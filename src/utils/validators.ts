@@ -5,9 +5,13 @@ export type Validator = {
 };
 
 const Validators = {
-  name: {
+  fullname: {
     regExp: /^(([а-я]+-)*[a-я]+) +(([а-я]+-)*[a-я]+)( +(([а-я]+-)*[a-я]+))?$/i,
     prettifyResult: (str: string): string => str.replaceAll(/ {2,}/g, ' '),
+  },
+  name: {
+    regExp: /^(([а-я]+-)*[a-я]+)$/i,
+    prettifyResult: (str: string) => str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase(),
   },
   tg: {
     regExp: /^((https:\/\/)?(t\.me\/)|@)?\w{5,}$/i,

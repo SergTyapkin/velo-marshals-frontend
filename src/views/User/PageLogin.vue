@@ -16,67 +16,169 @@
     <article class="form">
       <header>ВХОД</header>
 
-      <FormWithErrors ref="form" :fields="fields" submit-text="Вход" :loading="loading" @success="login" />
-
-      <router-link class="profile-link" :to="{ name: 'signup' }">
-        <button class="profile-button">Зарегистрироваться</button>
-      </router-link>
-
-      <div class="signin-links">
-        <!--<router-link class="signin-by-email-link" :to="{name: 'signInByEmail'}">Войти по почте</router-link>-->
-        <router-link class="restore-password-link" :to="{name: 'restorePassword'}">Восстановить пароль</router-link>
-      </div>
+      <transition name="opacity" mode="out-in">
+        <TGAuth @login="onLogin" v-if="!isNeedsToRegister" />
+        <section v-else>
+          АККАУНТ ЕЩЕ НЕ СОЗДДАН <br>
+          Необходимо зарегистрироваться
+          <FormWithErrors
+            submit-text="Зарегистрироваться"
+            @success="createAccount"
+            :loading="loading"
+            :fields="{
+              email: {
+                title: 'Электронная почта',
+                type: 'text',
+                placeholder: 'marshall@site.ru',
+                validationRegExp: Validators.email.regExp,
+                prettifyResult: Validators.email.prettifyResult,
+                autocomplete: 'email',
+              },
+              tel: {
+                title: 'Телефон',
+                type: 'tel',
+                placeholder: '8999XXXXXXXX',
+                validationRegExp: Validators.phone.regExp,
+                prettifyResult: Validators.phone.prettifyResult,
+                autocomplete: 'tel',
+              },
+              familyName: {
+                title: 'Фамилия',
+                placeholder: 'Маршалов',
+                validationRegExp: Validators.name.regExp,
+                prettifyResult: Validators.name.prettifyResult,
+                autocomplete: 'lastname',
+                value: tgUser?.last_name,
+              },
+              givenName: {
+                title: 'Имя',
+                placeholder: 'Маршал',
+                validationRegExp: Validators.name.regExp,
+                prettifyResult: Validators.name.prettifyResult,
+                autocomplete: 'firstname',
+                value: tgUser?.first_name,
+              },
+              middleName: {
+                title: 'Отчество',
+                placeholder: 'Маршалович',
+                validationRegExp: Validators.name.regExp,
+                prettifyResult: Validators.name.prettifyResult,
+                autocomplete: 'middlename',
+              },
+            }" />
+        </section>
+      </transition>
     </article>
   </div>
 </template>
 
-<script>
-import FormWithErrors from '~/components/FormWithErrors.vue';
+<script lang="ts">
 import { detectBrowser, detectOS } from '~/utils/utils';
+import TGAuth, { type TGUser } from '~/components/TGAuth.vue';
+import FormWithErrors from '~/components/FormWithErrors.vue';
 import Validators from '~/utils/validators';
 
 export default {
-  components: { FormWithErrors },
+  components: { FormWithErrors, TGAuth },
+
   data() {
     return {
-      fields: {
-        email: {
-          title: 'Электронная почта',
-          name: 'email',
-          type: 'text',
-          placeholder: 'legends@bmstu.ru',
-          validationRegExp: Validators.email.regExp,
-          prettifyResult: Validators.email.prettifyResult,
-          autocomplete: 'email',
-        },
-        password: {
-          title: 'Пароль',
-          name: 'password',
-          type: 'password',
-          placeholder: '●●●●●●',
-          validationRegExp: Validators.password.regExp,
-          prettifyResult: Validators.password.prettifyResult,
-          autocomplete: 'password',
-        },
-      },
       loading: false,
+      isNeedsToRegister: false,
+      tgUser: {} as TGUser,
+
+      Validators,
     };
   },
 
-  methods: {
-    async login(data) {
-      this.loading = true;
-      const { ok } = await this.$api.login(data.email, data.password, detectBrowser(), detectOS());
-      this.loading = false;
+  async mounted() {},
 
-      if (!ok) {
-        this.$refs.form.setError([this.fields.email, this.fields.password], 'Неверные email или пароль');
+  methods: {
+    async onLogin(user: TGUser) {
+      const existingUserId = await this.$request(
+        this,
+        this.$api.checkUserTgIdExisting,
+        [user.id],
+        `Не удалось получить информацию о существовании пользователя #${user.id}`,
+        undefined,
+        null,
+      );
+
+      if (!existingUserId) {
+        this.isNeedsToRegister = true;
+        this.tgUser = user;
         return;
       }
+
+      // User existing, login
+      await this.login(user);
+
       this.loading = true;
       await this.$store.dispatch('GET_USER');
       this.loading = false;
       this.$router.push({ name: 'profile' });
+    },
+
+    async createAccount(userData: {
+      email: string;
+      tel: string;
+      familyName: string;
+      givenName: string;
+      middleName: string;
+    }) {
+      if (!this.tgUser) {
+        return;
+      }
+
+      await this.$request(
+        this,
+        this.$api.signUp,
+        [
+          this.tgUser.id,
+          this.tgUser.username,
+          this.tgUser.hash,
+          this.tgUser.auth_date,
+          this.tgUser.photo_url,
+          this.tgUser.first_name,
+          this.tgUser.last_name,
+          userData.email,
+          userData.tel,
+          this.tgUser.photo_url,
+          userData.familyName,
+          userData.givenName,
+          userData.middleName,
+          detectBrowser(),
+          detectOS(),
+        ],
+        'Не удалось создать аккаунт',
+        async () => {
+          await this.$store.dispatch('GET_USER');
+          this.$router.push({name: '[profile'});
+        }
+      );
+    },
+
+    async login(user: TGUser) {
+      await this.$request(
+        this,
+        this.$api.signIn,
+        [
+          user.id,
+          user.username,
+          user.hash,
+          user.auth_date,
+          user.photo_url,
+          user.first_name,
+          user.last_name,
+          detectBrowser(),
+          detectOS(),
+        ],
+        'Не удалось войти в аккаунт',
+        async () => {
+          await this.$store.dispatch('GET_USER');
+          this.$router.push({name: '[profile'});
+        }
+      );
     },
   },
 };

@@ -16,6 +16,7 @@
       display block
       text-align left
       font-large()
+      trans()
 
     .placeholder
       pointer-events none
@@ -209,6 +210,30 @@
 import CircleLoading from '~/components/loaders/CircleLoading.vue';
 import SelectList from "~/components/SelectList.vue";
 
+export type Field = {
+  errorText: string,
+  overrideErrorText?: string,
+  successText?: string,
+  value?: any, // initial value
+  regExp?: RegExp,
+  validator?: (value: any) => boolean, // (Any) => Boolean
+  required?: boolean, // default: false
+  noTrimValue?: boolean, // default: false. By default the return value will be trimmed
+
+  type?: string, // default: 'text'
+  placeholder?: string,
+  autocomplete?: string, // default: 'off'
+  hideable?: boolean, // default: false
+  //other <input> attributes: String()
+
+  options?: string[], // options for type = 'select'
+  selectedIdx?: number, // number for type = 'select'
+
+  __error: boolean,
+  __success: boolean,
+  _isNotHidden: boolean,
+}
+
 export default {
   components: {SelectList, CircleLoading },
 
@@ -218,7 +243,6 @@ export default {
       required: true,
       default: () => ({
         some_field: {
-          name: String,
           errorText: String,
           overrideErrorText: null,
           successText: String,
@@ -267,7 +291,7 @@ export default {
         this.$emit('error');
         return;
       }
-      const res = {};
+      const res = {} as {[key: string]: any};
       Object.entries(this.fields).forEach(([fieldName, field]) => {
         const fieldValueTrimmed = field.type === 'text' ? field.value.trim() : field.value;
         res[fieldName] = field.prettifyResult ? field.prettifyResult(fieldValueTrimmed) : fieldValueTrimmed;
@@ -294,14 +318,15 @@ export default {
         field.__success = this.setSuccesses && !field.__error;
         res = res && !field.__error;
       });
+      this.$forceUpdate();
       return res;
     },
 
-    __setErrorOnField(field, errorText) {
+    __setErrorOnField(field: Field, errorText: string) {
       field.__error = true;
       field.overrideErrorText = errorText;
     },
-    setError(fields, errorText) {
+    setError(fields: Field[], errorText: string) {
       if (Array.isArray(fields)) {
         fields.forEach(field => this.__setErrorOnField(field, errorText));
         return;

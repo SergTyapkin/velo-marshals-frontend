@@ -9,45 +9,93 @@
 
 .root-profile
   page-root()
+  .user-block
+    .user-name-row
+      font-large()
+      text-align center
+      width 100%
+      img
+        max-width 400px
+        max-height 400px
+        aspect-ratio 1/1
+        object-fit cover
+        border-radius radiusMax
+      margin-bottom 50px
+
+    .user-data-block
+      display grid
+      grid-template-columns 1fr 1fr 1fr
+      width 100%
+      gap 10px
+      margin-block 50px
+      .data-row
+        display contents
 </style>
 
 <template>
   <div class="root-profile">
-    <div class="content-block">
-      <header class="header">ПРОФИЛЬ</header>
-      <div class="box user-block">
-        <div class="user-name-row">
-          <div class="user-name-id-block">
-            <div class="user-name">{{ $user.username }}</div>
-            <div class="user-id">#{{ String($user.id || '').padStart(4, '0') }}</div>
-          </div>
-          <button class="copy-id-button" @click="copyToClipboard($user.id, 'Твоё ID')">
-            <img src="../../../static/icons/copy.svg" alt="">
-          </button>
+    <header class="header">ПРОФИЛЬ</header>
+    <section class="user-block">
+      <section class="user-name-row">
+        <div class="user-name-id-block">
+          <img :src="$user.avatarUrl" alt="avatar">
+          <div class="user-name">{{ $user.givenName }} {{ $user.familyName }}</div>
+        </div>
 
-          <CircleLoading v-if="loadingProfile" size="30px" light />
-          <button v-else class="button-edit" @click="changeUserParam('name')">Изменить</button>
+        <CircleLoading v-if="loading" size="30px" light />
+      </section>
+
+      <section class="user-data-block">
+        <div class="data-row">
+          <div class="field">Tg id:</div>
+          <div class="data">{{ $user.tgId }}</div>
+          <button class="button-edit" @click="changeUserParam('tgId')">Изменить</button>
+        </div>
+        <div class="data-row">
+          <div class="field">Tg аккаунт:</div>
+          <div class="data">{{ $user.tgUsername }}</div>
+          <button class="button-edit" @click="changeUserParam('tgUsername')">Изменить</button>
+        </div>
+        <div class="data-row">
+          <div class="field">Фамилия:</div>
+          <div class="data">{{ $user.familyName }}</div>
+          <button class="button-edit" @click="changeUserParam('familyName')">Изменить</button>
+        </div>
+        <div class="data-row">
+          <div class="field">Имя:</div>
+          <div class="data">{{ $user.givenName }}</div>
+          <button class="button-edit" @click="changeUserParam('givenName')">Изменить</button>
+        </div>
+        <div class="data-row">
+          <div class="field">Отчество:</div>
+          <div class="data">{{ $user.middleName }}</div>
+          <button class="button-edit" @click="changeUserParam('middleName')">Изменить</button>
         </div>
         <div class="data-row">
           <div class="field">Email:</div>
-          <div class="data">{{ $user.email }}</div>
+          <div>
+            <div class="data">{{ $user.email }}</div>
+            <div v-if="$user.isConfirmedEmail" class="info">Подтвержден</div>
+            <div v-else class="info">Не подтвержден</div>
+          </div>
           <button class="button-edit" @click="changeUserParam('email')">Изменить</button>
         </div>
         <div class="data-row">
-          <div class="field">Разрешения:</div>
-          <div class="data">{{ $user.role }}</div>
-          <button class="button-edit" @click="changeUserParam('role', 'phone')">Изменить</button>
+          <div class="field">Телефон:</div>
+          <div class="data">{{ $user.tel }}</div>
+          <button class="button-edit" @click="changeUserParam('tel')">Изменить</button>
         </div>
-
-        <div class="buttons-row">
-          <router-link :to="{ name: 'changePassword' }">
-            <button class="change-password">Сменить пароль</button>
-          </router-link>
-
-          <button class="logout-button" @click="logout">Выйти</button>
+        <div class="data-row">
+          <div class="field">Уровень:</div>
+          <div class="data">{{ $user.level }}</div>
+          <button class="button-edit" @click="changeUserParam('level')">Изменить</button>
         </div>
+      </section>
+
+      <div class="buttons-row">
+        <button class="logout-button" @click="logout">Выйти</button>
       </div>
-    </div>
+    </section>
   </div>
 </template>
 
@@ -60,69 +108,57 @@ export default {
 
   data() {
     return {
-      loadingProfile: false,
+      loading: false,
     };
   },
 
   async mounted() {},
 
   methods: {
-    async changeUserParam(fieldName, fieldNameUser = fieldName, overrideHavingValue = null) {
-      const newUserData = {
-        name: this.$user.name,
-        group: this.$user.group,
-        telegram: this.$user.tg,
-        vk: this.$user.vk,
-        email: this.$user.email,
-        phone_number: this.$user.phone,
-      };
+    async changeUserParam(fieldName, validatorName, overrideHavingValue = null) {
       const inputValue = await this.$modals.prompt(
         overrideHavingValue ? 'Неверный формат' : 'Изменить значение поля',
         'Введите новое значение',
-        overrideHavingValue || newUserData[fieldName],
+        overrideHavingValue || this.$user[fieldName],
       );
       if (!inputValue) {
         return;
       }
-      if (!Validators[fieldNameUser].validate(inputValue)) {
-        this.changeUserParam(fieldName, fieldNameUser, inputValue);
-        return;
+
+      if (Validators[fieldName]) {
+        if (!Validators[fieldName].validate(inputValue)) {
+          this.changeUserParam(fieldName, fieldName, inputValue);
+          return;
+        }
+        newUserData[fieldName] = Validators[fieldName].prettifyResult(inputValue);
+      } else {
+        newUserData[fieldName] = Validators[fieldName].prettifyResult(inputValue);
       }
 
-      newUserData[fieldName] = Validators[fieldNameUser].prettifyResult(inputValue);
-      this.loadingProfile = true;
-      const { ok } = await this.$api.editProfile(
-        newUserData.name,
-        newUserData.group,
-        newUserData.telegram,
-        newUserData.vk,
-        newUserData.email,
-        newUserData.phone_number,
+      await this.$request(
+        this,
+        this.$api.updateUser,
+        [newUserData],
+        `Не удалось изменить значение поля ${fieldName}`,
+        () => {
+          this.$user[fieldName] = newUserData[fieldName];
+          this.$forceUpdate();
+          console.log(this.$user, this.$user[fieldName], newUserData[fieldName]);
+        }
       );
-      this.loadingProfile = false;
-      if (!ok) {
-        this.$popups.error(`Не удалось изменить значение поля ${fieldName}`);
-        return;
-      }
-      this.$user[fieldNameUser] = newUserData[fieldName];
     },
 
     async logout() {
-      this.loadingProfile = true;
-      const { ok } = await this.$api.logout();
-      this.loadingProfile = true;
-
-      if (!ok) {
-        this.$popups.error('Не получилось выйти из аккаунта', 'Неизвестная ошибка');
-        return;
-      }
-      this.$store.dispatch('DELETE_USER');
-      this.$router.push({ name: 'login' });
-    },
-
-    copyToClipboard(str, description) {
-      navigator.clipboard.writeText(str);
-      this.$popups.success('Скопировано', `${description} скопировано в буфер обмена`);
+      await this.$request(
+        this,
+        this.$api.signOut,
+        [],
+        `Не удалось выйти из аккаунта`,
+        () => {
+          this.$store.dispatch('DELETE_USER');
+          this.$router.push({ name: 'login' });
+        }
+      );
     },
   },
 };

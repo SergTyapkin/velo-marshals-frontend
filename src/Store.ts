@@ -8,9 +8,18 @@ export default new Vuex.Store({
   },
   mutations: {
     SET_USER(state: State, userData: User) {
-      state.user.id = String(userData.id);
-      state.user.username = String(userData.username);
-      state.user.email = String(userData.email);
+      state.user.id = userData.id;
+      state.user.tgUsername = userData.tgUsername;
+      state.user.tgId = userData.tgId;
+      state.user.email = userData.email;
+      state.user.isConfirmedEmail = userData.isConfirmedEmail;
+      state.user.tel = userData.tel;
+      state.user.avatarUrl = userData.avatarUrl;
+      state.user.familyName = userData.familyName;
+      state.user.givenName = userData.givenName;
+      state.user.middleName = userData.middleName;
+      state.user.joinedDate = userData.joinedDate;
+      state.user.level = userData.level;
 
       state.user.isSignedIn = true;
     },

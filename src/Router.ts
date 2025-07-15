@@ -4,10 +4,8 @@ import { type Store } from '~/types/store';
 // Components:
 import Page from '~/views/Page.vue';
 import Page404 from '~/views/Page404.vue';
-import PageRegistration from '~/views/User/PageRegistration.vue';
 import PageLogin from '~/views/User/PageLogin.vue';
 import PageProfile from '~/views/User/PageProfile.vue';
-import PageRestorePassword from '~/views/User/PageRestorePassword.vue';
 import PageConfirmEmail from '~/views/User/PageConfirmEmail.vue';
 import routes from '~/routes';
 import { RouteRecordRaw } from 'vue-router';
@@ -26,9 +24,6 @@ export default function createVueRouter(Store: Store): Router {
 
     { path: '/profile', name: 'profile', component: PageProfile, meta: {loginRequired: true} },
     { path: '/login', name: 'login', component: PageLogin, meta: {noLoginRequired: true} },
-    { path: '/signup', name: 'signup', component: PageRegistration, meta: {loginRequired: true} },
-    { path: '/password/restore', name: 'restorePassword', component: PageRestorePassword, meta: {loginRequired: true} },
-    { path: '/password/change', name: 'changePassword', component: PageRestorePassword, meta: {loginRequired: true} },
     { path: '/email/confirm', name: 'confirmEmail', component: PageConfirmEmail, meta: {loginRequired: true} },
 
     { path: '/:pathMatch(.*)*', name: 'page404', component: Page404 },
