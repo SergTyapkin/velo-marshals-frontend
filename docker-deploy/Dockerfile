@@ -13,6 +13,7 @@ WORKDIR /home/node/front
 RUN apt-get update -y && apt-get install --no-install-recommends -y \
     gettext-base
 
+ARG DOMAIN_URL
 RUN export DOLLAR="$" && \
     for proxy_num in $(seq 1 $(. "./.env"; eval "echo \${PROXY_SERVICES_COUNT}" | tr -dc "0-9")); do \
       eval "export PROXY_${proxy_num}_API_PREFIX=$(. "./.env"; eval "echo \${PROXY_${proxy_num}_API_PREFIX}" | tr -dc "a-zA-Z0-9/_-")"; \
@@ -50,9 +51,8 @@ ARG HTTP_NGINX_CONFIG
 ARG HTTPS_NGINX_CONFIG
 
 # substitute ${HTTP_NGINX_CONFIG} and ${HTTPS_NGINX_CONFIG} into default.conf.template
-RUN if [ -z '${HTTP_NGINX_CONFIG}' ] && [ -z '${HTTPS_NGINX_CONFIG}' ]; then \
+RUN if [ -z "${HTTP_NGINX_CONFIG}" ] && [ -z "${HTTPS_NGINX_CONFIG}" ]; then \
       echo "HTTP_NGINX_CONFIG or HTTPS_NGINX_CONFIG must be set. Error"; \
       exit 1; \
     fi && \
-    envsubst < /etc/nginx/templates/default.conf.template > /etc/nginx/templates/default.conf.template.substututed && \
-    mv /etc/nginx/templates/default.conf.template.substututed /etc/nginx/templates/default.conf.template
+    envsubst < /etc/nginx/templates/default.conf.template > /etc/nginx/templates/default.conf.template.substututed && mv /etc/nginx/templates/default.conf.template.substututed /etc/nginx/templates/default.conf.template
