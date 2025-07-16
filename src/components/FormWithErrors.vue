@@ -322,16 +322,16 @@ export default {
       return res;
     },
 
-    __setErrorOnField(field: Field, errorText: string) {
-      field.__error = true;
-      field.overrideErrorText = errorText;
+    __setErrorOnField(fieldName: string, errorText: string) {
+      this.fields[fieldName].__error = true;
+      this.fields[fieldName].overrideErrorText = errorText;
     },
-    setError(fields: Field[], errorText: string) {
-      if (Array.isArray(fields)) {
-        fields.forEach(field => this.__setErrorOnField(field, errorText));
+    setError(fieldNames: string[], errorText: string) {
+      if (Array.isArray(fieldNames)) {
+        fieldNames.forEach(fieldName => this.__setErrorOnField(fieldName, errorText));
         return;
       }
-      this.__setErrorOnField(fields, errorText);
+      this.__setErrorOnField(fieldNames, errorText);
     },
   },
 };

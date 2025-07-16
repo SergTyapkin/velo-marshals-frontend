@@ -141,16 +141,22 @@ export default {
       errorText: string,
       callback?: (data: Awaited<ReturnType<APIFoo>>['data'], status: number) => any,
       toFallbackValue?: Fallback,
+      errorCallbacks?: {[key: number]: () => any},
     ) => {
       context.loading = true;
       try {
         const { status, ok, data } = await apiRequest(...args);
         context.loading = false;
         if (!ok) {
-          this.$popups.error(`Ошибка ${status}`, errorText);
+          const errCallback = errorCallbacks?.[status];
+          if (errCallback) {
+            errCallback();
+            return toFallbackValue;
+          }
           if (toFallbackValue) {
             return toFallbackValue;
           }
+          this.$popups.error(`Ошибка ${status}`, errorText);
           throw new Error(`Ошибка ${status} при запросе на API. ${errorText}`);
         }
         callback?.(data, status);

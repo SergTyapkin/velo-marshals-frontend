@@ -22,6 +22,7 @@
           АККАУНТ ЕЩЕ НЕ СОЗДДАН <br>
           Необходимо зарегистрироваться
           <FormWithErrors
+            ref="form"
             submit-text="Зарегистрироваться"
             @success="createAccount"
             :loading="loading"
@@ -85,7 +86,15 @@ export default {
     return {
       loading: false,
       isNeedsToRegister: false,
-      tgUser: {} as TGUser,
+      tgUser: {
+        // auth_date: 1,
+        // first_name: "",
+        // hash: "",
+        // id: 1,
+        // last_name: "",
+        // photo_url: ""
+        // username: "",
+      } as TGUser,
 
       Validators,
     };
@@ -154,6 +163,12 @@ export default {
         async () => {
           await this.$store.dispatch('GET_USER');
           this.$router.push({name: '[profile'});
+        },
+        undefined,
+        {
+          409: () => {
+            (this.$refs.form as typeof FormWithErrors).setError(['email', 'tel'], 'Email или телефон уже зарегистрированы')
+          }
         }
       );
     },
