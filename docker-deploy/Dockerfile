@@ -50,8 +50,14 @@ ARG HTTP_NGINX_CONFIG
 ARG HTTPS_NGINX_CONFIG
 
 # substitute ${HTTP_NGINX_CONFIG} and ${HTTPS_NGINX_CONFIG} into default.conf.template
+RUN echo $HTTP_NGINX_CONFIG
+RUN echo $HTTPS_NGINX_CONFIG
+RUN echo $DOMAIN_URL
+RUN cat /etc/nginx/templates/default.conf.template
 RUN if [ -z "${HTTP_NGINX_CONFIG}" ] && [ -z "${HTTPS_NGINX_CONFIG}" ]; then \
       echo "HTTP_NGINX_CONFIG or HTTPS_NGINX_CONFIG must be set. Error"; \
       exit 1; \
     fi && \
-    envsubst < /etc/nginx/templates/default.conf.template > /etc/nginx/templates/default.conf.template.substututed && mv /etc/nginx/templates/default.conf.template.substututed /etc/nginx/templates/default.conf.template
+    envsubst < /etc/nginx/templates/default.conf.template > /etc/nginx/templates/default.conf.template.substututed && \
+    RUN cat /etc/nginx/templates/default.conf.template.substututed && \
+    mv /etc/nginx/templates/default.conf.template.substututed /etc/nginx/templates/default.conf.template
