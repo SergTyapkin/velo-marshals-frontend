@@ -66,7 +66,8 @@
                 prettifyResult: Validators.name.prettifyResult,
                 autocomplete: 'middlename',
               },
-            }" />
+            }"
+          />
         </section>
       </transition>
     </article>
@@ -104,16 +105,16 @@ export default {
 
   methods: {
     async onLogin(user: TGUser) {
-      const existingUserId = await this.$request(
+      const existingUser = await this.$request(
         this,
         this.$api.checkUserTgIdExisting,
         [user.id],
         `Не удалось получить информацию о существовании пользователя #${user.id}`,
         undefined,
-        null,
+        -1,
       );
 
-      if (!existingUserId) {
+      if (existingUser === -1) {
         this.isNeedsToRegister = true;
         this.tgUser = user;
         return;
