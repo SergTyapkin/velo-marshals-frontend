@@ -1,4 +1,4 @@
-![GithubCI](https://github.com/sergtyapkin/vue-frontend-template/actions/workflows/deploy.yaml/badge.svg)
+![GithubCI](https://github.com/SergTyapkin/velo-marshals-frontend/actions/workflows/deploy.yaml/badge.svg)
 
 # Фронтенд на Vue.js с авто-деплоем на _Nginx_ в докере и автоматическим получением сертификатов _Letsencrypt_
 
