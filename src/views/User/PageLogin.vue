@@ -105,28 +105,28 @@ export default {
 
   methods: {
     async onLogin(user: TGUser) {
-      const existingUser = await this.$request(
+      await this.$request(
         this,
         this.$api.checkUserTgIdExisting,
         [user.id],
         `Не удалось получить информацию о существовании пользователя #${user.id}`,
+        async () => {
+          // User existing, login
+          await this.login(user);
+
+          this.loading = true;
+          await this.$store.dispatch('GET_USER');
+          this.loading = false;
+          this.$router.push({ name: 'profile' });
+        },
         undefined,
-        -1,
+        {
+          404: () => {
+            this.isNeedsToRegister = true;
+            this.tgUser = user;
+          }
+        }
       );
-
-      if (existingUser === -1) {
-        this.isNeedsToRegister = true;
-        this.tgUser = user;
-        return;
-      }
-
-      // User existing, login
-      await this.login(user);
-
-      this.loading = true;
-      await this.$store.dispatch('GET_USER');
-      this.loading = false;
-      this.$router.push({ name: 'profile' });
     },
 
     async createAccount(userData: {
