@@ -88,9 +88,10 @@
 import { getCurrentInstance } from 'vue';
 import { Modals, Popups } from '@sergtyapkin/modals-popups';
 import API from '~/utils/API';
-import { saveAllAssetsByServiceWorker } from '~/utils/utils';
+import { getRequestFoo, saveAllAssetsByServiceWorker, setDisableCachingUrlsByServiceWorker } from '~/utils/utils';
 import HeaderComponent from '~/components/HeaderComponent.vue';
 import FooterComponent from '~/components/FooterComponent.vue';
+import { DISABLED_CACHING_URLS } from '~/constants';
 
 function removeAllHoverStyles() {
   try {
@@ -134,38 +135,7 @@ export default {
     this.global.$app = this;
     this.global.$api = new API(`/api`);
     this.global.$log = (...data: any[]) => console.log(...data);
-    this.global.$request = async <APIFoo extends (...args: any) => any, Fallback>(
-      context: { loading: boolean },
-      apiRequest: APIFoo,
-      args: Parameters<APIFoo>,
-      errorText: string,
-      callback?: (data: Awaited<ReturnType<APIFoo>>['data'], status: number) => any,
-      toFallbackValue?: Fallback,
-      errorCallbacks?: {[key: number]: () => any},
-    ) => {
-      context.loading = true;
-      try {
-        const { status, ok, data } = await apiRequest(...args);
-        context.loading = false;
-        if (!ok) {
-          const errCallback = errorCallbacks?.[status];
-          if (errCallback) {
-            errCallback();
-            return toFallbackValue;
-          }
-          if (toFallbackValue) {
-            return toFallbackValue;
-          }
-          this.$popups.error(`Ошибка ${status}`, errorText);
-          throw new Error(`Ошибка ${status} при запросе на API. ${errorText}`);
-        }
-        callback?.(data, status);
-        return data;
-      } catch (err) {
-        context.loading = false;
-        console.error('Error while executing $request:', err);
-      }
-    };
+    this.global.$request = getRequestFoo(this.$popups.error);
 
     this.checkMobileScreen();
     window.addEventListener('resize', this.checkMobileScreen);
@@ -173,6 +143,7 @@ export default {
     saveAllAssetsByServiceWorker(({ current, total, progress }) => {
       console.log(`Saved resource by SW: ${current}. Progress: ${progress}/${total}`);
     });
+    setDisableCachingUrlsByServiceWorker(DISABLED_CACHING_URLS);
   },
 
   unmounted() {
