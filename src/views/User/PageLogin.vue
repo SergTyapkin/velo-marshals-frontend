@@ -9,18 +9,25 @@
 
 .root-signin
   page-root()
+  .form-container
+    block-bg-shadow()
+    .auth-widget
+      text-align center
+    .info
+      color colorText5
+      font-small()
 </style>
 
 <template>
   <div class="root-signin">
-    <article class="form">
+    <article class="form-container">
       <header>ВХОД</header>
 
       <transition name="opacity" mode="out-in">
-        <TGAuth @login="onLogin" v-if="!isNeedsToRegister" />
+        <TGAuth @login="onLogin" v-if="!isNeedsToRegister" class="auth-widget" />
         <section v-else>
-          АККАУНТ ЕЩЕ НЕ СОЗДДАН <br>
-          Необходимо зарегистрироваться
+          Видим вас впервые. Давайте знакомиться!
+          <div class="info">Вы вошли в Telegram: {{ tgUser.username ?? tgUser.id }}</div>
           <FormWithErrors
             ref="form"
             submit-text="Зарегистрироваться"
@@ -37,14 +44,16 @@
               },
               tel: {
                 title: 'Телефон',
+                info: 'В любом формате',
                 type: 'tel',
-                placeholder: '8999XXXXXXXX',
+                placeholder: '+7-999-XXXXXXXX',
                 validationRegExp: Validators.phone.regExp,
                 prettifyResult: Validators.phone.prettifyResult,
                 autocomplete: 'tel',
               },
               familyName: {
                 title: 'Фамилия',
+                info: 'Как в паспорте',
                 placeholder: 'Маршалов',
                 validationRegExp: Validators.name.regExp,
                 prettifyResult: Validators.name.prettifyResult,
@@ -53,6 +62,7 @@
               },
               givenName: {
                 title: 'Имя',
+                info: 'Как в паспорте',
                 placeholder: 'Маршал',
                 validationRegExp: Validators.name.regExp,
                 prettifyResult: Validators.name.prettifyResult,
@@ -61,6 +71,7 @@
               },
               middleName: {
                 title: 'Отчество',
+                info: 'Как в паспорте',
                 placeholder: 'Маршалович',
                 validationRegExp: Validators.name.regExp,
                 prettifyResult: Validators.name.prettifyResult,

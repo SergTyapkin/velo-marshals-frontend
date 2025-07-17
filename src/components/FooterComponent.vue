@@ -9,106 +9,48 @@
 
 
 .root-footer
-  margin-top 100px
-  color colorText1
-  background colorBlockBgEmp1Gradient
+  position fixed
+  bottom 0
+  overflow hidden
+  width 100%
+  height footerHeight
+  background colorBlockBg
+  border-radius radiusL radiusL 0 0
 
-  .top-row
-    page-root()
-
+  .buttons
     display flex
-    gap 10px
-    justify-content space-between
-    padding-top 40px
-    padding-bottom 20px
-
-    .column
-      display flex
+    max-width 100%
+    height 100%
+    .button
+      flex 1
       flex-direction column
-
-      > *:not(header)
+      gap 5px
+      height 100%
+      padding-inline 5px
+      text-align center
+      &.small
         font-small-extra()
-        font-thin()
-        hover-effect()
-
-        padding 4px 0
-
-      .logo
-        width 150px
-
-        @media ({mobile})
-          width 75px
-
-      header
-        font-large()
-
-  .bottom-row
-    border-top 1px solid colorEmp2
-    .bottom-row-inner
-      page-root()
+      img
+        width 25px
+        trans()
+      &.router-link-active
+        gap 0
+        background radial-gradient(mix(colorEmp2, transparent, 30%), colorBlockBg 75%) no-repeat 50% 50%
+        img
+          width 35px
+      centered-flex-container()
       font-small()
-
-      display flex
-      gap 40px
-      padding-top 10px
-      padding-bottom 10px
-
-      > *:not(.languages)
-        hover-effect()
-
-      .languages
-        button
-          button-no-styles()
-          hover-effect()
-
-          padding-right 10px
+      trans()
 </style>
 
 <template>
   <footer class="root-footer">
-    <section class="top-row">
-      <router-link :to="{ name: 'default' }" class="column">
-        <img class="logo" src="/static/icons/telegram-logo.svg" alt="logo">
-      </router-link>
-
-      <section class="column">
-        <header>Партнеры</header>
-        <a href="#" target="_blank">Партнер</a>
-        <a href="#" target="_blank">Партнер</a>
-        <a href="#" target="_blank">Партнер</a>
-        <a href="#" target="_blank">Партнер</a>
-      </section>
-
-      <section class="column">
-        <header>Меню</header>
-        <router-link :to="{ name: 'default' }">Раздел</router-link>
-        <router-link :to="{ name: 'default' }">Раздел</router-link>
-        <router-link :to="{ name: 'default' }">Раздел</router-link>
-        <router-link :to="{ name: 'default' }">Раздел</router-link>
-        <router-link :to="{ name: 'default' }">Раздел</router-link>
-      </section>
-
-      <section class="column">
-        <header>Списки</header>
-        <router-link :to="{ name: 'default' }">Раздел</router-link>
-        <router-link :to="{ name: 'default' }">Раздел</router-link>
-        <router-link :to="{ name: 'default' }">Раздел</router-link>
-        <router-link :to="{ name: 'default' }">Раздел</router-link>
-      </section>
-    </section>
-
-    <section class="bottom-row">
-      <div class="bottom-row-inner">
-        <div class="languages">
-          <button>RU</button>
-          <button>ENG</button>
-          <button>AR</button>
-          <button>ZH</button>
-        </div>
-        <router-link :to="{ name: 'default' }">Политика конфиденциальности</router-link>
-        <router-link :to="{ name: 'default' }">Настройка файлов cookie</router-link>
-      </div>
-    </section>
+    <nav class="buttons">
+      <router-link :to="{ name: 'login' }" class="button"><img src="/static/icons/listing.svg" alt="">Фестиваль</router-link>
+      <router-link :to="{ name: 'default' }" class="button"><img src="/static/icons/external-link.svg" alt="">Ссылки</router-link>
+      <router-link :to="{ name: 'default' }" class="button"><img src="/static/icons/work.svg" alt="">Оборудование</router-link>
+      <router-link :to="{ name: 'default' }" class="button"><img src="/static/icons/profile.svg" alt="">Профиль</router-link>
+    </nav>
   </footer>
 </template>
 

@@ -9,18 +9,24 @@ page-root()
   max-width pageMaxWidth
   margin-right 'max(calc((100% - %s) / 2), 0px)' % (pageMaxWidth + 2 * pageMinHorizontalPadding)
   margin-left 'max(calc((100% - %s) / 2), 0px)' % (pageMaxWidth + 2 * pageMinHorizontalPadding)
-  padding 30px pageMinHorizontalPadding 70px pageMinHorizontalPadding
+  padding 30px pageMinHorizontalPadding (footerHeight + 20px) pageMinHorizontalPadding
 
 
 block(colorBorder=colorBorder)
   display block
-  padding 16px
+  padding 25px
   border-radius radiusL
   header
-    font-medium()
+    font-large()
     font-bold()
+
+    margin-bottom 10px
+    text-align center
   section
     font-medium()
+
+  @media ({mobile})
+    padding 16px
 
 block-shadow()
   block()

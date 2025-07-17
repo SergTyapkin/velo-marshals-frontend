@@ -68,7 +68,7 @@
 </style>
 
 <template>
-  <HeaderComponent class="header" />
+  <!--  <HeaderComponent class="header" />-->
 
   <div class="wrapper">
     <router-view #default="{ Component }">

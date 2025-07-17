@@ -10,7 +10,7 @@ const Validators = {
     prettifyResult: (str: string): string => str.replaceAll(/ {2,}/g, ' '),
   },
   name: {
-    regExp: /^(([а-я]+-)*[a-я]+)$/i,
+    regExp: /^(([а-я]+-)*[а-я]+)$/i,
     prettifyResult: (str: string) => str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase(),
   },
   tg: {

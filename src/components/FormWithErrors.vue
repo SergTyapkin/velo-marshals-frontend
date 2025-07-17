@@ -10,10 +10,10 @@
 .root-form
   .input-container
     position relative
-    margin-top 20px
+    margin-top 25px
 
     label
-      display block
+      display inline-block
       text-align left
       font-large()
       trans()
@@ -23,8 +23,7 @@
       user-select none
       position absolute
       bottom 12px
-      left 44px
-      color colorText2
+      color colorText5
       text-align left
       transition all 0.2s ease
       font-medium()
@@ -38,6 +37,7 @@
       display block
       box-sizing border-box
       width 100%
+      margin-top 3px
       padding 10px 0 10px 40px
       text-align left
       border 2px solid colorBorder
@@ -68,7 +68,7 @@
 
         &:not(:focus) ~ .placeholder
         &:not(:placeholder-shown) ~ .placeholder
-          left 20px
+          left 18px
 
     .image-hidden
     .image
@@ -108,10 +108,10 @@
 
     .info
       user-select none
-      margin-top 2px
-      padding-left 20px
+      display inline-block
+      margin-left 10px
+      color colorText5
       text-align left
-      opacity 0.5
       font-small-extra()
 
     &.error
@@ -143,7 +143,7 @@
   >
     <div
       class="input-container"
-      v-for="([fieldName, field], i) in Object.entries(fields)"
+      v-for="([fieldKey, field], i) in Object.entries(fields)"
       :key="i"
       :class="{
         error: field.__error,
@@ -152,7 +152,8 @@
         'hideable': field.hideable,
       }"
     >
-      <label :for="`${uid}-${fieldName}`">{{ field.title }}</label>
+      <label :for="`${uid}-${fieldKey}`">{{ field.title }}</label>
+      <div v-if="field.info" class="info">{{ field.info }}</div>
 
       <SelectList
         v-if="field.type === 'select'"
@@ -163,7 +164,7 @@
       <input
         v-else
         v-bind="field"
-        :id="`${uid}-${fieldName}`"
+        :id="`${uid}-${fieldKey}`"
         v-model="field.value"
         :type="field._isNotHidden ? 'text' : field.type || 'text'"
         :autocomplete="field.autocomplete || 'off'"
@@ -187,7 +188,6 @@
         alt="show"
       >
 
-      <div v-if="field.info" class="info">{{ field.info }}</div>
       <div class="placeholder">{{ field.placeholder }}</div>
       <div class="error" :class="{ hidden: !errorSuccessShowed }">
         {{ field.overrideErrorText || field.errorText || 'Неверный формат' }}
@@ -209,9 +209,12 @@
 <script lang="ts">
 import CircleLoading from '~/components/loaders/CircleLoading.vue';
 import SelectList from "~/components/SelectList.vue";
+import { PropType } from 'vue';
 
 export type Field = {
-  errorText: string,
+  title?: string,
+  info?: string,
+  errorText?: string,
   overrideErrorText?: string,
   successText?: string,
   value?: any, // initial value
@@ -239,29 +242,8 @@ export default {
 
   props: {
     fields: {
-      type: Object,
+      type: Object as PropType<{[key: string]: Field}>,
       required: true,
-      default: () => ({
-        some_field: {
-          errorText: String,
-          overrideErrorText: null,
-          successText: String,
-          value: String, // initial value
-          regExp: RegExp,
-          validator: Function, // (Any) => Boolean
-          required: Boolean, // default: false
-          noTrimValue: Boolean, // default: false. By default the return value will be trimmed
-
-          type: String(), // default: 'text'
-          placeholder: String(),
-          autocomplete: String(), // default: 'off'
-          hideable: Boolean, // default: false
-          //other <input> attributes: String()
-
-          options: [], // options for type = 'select'
-          selectedIdx: undefined, // number for type = 'select'
-        },
-      }),
     },
     submitText: {
       type: String,
@@ -292,9 +274,9 @@ export default {
         return;
       }
       const res = {} as {[key: string]: any};
-      Object.entries(this.fields).forEach(([fieldName, field]) => {
+      Object.entries(this.fields).forEach(([fieldKey, field]) => {
         const fieldValueTrimmed = field.type === 'text' ? field.value.trim() : field.value;
-        res[fieldName] = field.prettifyResult ? field.prettifyResult(fieldValueTrimmed) : fieldValueTrimmed;
+        res[fieldKey] = field.prettifyResult ? field.prettifyResult(fieldValueTrimmed) : fieldValueTrimmed;
       });
       this.$emit('success', res);
     },
@@ -322,16 +304,16 @@ export default {
       return res;
     },
 
-    __setErrorOnField(fieldName: string, errorText: string) {
-      this.fields[fieldName].__error = true;
-      this.fields[fieldName].overrideErrorText = errorText;
+    __setErrorOnField(fieldKey: string, errorText: string) {
+      this.fields[fieldKey].__error = true;
+      this.fields[fieldKey].overrideErrorText = errorText;
     },
-    setError(fieldNames: string[], errorText: string) {
-      if (Array.isArray(fieldNames)) {
-        fieldNames.forEach(fieldName => this.__setErrorOnField(fieldName, errorText));
+    setError(fieldKeys: string[], errorText: string) {
+      if (Array.isArray(fieldKeys)) {
+        fieldKeys.forEach(fieldKey => this.__setErrorOnField(fieldKey, errorText));
         return;
       }
-      this.__setErrorOnField(fieldNames, errorText);
+      this.__setErrorOnField(fieldKeys, errorText);
     },
   },
 };
