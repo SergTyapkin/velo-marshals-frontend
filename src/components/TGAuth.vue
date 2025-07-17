@@ -11,6 +11,7 @@
   page-root()
   .error
     font-medium()
+
     color colorError
 </style>
 

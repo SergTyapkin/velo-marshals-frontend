@@ -12,21 +12,22 @@
   .user-block
     .user-name-row
       font-large()
-      text-align center
+
       width 100%
+      margin-bottom 50px
+      text-align center
       img
+        aspect-ratio 1/1
         max-width 400px
         max-height 400px
-        aspect-ratio 1/1
         object-fit cover
         border-radius radiusMax
-      margin-bottom 50px
 
     .user-data-block
       display grid
       grid-template-columns 1fr 1fr 1fr
-      width 100%
       gap 10px
+      width 100%
       margin-block 50px
       .data-row
         display contents

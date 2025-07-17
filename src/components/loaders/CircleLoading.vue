@@ -100,6 +100,7 @@
     opacity 0
   100%
     opacity 1
+
 @keyframes lds-default
   0%
   20%
