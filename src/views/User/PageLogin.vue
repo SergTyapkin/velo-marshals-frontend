@@ -163,7 +163,7 @@ export default {
         'Не удалось создать аккаунт',
         async () => {
           await this.$store.dispatch('GET_USER');
-          this.$router.push({name: '[profile'});
+          this.$router.push({name: 'profile'});
         },
         undefined,
         {
@@ -192,7 +192,7 @@ export default {
         'Не удалось войти в аккаунт',
         async () => {
           await this.$store.dispatch('GET_USER');
-          this.$router.push({name: '[profile'});
+          this.$router.push({name: 'profile'});
         }
       );
     },
