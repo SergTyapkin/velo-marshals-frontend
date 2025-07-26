@@ -1,7 +1,7 @@
 import REST_API from '@sergtyapkin/rest-api';
 import { validateModel, type Model } from '@sergtyapkin/models-validator';
-import { UserModel, UserModelMockData } from '~/utils/APIModels';
-import { User } from '~/utils/models';
+import { EventListModel, EventListModelMockData, UserModel, UserModelMockData } from '~/utils/APIModels';
+import type { User, Event } from '~/utils/models';
 
 type RequestFunc = (url: string, data?: object) => Promise<{ data: object; status: number; ok: boolean }>;
 type MyResponse<T> = Promise<{ data: T; status: number; ok: boolean }> | { data: T; status: number; ok: boolean };
@@ -59,16 +59,16 @@ export default class API extends REST_API {
 
   // Api configuration
   // User
-  // deleteAnotherSessions = () => this.delete('/user/sessions/another');
-  // getAllSessions = () => this.get('/user/sessions/all');
+  // deleteAnotherSessions = () => this.#DELETE'/user/sessions/another');
+  // getAllSessions = () => this.#GET'/user/sessions/all');
 
-  // getAllUsers = () => this.get(`/user/all`);
-  // getUsersBySearch = (search) => this.get(`/user/all`, {search});
+  // getAllUsers = () => this.#GET(`/user/all`);
+  // getUsersBySearch = (search) => this.#GET(`/user/all`, {search});
   //
-  // updateUserAvatarImageId = (userId, avatarUrl) => this.put(`/user`, {userId, avatarUrl});
+  // updateUserAvatarImageId = (userId, avatarUrl) => this.#PUT(`/user`, {userId, avatarUrl});
   //
-  // confirmEmailSendMessage = () => this.post(`/user/email/confirm`);
-  // confirmEmailByCode = (code) => this.put(`/user/email/confirm`, {code});
+  // confirmEmailSendMessage = () => this.#POST(`/user/email/confirm`);
+  // confirmEmailByCode = (code) => this.#PUT(`/user/email/confirm`, {code});
 
   getUser = () => this.#GET(`/user`, {}, UserModel, Response200(UserModelMockData)) as MyResponse<User>;
   // getAnotherUser = (id) => this.#GET(`/user`, {id}, UserModel, Response200(UserModelMockData)) as MyResponse<User>;
@@ -105,44 +105,58 @@ export default class API extends REST_API {
     ) as MyResponse<User>;
   signOut = () => this.#DELETE(`/user/session`) as MyResponse<unknown>;
 
-  // getEvents = (filters: object) => this.get(`/event`, filters); // filters: any of {date, placeId, participantId, type, search}; type = one of ['all', 'past', 'next'];
-  // getEventById = (id: string) => this.get(`/event`, {id});
-  // createEvent = (name, description, date, timeStart, timeEnd, placeId, eventTimeStart, eventTimeEnd, peopleNeeds, isAcademy) => this.post(`/event`, {name, date, timeStart, timeEnd, description, placeId, eventTimeStart, eventTimeEnd, peopleNeeds, isAcademy});
-  // editEvent = (id, name, description, date, timeStart, timeEnd, placeId, eventTimeStart, eventTimeEnd, peopleNeeds, isAcademy) => this.put(`/event`, {id, name, date, timeStart, timeEnd, description, placeId, eventTimeStart, eventTimeEnd, peopleNeeds, isAcademy});
-  // deleteEventById = (id) => this.delete(`/event`, {id});
+  getEvents = (filters?: {
+    dateStart?: Date,
+    dateEnd?: Date,
+    search?: string,
+    registrationId?: string,
+    type?: 'future' | 'past' | 'all',
+  }) => this.#GET(
+    `/event`,
+    filters,
+    EventListModel,
+    Response200(EventListModelMockData)
+  ) as MyResponse<{events: Event[]}>;
+
+  // getEventById = (id: string) => this.#GET(`/event`, {id});
+  // createEvent = (name, description, date, timeStart, timeEnd, placeId, eventTimeStart, eventTimeEnd, peopleNeeds, isAcademy) => this.#POST(`/event`, {name, date, timeStart, timeEnd, description, placeId, eventTimeStart, eventTimeEnd, peopleNeeds, isAcademy});
+  // editEvent = (id, name, description, date, timeStart, timeEnd, placeId, eventTimeStart, eventTimeEnd, peopleNeeds, isAcademy) => this.#PUT(`/event`, {id, name, date, timeStart, timeEnd, description, placeId, eventTimeStart, eventTimeEnd, peopleNeeds, isAcademy});
+  // deleteEventById = (id) => this.#DELETE(`/event`, {id});
+
+  registerToEvent = (eventId: string, userId: string, userComment: string) =>
+    this.#POST(`/registration/event`, {eventId, userId, userComment}, {}, Response200({})) as MyResponse<unknown>;
+  unregisterToEvent = (eventId: string, userId: string) =>
+    this.#DELETE(`/registration/event`, {eventId, userId}, {}, Response200({})) as MyResponse<unknown>;
+  // updateRegistrationScore = (id, score) => this.#PUT(`/registration/event`, {id, score});
+  // updateRegistrationCommentAdmin = (id, comment) => this.#PUT(`/registration/event`, {id, comment});
+  // updateRegistrationCommentSelf = (id, comment) => this.#PUT(`/registration/event/comment`, {id, comment});
+  // getUnvotedRegistrations = () => this.#GET(`/registration/unvoted`);
   //
-  // registerToEvent = (eventId, userId, positionId, comment) => this.post(`/registration/event`, {eventId, userId, positionId, comment});
-  // notRegisterToEvent = (eventId, userId) => this.delete(`/registration/event`, {eventId, userId});
-  // updateRegistrationScore = (id, score) => this.put(`/registration/event`, {id, score});
-  // updateRegistrationCommentAdmin = (id, comment) => this.put(`/registration/event`, {id, comment});
-  // updateRegistrationCommentSelf = (id, comment) => this.put(`/registration/event/comment`, {id, comment});
-  // getUnvotedRegistrations = () => this.get(`/registration/unvoted`);
+  // getRegistrationRatingWithDates = (dateStart, dateEnd) => this.#GET(`/ratings`, {dateStart, dateEnd});
+  // getRegistrationRating = () => this.#GET(`/ratings`);
+  // getRegistrationsExtract = () => this.#GET(`/registration/extract`);
   //
-  // getRegistrationRatingWithDates = (dateStart, dateEnd) => this.get(`/ratings`, {dateStart, dateEnd});
-  // getRegistrationRating = () => this.get(`/ratings`);
-  // getRegistrationsExtract = () => this.get(`/registration/extract`);
+  // getDocs = (filters) => this.#GET(`/docs`, filters); // filters: any of {placeId, positionId, search}
+  // getDocById = (id) => this.#GET(`/docs`, {id});
+  // editDoc = (id, title, text, placeId, positionId) => this.#PUT(`/docs`, {id, title, text, placeId, positionId});
+  // createDoc = (title, text, placeId, positionId) => this.#POST(`/docs`, {title, text, placeId, positionId});
+  // deleteDoc = (id) => this.#DELETE(`/docs`, {id});
   //
-  // getDocs = (filters) => this.get(`/docs`, filters); // filters: any of {placeId, positionId, search}
-  // getDocById = (id) => this.get(`/docs`, {id});
-  // editDoc = (id, title, text, placeId, positionId) => this.put(`/docs`, {id, title, text, placeId, positionId});
-  // createDoc = (title, text, placeId, positionId) => this.post(`/docs`, {title, text, placeId, positionId});
-  // deleteDoc = (id) => this.delete(`/docs`, {id});
+  // getAchievements = () => this.#GET(`/achievements`);
+  // getAchievementById = (id) => this.#GET(`/achievements`, {id});
+  // createAchievement = (name, description, levels, special) => this.#POST(`/achievements`, {name, description, levels, special});
+  // editAchievement = (id, name, description, levels, special) => this.#PUT(`/achievements`, {id, name, description, levels, special});
+  // updateAchievementImage = (id, imageId) => this.#PUT(`/achievements`, {id, imageId});
+  // deleteAchievement = (id) => this.#DELETE(`/achievements`, {id});
   //
-  // getAchievements = () => this.get(`/achievements`);
-  // getAchievementById = (id) => this.get(`/achievements`, {id});
-  // createAchievement = (name, description, levels, special) => this.post(`/achievements`, {name, description, levels, special});
-  // editAchievement = (id, name, description, levels, special) => this.put(`/achievements`, {id, name, description, levels, special});
-  // updateAchievementImage = (id, imageId) => this.put(`/achievements`, {id, imageId});
-  // deleteAchievement = (id) => this.delete(`/achievements`, {id});
+  // getUserAchievements = (userId) => this.#GET(`/achievements/user`, {userId});
+  // addUserAchievement = (userId, achievementId, level) => this.#POST(`/achievements/user`, {userId, achievementId, level});
+  // editUserAchievement = (id, userId, achievementId, level) => this.#PUT(`/achievements/user`, {id, userId, achievementId, level});
+  // deleteUserAchievement = (id) => this.#DELETE(`/achievements/user`, {id});
   //
-  // getUserAchievements = (userId) => this.get(`/achievements/user`, {userId});
-  // addUserAchievement = (userId, achievementId, level) => this.post(`/achievements/user`, {userId, achievementId, level});
-  // editUserAchievement = (id, userId, achievementId, level) => this.put(`/achievements/user`, {id, userId, achievementId, level});
-  // deleteUserAchievement = (id) => this.delete(`/achievements/user`, {id});
+  // uploadImage = (dataUrl) => this.#POST(`/image`, {dataUrl});
+  // deleteImage = (imageId) => this.#DELETE(`/image`, {imageId});
   //
-  // uploadImage = (dataUrl) => this.post(`/image`, {dataUrl});
-  // deleteImage = (imageId) => this.delete(`/image`, {imageId});
-  //
-  // executeSql = (sql) => this.post(`/sql`, {sql});
-  // getSqlHistory = () => this.get(`/sql/history`);
+  // executeSql = (sql) => this.#POST(`/sql`, {sql});
+  // getSqlHistory = () => this.#GET(`/sql/history`);
 }

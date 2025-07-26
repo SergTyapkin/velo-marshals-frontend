@@ -10,12 +10,16 @@ page-root()
   margin-right 'max(calc((100% - %s) / 2), 0px)' % (pageMaxWidth + 2 * pageMinHorizontalPadding)
   margin-left 'max(calc((100% - %s) / 2), 0px)' % (pageMaxWidth + 2 * pageMinHorizontalPadding)
   padding 30px pageMinHorizontalPadding (footerHeight + 20px) pageMinHorizontalPadding
+  header
+    font-large-extra()
+    font-bold()
+    margin-bottom 20px
 
 
 block(colorBorder=colorBorder)
   display block
   padding 25px
-  border-radius radiusL
+  border-radius radiusM
   header
     font-large()
     font-bold()

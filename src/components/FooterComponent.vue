@@ -19,12 +19,14 @@
 
   .buttons
     display flex
+    justify-content space-evenly
     max-width 100%
     height 100%
     .button
       flex 1
       flex-direction column
       gap 5px
+      max-width 100px
       height 100%
       padding-inline 5px
       text-align center
@@ -46,10 +48,11 @@
 <template>
   <footer class="root-footer">
     <nav class="buttons">
-      <router-link :to="{ name: 'login' }" class="button"><img src="/static/icons/listing.svg" alt="">Фестиваль</router-link>
-      <router-link :to="{ name: 'default' }" class="button"><img src="/static/icons/external-link.svg" alt="">Ссылки</router-link>
-      <router-link :to="{ name: 'default' }" class="button"><img src="/static/icons/work.svg" alt="">Оборудование</router-link>
-      <router-link :to="{ name: 'default' }" class="button"><img src="/static/icons/profile.svg" alt="">Профиль</router-link>
+      <router-link :to="{ name: 'events' }" class="button"><img src="/static/icons/listing.svg" alt="">Фестивали</router-link>
+<!--      <router-link :to="{ name: 'login' }" class="button"><img src="/static/icons/listing.svg" alt="">Фестиваль</router-link>-->
+<!--      <router-link :to="{ name: 'default' }" class="button"><img src="/static/icons/external-link.svg" alt="">Ссылки</router-link>-->
+<!--      <router-link :to="{ name: 'default' }" class="button"><img src="/static/icons/work.svg" alt="">Оборудование</router-link>-->
+      <router-link :to="{ name: 'profile' }" class="button"><img src="/static/icons/profile.svg" alt="">Профиль</router-link>
     </nav>
   </footer>
 </template>

@@ -10,12 +10,12 @@
 .wrapper
   flex 1
   width 100%
-  min-height 100%
+  min-height 100vh
 
-  // > *
-  //  position absolute
-  //  width 100%
-  //  min-height 100vh
+  > *
+    position absolute
+    width 100%
+    min-height 100vh
 </style>
 
 <style lang="stylus">
