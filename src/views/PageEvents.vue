@@ -83,8 +83,8 @@
 
         <br />
 
-        <div class="date">Дата: {{ event.startDate }}</div>
-        <div class="date">Сбор маршалов: {{ event.cameDate }}</div>
+        <div class="date">Дата: {{ dateFormatter(event.startDate) }}</div>
+        <div class="date">Сбор маршалов: {{ timeFormatter(event.cameDate) }}</div>
 
         <br />
 
@@ -125,6 +125,7 @@
 import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 
 import type { Event } from '~/utils/models';
+import { dateFormatter, timeFormatter } from '~/utils/formatters';
 
 export default {
   components: { CircleLinesLoading },
@@ -142,6 +143,9 @@ export default {
   },
 
   methods: {
+    timeFormatter,
+    dateFormatter,
+
     async updateEvents() {
       this.events = (
         await this.$request(this, this.$api.getEvents, [], 'Не удалось получить список событий', () => {}, {

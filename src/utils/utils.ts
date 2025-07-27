@@ -191,7 +191,7 @@ export async function saveAllAssetsByServiceWorker(
 export async function setDisableCachingUrlsByServiceWorker(paths: string[]) {
   const word = '[\\w-~!*\'()<>"{}|^`]+';
   const baseUrl = `(http(s)?://${word}(\\.${word})+)`;
-  const regexps = paths.map(path => `^${baseUrl}${path}$`);
+  const regexps = paths.map(path => `^${baseUrl}${path}`);
   console.log("Send to SW disable caching regexps:", regexps);
   return await swAPI.setDisableCachingRegexps(regexps)
 }

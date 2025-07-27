@@ -47,6 +47,7 @@
           inset 0
           z-index -1
           transform scale(1.5)
+          opacity 0.7
           filter blur(10px) brightness(0.3)
       .user-name-group
         .name

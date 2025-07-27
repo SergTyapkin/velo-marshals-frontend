@@ -114,7 +114,7 @@ import API from '~/utils/API';
 import { getRequestFoo, saveAllAssetsByServiceWorker, setDisableCachingUrlsByServiceWorker } from '~/utils/utils';
 import HeaderComponent from '~/components/HeaderComponent.vue';
 import FooterComponent from '~/components/FooterComponent.vue';
-import { DISABLED_CACHING_URLS } from '~/constants';
+import { API_PREFIX, DISABLED_CACHING_URLS } from '~/constants';
 
 function removeAllHoverStyles() {
   try {
@@ -156,7 +156,7 @@ export default {
     this.global.$modals = this.$refs.modals;
     this.global.$popups = this.$refs.popups;
     this.global.$app = this;
-    this.global.$api = new API(`/api`);
+    this.global.$api = new API(API_PREFIX);
     this.global.$log = (...data: any[]) => console.log(...data);
     this.global.$request = getRequestFoo(this.$popups.error);
 
