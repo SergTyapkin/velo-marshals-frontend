@@ -239,16 +239,16 @@ sw.addEventListener('fetch', function (event) {
     return;
   }
 
-  const getResponseWithFetch = async () => {
+  const getResponseWithFetch = async (): Promise<[Response, boolean]> => {
     try {
       const response = await fetch(event.request.clone());
       if (response.ok) {
         await setCached(event.request.url, response); // Добавляем в кэш
-        return response.clone();
+        return [response.clone(), true];
       }
-      return null;
+      return [response, false];
     } catch {
-      return null;
+      return [new Response(), false];
     }
   };
   const getResponseFromCache = async (): Promise<[Response, boolean]> => {
@@ -296,14 +296,27 @@ sw.addEventListener('fetch', function (event) {
   event.respondWith(
     (async () => {
       if (STRATEGY_CACHE_FIRST) {
+        // looks in cache
         const [cached, ok] = await getResponseFromCache();
         if (ok) {
           getResponseWithFetch();
           return cached;
         }
-        return (await getResponseWithFetch()) || cached;
+        // if not cached - return any from fetch
+        return (await getResponseWithFetch())[0];
       }
-      return (await getResponseWithFetch()) || (await getResponseFromCache())[0];
+      // try to get by fetch
+      const [fetched, okFetched] = await getResponseWithFetch();
+      if (okFetched) {
+        return fetched;
+      }
+      // try to get from cache
+      const [cached, okCached] = await getResponseFromCache();
+      if (okCached) {
+        return cached;
+      }
+      // return any from fetch
+      return fetched;
     })(),
   );
 });
