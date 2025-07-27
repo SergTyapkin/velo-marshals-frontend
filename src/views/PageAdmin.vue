@@ -14,10 +14,12 @@
     block-bg()
     block-shadow()
 
-    .button-get
-      button()
+    .filters-group
+      margin-bottom 30px
+      .button-get
+        button()
 
-    .container
+    .results-container
       list-no-styles()
 
       .registration
@@ -36,12 +38,16 @@
         .tg
           text-decoration underline
 
+        .buton-comment
+          button()
+
         .buton-reject
           button-attention()
 
         .buton-confirm
           button-success()
 
+        .buton-comment
         .buton-reject
         .buton-confirm
           padding 5px
@@ -57,19 +63,29 @@
     <section class="registrations">
       <header>Регистрации</header>
 
-      <InputComponent v-model="filters.eventId" placeholder="id мероприятия" />
-      <button class="button-get" @click="updateRegistrations">Получить</button>
+      <section class="filters-group">
+        <InputComponent v-model="filters.eventId" placeholder="id мероприятия" />
+        <button class="button-get" @click="updateRegistrations">Получить</button>
+      </section>
 
       <header>{{ gottenData.event?.title }}</header>
-      <ul class="container">
+      <ul class="results-container">
         <li
           v-for="(registration, i) in gottenData.registrations"
           class="registration"
           :class="{ rejected: registration.isConfirmed === false, confirmed: registration.isConfirmed === true }"
         >
-          <div class="number">{{ i }}</div>
+          <div class="number">#{{ i }}</div>
           <div class="username">{{ registration.userName }}</div>
           <a class="tg" :href="`https://t.me/${registration.userTgUsername}`">@{{ registration.userTgUsername }}</a>
+          <button
+            v-if="registration.userComment"
+            @click="$modals.alert('Комментарий', registration.userComment)"
+            class="buton-comment"
+          >
+            <img src="/static/icons/mono/message.svg" alt="message" />
+          </button>
+
           <button
             @click="setRegistrationConfirmed(false, registration)"
             class="buton-reject"
