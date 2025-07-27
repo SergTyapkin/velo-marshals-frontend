@@ -21,6 +21,14 @@ export default new Vuex.Store({
       state.user.joinedDate = userData.joinedDate;
       state.user.level = userData.level;
 
+      state.user.canEditAchievements = userData.canEditAchievements;
+      state.user.canAssignAchievements = userData.canAssignAchievements;
+      state.user.canEditRegistrations = userData.canEditRegistrations;
+      state.user.canEditEvents = userData.canEditEvents;
+      state.user.canEditUsersData = userData.canEditUsersData;
+      state.user.canEditDocs = userData.canEditDocs;
+      state.user.canEditHistory = userData.canEditHistory;
+
       state.user.isSignedIn = true;
     },
     DELETE_USER(state: State) {
@@ -35,9 +43,11 @@ export default new Vuex.Store({
         return;
       }
       state.commit('SET_USER', data);
+      this.$app.update();
     },
-    DELETE_USER(state: State) {
+    DELETE_USER(this: Store, state: State) {
       state.commit('DELETE_USER');
+      this.$app.update();
     },
   },
 });

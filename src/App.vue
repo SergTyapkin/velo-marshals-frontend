@@ -16,6 +16,23 @@
     position absolute
     width 100%
     min-height 100vh
+
+.background
+  background mix(red, black, 40%)
+  position absolute
+  right 0
+  top 30%
+  width 50vh
+  z-index -999999
+  trans()
+  &.blured
+    filter blur(10px)
+  .logo-bg
+    position absolute
+    width 100%
+    right -2%
+    fill colorEmp1
+    transform scale(-1, 1)
 </style>
 
 <style lang="stylus">
@@ -70,6 +87,10 @@
 <template>
   <!--  <HeaderComponent class="header" />-->
 
+  <section class="background" :class="{blured: $user?.isSignedIn}">
+    <img src="/static/icons/color/logo-velo.svg" alt="" class="logo-bg">
+  </section>
+
   <div class="wrapper">
     <router-view #default="{ Component }">
       <transition name="scale-in">
@@ -78,7 +99,9 @@
     </router-view>
   </div>
 
-  <FooterComponent class="footer" />
+  <transition name="opacity">
+    <FooterComponent class="footer" ref="footer" />
+  </transition>
 
   <Popups ref="popups" />
   <Modals ref="modals" />
@@ -159,6 +182,11 @@ export default {
       }
       this.global!.$isMobile = false;
     },
+
+    update() {
+      this.$forceUpdate();
+      (this.$refs.footer as typeof FooterComponent)?.update();
+    }
   },
 
   watch: {

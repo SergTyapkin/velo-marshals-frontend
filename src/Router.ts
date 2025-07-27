@@ -10,6 +10,7 @@ import PageConfirmEmail from '~/views/User/PageConfirmEmail.vue';
 import routes from '~/routes';
 import { RouteRecordRaw } from 'vue-router';
 import PageEvents from '~/views/PageEvents.vue';
+import PageAdmin from '~/views/PageAdmin.vue';
 
 type MyRoute = RouteRecordRaw & {
   path: keyof typeof routes,
@@ -28,6 +29,7 @@ export default function createVueRouter(Store: Store): Router {
     { path: '/email/confirm', name: 'confirmEmail', component: PageConfirmEmail, meta: {loginRequired: true} },
 
     { path: '/events', name: 'events', component: PageEvents, meta: {loginRequired: true} },
+    { path: '/admin', name: 'admin', component: PageAdmin, meta: {loginRequired: true} },
 
     { path: '/:pathMatch(.*)*', name: 'page404', component: Page404 },
   ];

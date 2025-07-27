@@ -15,10 +15,41 @@
 
     .event
       block-shadow()
-      margin-bottom 20px
+      margin-bottom 30px
       position relative
+
+      &:first-child
+        margin-bottom 100px
+
+      &:not(:first-child)
+        filter saturate(0.2)
+
+      .registrations-info
+        font-small-extra()
+        svg-inside(25px)
+        color colorText3
+        img
+          margin-left 5px
+          opacity 0.7
+
+      .user-comment-info
+        font-small()
+
+      .confirmed-info
+        font-small-extra()
+        color colorSuccess
+
+      .unconfirmed-info
+        font-small-extra()
+        color colorError
+
+      .confirmed-unknown-info
+        font-small-extra()
+        color colorText4
+
       button
         button()
+        margin-top 10px
 
       .background
         position absolute
@@ -27,12 +58,13 @@
         z-index -1
         width 100%
         height 100%
+
       .background-overlay
         content ""
         position absolute
         inset 0
         z-index -1
-        background linear-gradient(60deg, colorBlockBg 30%, mix(colorBlockBg, transparent, 50%))
+        background linear-gradient(60deg, colorBlockBg 30%, mix(colorBlockBg, transparent, 30%))
 </style>
 
 <template>
@@ -40,8 +72,8 @@
     <header>Все фестивали</header>
 
     <ul class="events-container">
-      <li v-for="event in events" class="event">
-        <img class="background" :src="event.previewUrl" alt="bg">
+      <li v-for="(event, i) in events" class="event">
+        <img class="background" :src="event.previewUrl" alt="bg" />
         <div class="background-overlay" />
 
         <header>{{ event.title }}</header>
@@ -49,18 +81,39 @@
         <!--        <MarkdownRenderer :initial-text="event.description" />-->
         <div class="description">{{ event.description }}</div>
 
-        <br>
+        <br />
 
         <div class="date">Дата: {{ event.startDate }}</div>
         <div class="date">Сбор маршалов: {{ event.cameDate }}</div>
 
-        <br>
+        <br />
 
-        <button v-if="event.isYouRegistered" class="unregister" :disabled="loading" @click="unregister(event)">
-          Отменить<br />
-          регистрацию
-        </button>
-        <button v-else class="register" @click="register(event)" :disabled="loading">Зарегистрироваться</button>
+        <div class="registrations-info">
+          {{ event.registrationsCount }} <img src="/static/icons/mono/people.svg" alt="man" />
+        </div>
+
+        <br />
+
+        <div class="user-comment-info" v-if="event.isYouRegistered">
+          Ваш комментарий: "{{ event.yourComment }}"
+        </div>
+
+        <div v-if="event.isYourRegistrationConfirmed === true" class="confirmed-info">
+          Ваша регистрация подтверждена!<br />Приходите в составе маршалов
+        </div>
+        <div v-else-if="event.isYourRegistrationConfirmed === false" class="unconfirmed-info">
+          Ваша регистрация отклонена<br />К сожалению, вы не можете быть в составе маршалов в этот раз :(
+        </div>
+        <div v-else class="confirmed-unknown-info">Регистрация ожидает подтверждения администраторами</div>
+
+        <div v-if="i === 0 && event.isYourRegistrationConfirmed !== false">
+          <transition name="opacity" mode="out-in">
+            <button v-if="event.isYouRegistered" class="unregister" :disabled="loading" @click="unregister(event)">
+              Отменить регистрацию
+            </button>
+            <button v-else class="register" @click="register(event)" :disabled="loading">Зарегистрироваться</button>
+          </transition>
+        </div>
       </li>
     </ul>
 
@@ -78,7 +131,7 @@ export default {
 
   data() {
     return {
-      loading: true,
+      loading: false,
 
       events: [] as Event[],
     };
@@ -95,7 +148,6 @@ export default {
           events: [],
         })
       ).events;
-      console.log(this.events);
     },
 
     async register(event: Event) {
@@ -115,7 +167,6 @@ export default {
           this.$popups.success(
             `Вы успешно зарегистрированы на "${event.title}"!`,
             `Ожидайте решения о принятии вашей регистрации`,
-            8000,
           );
           this.updateEvents();
         },

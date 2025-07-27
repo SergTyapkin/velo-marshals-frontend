@@ -32,16 +32,39 @@ block(colorBorder=colorBorder)
   @media ({mobile})
     padding 16px
 
+block-border(borderColor=colorEmp1)
+  block()
+  border 2px solid borderColor
+
+
 block-shadow()
   block()
+  block-border()
 
-  box-shadow 0 0 10px 2px colorShadow
+  position relative
+  &::before
+  &::after
+    block-border()
+    content ""
+    position absolute
+    inset -5px
+    z-index -1
+    background colorEmp1
+  &::before
+    clip-path polygon(0 0, 30% 0, 70% 100%, 30% 100%, 0 30%)
+  &::after
+    clip-path polygon(70% 0, 100% 0, 100% 70%)
 
 block-bg(colorBg=colorBlockBg)
   block()
 
   display block
   background colorBg
+block-bg-transparent(colorBg=colorBlockBg)
+  block()
+
+  display block
+  background mix(colorBg, transparent, 80%)
 
 block-bg-shadow()
   block-bg()

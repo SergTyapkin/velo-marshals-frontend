@@ -1,7 +1,16 @@
 import REST_API from '@sergtyapkin/rest-api';
 import { validateModel, type Model } from '@sergtyapkin/models-validator';
-import { EventListModel, EventListModelMockData, UserModel, UserModelMockData } from '~/utils/APIModels';
-import type { User, Event } from '~/utils/models';
+import {
+  EventListModel,
+  EventListModelMockData,
+  EventModel,
+  EventModelMockData,
+  RegistrationListModel,
+  RegistrationListModelMockData,
+  UserModel,
+  UserModelMockData,
+} from '~/utils/APIModels';
+import type { User, Event, Registration } from '~/utils/models';
 
 type RequestFunc = (url: string, data?: object) => Promise<{ data: object; status: number; ok: boolean }>;
 type MyResponse<T> = Promise<{ data: T; status: number; ok: boolean }> | { data: T; status: number; ok: boolean };
@@ -38,6 +47,8 @@ export default class API extends REST_API {
     if (!model) {
       return { ok, data: dataRes, status };
     }
+    console.log(model, dataRes);
+    console.log(validateModel(model, dataRes));
     return { ok, data: validateModel(model, dataRes), status };
   }
 
@@ -78,60 +89,114 @@ export default class API extends REST_API {
     this.#PUT(`/user`, userData, UserModel, Response200(UserModelMockData)) as MyResponse<User>;
 
   signIn = (
-    tgId: string, tgUsername: string, tgHash: string, tgAuthDate: string,
-    tgPhotoUrl: string, tgFirstName: string, tgLastName: string, clientBrowser: string, clientOS: string,
+    tgId: string,
+    tgUsername: string,
+    tgHash: string,
+    tgAuthDate: string,
+    tgPhotoUrl: string,
+    tgFirstName: string,
+    tgLastName: string,
+    clientBrowser: string,
+    clientOS: string,
   ) =>
     this.#POST(
       `/user/auth`,
       {
-        tgId, tgUsername, tgHash, tgAuthDate, tgPhotoUrl,
-        tgFirstName, tgLastName, clientBrowser, clientOS
+        tgId,
+        tgUsername,
+        tgHash,
+        tgAuthDate,
+        tgPhotoUrl,
+        tgFirstName,
+        tgLastName,
+        clientBrowser,
+        clientOS,
       },
-      UserModel,
-    ) as MyResponse<User>;
+      {},
+    ) as MyResponse<unknown>;
   signUp = (
-    tgId: string, tgUsername: string, tgHash: string, tgAuthDate: string,
-    tgPhotoUrl: string, tgFirstName: string, tgLastName: string, email: string, tel: string,
-    avatarUrl: string, familyName: string, givenName: string, middleName: string, clientBrowser: string, clientOS: string,
+    tgId: string,
+    tgUsername: string,
+    tgHash: string,
+    tgAuthDate: string,
+    tgPhotoUrl: string,
+    tgFirstName: string,
+    tgLastName: string,
+    email: string,
+    tel: string,
+    avatarUrl: string,
+    familyName: string,
+    givenName: string,
+    middleName: string,
+    clientBrowser: string,
+    clientOS: string,
   ) =>
     this.#POST(
       `/user`,
       {
-        tgId, tgUsername, tgHash, tgAuthDate,
-        tgPhotoUrl, tgFirstName, tgLastName, email, tel,
-        avatarUrl, familyName, givenName, middleName, clientBrowser, clientOS,
+        tgId,
+        tgUsername,
+        tgHash,
+        tgAuthDate,
+        tgPhotoUrl,
+        tgFirstName,
+        tgLastName,
+        email,
+        tel,
+        avatarUrl,
+        familyName,
+        givenName,
+        middleName,
+        clientBrowser,
+        clientOS,
       },
       UserModel,
     ) as MyResponse<User>;
   signOut = () => this.#DELETE(`/user/session`) as MyResponse<unknown>;
 
   getEvents = (filters?: {
-    dateStart?: Date,
-    dateEnd?: Date,
-    search?: string,
-    registrationId?: string,
-    type?: 'future' | 'past' | 'all',
-  }) => this.#GET(
-    `/event`,
-    filters,
-    EventListModel,
-    Response200(EventListModelMockData)
-  ) as MyResponse<{events: Event[]}>;
-
-  // getEventById = (id: string) => this.#GET(`/event`, {id});
+    dateStart?: Date;
+    dateEnd?: Date;
+    search?: string;
+    registrationId?: string;
+    type?: 'future' | 'past' | 'all';
+  }) =>
+    this.#GET(`/event`, filters, EventListModel, Response200(EventListModelMockData)) as MyResponse<{
+      events: Event[];
+    }>;
+  getEventById = (id: string) =>
+    this.#GET(`/event`, { id }, EventModel, Response200(EventModelMockData)) as MyResponse<Event>;
   // createEvent = (name, description, date, timeStart, timeEnd, placeId, eventTimeStart, eventTimeEnd, peopleNeeds, isAcademy) => this.#POST(`/event`, {name, date, timeStart, timeEnd, description, placeId, eventTimeStart, eventTimeEnd, peopleNeeds, isAcademy});
   // editEvent = (id, name, description, date, timeStart, timeEnd, placeId, eventTimeStart, eventTimeEnd, peopleNeeds, isAcademy) => this.#PUT(`/event`, {id, name, date, timeStart, timeEnd, description, placeId, eventTimeStart, eventTimeEnd, peopleNeeds, isAcademy});
   // deleteEventById = (id) => this.#DELETE(`/event`, {id});
 
   registerToEvent = (eventId: string, userId: string, userComment: string) =>
-    this.#POST(`/registration/event`, {eventId, userId, userComment}, {}, Response200({})) as MyResponse<unknown>;
+    this.#POST(`/registration/event`, { eventId, userId, userComment }, {}, Response200({})) as MyResponse<unknown>;
   unregisterToEvent = (eventId: string, userId: string) =>
-    this.#DELETE(`/registration/event`, {eventId, userId}, {}, Response200({})) as MyResponse<unknown>;
+    this.#DELETE(`/registration/event`, { eventId, userId }, {}, Response200({})) as MyResponse<unknown>;
   // updateRegistrationScore = (id, score) => this.#PUT(`/registration/event`, {id, score});
   // updateRegistrationCommentAdmin = (id, comment) => this.#PUT(`/registration/event`, {id, comment});
   // updateRegistrationCommentSelf = (id, comment) => this.#PUT(`/registration/event/comment`, {id, comment});
-  // getUnvotedRegistrations = () => this.#GET(`/registration/unvoted`);
-  //
+
+  getRegistrations = (eventId: string) =>
+    this.#GET(
+      `/registration/event`,
+      { eventId },
+      RegistrationListModel,
+      Response200(RegistrationListModelMockData),
+    ) as MyResponse<{
+      registrations: Registration[];
+    }>;
+  setRegistrationConfirmed = (id: string, isConfirmed: boolean) =>
+    this.#PUT(
+      `/registration`,
+      {
+        id,
+        isConfirmed,
+      },
+      {},
+      Response200({}),
+    ) as MyResponse<unknown>;
   // getRegistrationRatingWithDates = (dateStart, dateEnd) => this.#GET(`/ratings`, {dateStart, dateEnd});
   // getRegistrationRating = () => this.#GET(`/ratings`);
   // getRegistrationsExtract = () => this.#GET(`/registration/extract`);

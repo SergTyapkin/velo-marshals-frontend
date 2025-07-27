@@ -77,7 +77,7 @@
       </div>
       <div class="right-group">
         <InputSearch v-model="searchText" class="search" placeholder="Поиск по сайту" />
-        <router-link :to="{ name: 'profile' }" class="profile"><img src="/static/icons/profile.svg" alt="profile"></router-link>
+        <router-link :to="{ name: 'profile' }" class="profile"><img src="/static/icons/mono/profile.svg" alt="profile"></router-link>
       </div>
     </div>
   </header>

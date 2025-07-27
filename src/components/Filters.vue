@@ -43,7 +43,7 @@
         <span class="name">{{ title }}</span>
         <transition name="opacity">
           <button v-if="isFiltersChanged" class="button-defaults" @click="dropFilters">
-            <img src="/static/icons/cross.svg" alt="">
+            <img src="/icons/color/cross.svg" alt="">
             Сбросить
           </button>
         </transition>

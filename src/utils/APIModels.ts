@@ -47,6 +47,38 @@ export const UserModel = {
     type: Number,
     from: 'level',
   },
+  canEditAchievements: {
+    type: Boolean,
+    from: 'caneditachievements',
+  },
+  canAssignAchievements: {
+    type: Boolean,
+    from: 'canassignachievements',
+  },
+  canEditRegistrations: {
+    type: Boolean,
+    from: 'caneditregistrations',
+  },
+  canEditEvents: {
+    type: Boolean,
+    from: 'caneditevents',
+  },
+  canEditUsersData: {
+    type: Boolean,
+    from: 'caneditusersdata',
+  },
+  canEditDocs: {
+    type: Boolean,
+    from: 'caneditdocs',
+  },
+  canExecuteSQL: {
+    type: Boolean,
+    from: 'canexecutesql',
+  },
+  canEditHistory: {
+    type: Boolean,
+    from: 'canedithistory',
+  },
 };
 
 export const UserModelMockData = validateModel(UserModel, {
@@ -62,8 +94,19 @@ export const UserModelMockData = validateModel(UserModel, {
   middlename: 'Сергеевич',
   joineddate: '03-02-2018 14:30',
   level: 2,
+
+  caneditachievements: true,
+  canassignachievements: true,
+  caneditregistrations: true,
+  caneditevents: true,
+  caneditusersdata: true,
+  caneditdocs: true,
+  canexecutesql: true,
+  canedithistory: true,
 });
 
+
+// ------------------------------
 
 export const EventModel = {
   id: String,
@@ -112,6 +155,16 @@ export const EventModel = {
     type: Boolean,
     from: 'isyouregistered',
   },
+  isYourRegistrationConfirmed: {
+    type: Boolean,
+    from: 'isyourregistrationconfirmed',
+    optional: true,
+  },
+  yourComment: {
+    type: String,
+    from: 'yourcomment',
+    optional: true,
+  },
   registrationsCount: {
     type: Number,
     from: 'registrationscount',
@@ -132,6 +185,8 @@ export const EventModelMockData = validateModel(EventModel, {
   medalpreviewurl: 'https://wallpaperbat.com/img/47279-3d-cat-wallpaper.jpg',
   authorid: 'USER_ID_1',
   isyouregistered: false,
+  yourcomment: 'Путите пж',
+  isyourregistrationconfirmed: null,
   registrationscount: 40,
 });
 
@@ -144,6 +199,110 @@ export const EventListModelMockData = {
     Object.assign({}, EventModelMockData, {id: 'EVENT_ID_1'}),
     Object.assign({}, EventModelMockData, {id: 'EVENT_ID_2', title: 'Фестиваль 2'}),
     Object.assign({}, EventModelMockData, {id: 'EVENT_ID_3', title: 'Фестиваль 3'}),
+  ]
+}
+
+
+// ------------------------------
+
+export const RegistrationModel = {
+  id: String,
+  userId: {
+    type: String,
+    from: 'userid',
+  },
+  eventId: {
+    type: String,
+    from: 'eventid',
+  },
+  isConfirmed: {
+    type: Boolean,
+    from: 'isconfirmed',
+    optional: true,
+  },
+  userComment: {
+    type: String,
+    from: 'usercomment',
+    optional: true,
+  },
+  adminComment: {
+    type: String,
+    from: 'admincomment',
+    optional: true,
+  },
+  level: {
+    type: Number,
+    optional: true,
+  },
+  salary: {
+    type: Number,
+    optional: true,
+  },
+  taskText: {
+    type: String,
+    from: 'tasktext',
+    optional: true,
+  },
+  cameDate: {
+    type: Date,
+    from: 'camedate',
+    optional: true,
+  },
+  leaveDate: {
+    type: Date,
+    from: 'leavedate',
+    optional: true,
+  },
+  lapsPassed: {
+    type: Number,
+    from: 'lapspassed',
+  },
+  userName: {
+    type: String,
+    from: 'username',
+  },
+  userTel: {
+    type: String,
+    from: 'usertel',
+  },
+  userTgUsername: {
+    type: String,
+    from: 'usertgusername',
+  },
+  userAvatarUrl: {
+    type: String,
+    from: 'useravatarurl',
+  },
+};
+
+export const RegistrationModelMockData = validateModel(RegistrationModel, {
+  id: 'REG_ID_1',
+  userid: 'USER_ID_1',
+  eventid: 'EVENT_ID_1',
+  isconfirmed: false,
+  usercomment: 'Пустите пж',
+  admincomment: 'Конч какой-то',
+  tasktext: 'Стоит на старте',
+  camedate: null,
+  leavedate: null,
+  level: 2,
+  salary: 3000,
+  lapspassed: 2.51,
+  username: 'Сергей Пилкин',
+  usertel: '893428923',
+  usertgusername: 'Tyapkin_S',
+  useravatarurl: 'https://t.me/i/userpic/320/VAi-EEjunOcTgZG36icSc6982Znc9mfEUNrphVxV4J4.jpg',
+});
+
+export const RegistrationListModel = {
+  registrations: ArrayType(RegistrationModel),
+}
+
+export const RegistrationListModelMockData = {
+  registrations: [
+    Object.assign({}, RegistrationModelMockData, {id: 'REG_ID_1'}),
+    Object.assign({}, RegistrationModelMockData, {id: 'REG_ID_2'}),
+    Object.assign({}, RegistrationModelMockData, {id: 'REG_ID_3'}),
   ]
 }
 

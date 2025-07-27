@@ -52,7 +52,7 @@
       <label v-if="!modelValue" for="search">
         <img class="icon" src="/static/icons/search.svg" alt="search">
       </label>
-      <img v-else class="clear" @click="updateModelValue('')" src="/static/icons/cross.svg" alt="clear">
+      <img v-else class="clear" @click="updateModelValue('')" src="/static/icons/color/cross.svg" alt="clear">
     </transition>
   </div>
 </template>

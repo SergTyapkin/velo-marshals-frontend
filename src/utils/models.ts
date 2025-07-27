@@ -12,6 +12,15 @@ export interface User {
   joinedDate: Date,
   level: number,
 
+  canEditAchievements: boolean,
+  canAssignAchievements: boolean,
+  canEditRegistrations: boolean,
+  canEditEvents: boolean,
+  canEditUsersData: boolean,
+  canEditDocs: boolean,
+  canExecuteSQL: boolean,
+  canEditHistory: boolean,
+
   isSignedIn: boolean,
 }
 
@@ -29,5 +38,26 @@ export interface Event {
   medalPreviewUrl: string,
   authorId: string,
   isYouRegistered: boolean,
+  isYourRegistrationConfirmed?: boolean,
+  yourComment?: string,
   registrationsCount: number,
+}
+
+export interface Registration {
+  id: string,
+  userId: string,
+  eventId: string,
+  isConfirmed?: boolean,
+  userComment?: string,
+  adminComment?: string,
+  level?: number,
+  salary?: number,
+  taskText?: string,
+  cameDate?: string,
+  leaveDate?: Date,
+  lapsPassed: number,
+  userName: string,
+  userTel: string,
+  userTgUsername: string,
+  userAvatarUrl: string,
 }

@@ -12,6 +12,7 @@ export default {
   '/horse/:id': false,
 
   '/events': true,
+  '/admin': false,
 
   // Page 404
   '/:pathMatch(.*)*': false,
