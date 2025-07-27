@@ -47,9 +47,9 @@ export default defineConfig(({ mode }: { command: 'build' | 'serve'; mode: 'deve
         includeManifestIcons: true,
         includeAssets: ['/static/favicon.svg'],
         manifest: {
-          short_name: 'Frontend Template',
-          name: 'Frontend template with all best-practice instruments',
-          description: 'Some description of our service',
+          short_name: 'Веломаршалы',
+          name: 'Веломаршалы Московских Велофестивалей',
+          description: 'Внутренний сервис для работы маршалов на Московских Велофестивалях',
           icons: [
             {
               src: '/static/favicon.svg',
@@ -67,10 +67,16 @@ export default defineConfig(({ mode }: { command: 'build' | 'serve'; mode: 'deve
           prefer_related_applications: false,
           shortcuts: [
             {
-              name: 'Home',
-              short_name: 'Home',
-              description: 'Our base page',
-              url: '/?source=pwa',
+              name: 'Профиль',
+              short_name: 'Профиль',
+              description: 'Ваш профиль',
+              url: '/profile?source=pwa',
+            },
+            {
+              name: 'Фестивали',
+              short_name: 'Фестивали',
+              description: 'Все фестивали, на которые открыта регистрация',
+              url: '/events?source=pwa',
             },
           ],
         },
