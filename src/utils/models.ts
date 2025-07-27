@@ -1,11 +1,11 @@
 export interface User {
   id: string,
-  tgUsername: string,
+  tgUsername?: string,
   tgId: string,
   email: string,
   isConfirmedEmail: boolean,
   tel: string,
-  avatarUrl: string,
+  avatarUrl?: string,
   familyName: string,
   givenName: string,
   middleName: string,

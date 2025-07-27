@@ -5,6 +5,7 @@ export const UserModel = {
   tgUsername: {
     type: String,
     from: 'tgusername',
+    optional: true,
   },
   tgId: {
     type: String,
@@ -25,6 +26,7 @@ export const UserModel = {
   avatarUrl: {
     type: String,
     from: 'avatarurl',
+    optional: true,
   },
   familyName: {
     type: String,
