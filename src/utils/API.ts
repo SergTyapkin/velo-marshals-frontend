@@ -72,8 +72,8 @@ export default class API extends REST_API {
 
   getUser = () => this.#GET(`/user`, {}, UserModel, Response200(UserModelMockData)) as MyResponse<User>;
   // getAnotherUser = (id) => this.#GET(`/user`, {id}, UserModel, Response200(UserModelMockData)) as MyResponse<User>;
-  checkUserTgIdExisting = (tgId: string) =>
-    this.#GET(`/user`, { tgId }, { id: String }, Response200({ id: 'USER_ID' })) as MyResponse<{ id: string }>;
+  checkUserTgUsernameExisting = (tgUsername: string) =>
+    this.#GET(`/user`, { tgUsername }, { id: String }, Response200({ id: 'USER_ID' })) as MyResponse<{ id: string }>;
   updateUser = (userData: User) =>
     this.#PUT(`/user`, userData, UserModel, Response200(UserModelMockData)) as MyResponse<User>;
 

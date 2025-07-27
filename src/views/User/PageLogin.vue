@@ -118,8 +118,8 @@ export default {
     async onLogin(user: TGUser) {
       await this.$request(
         this,
-        this.$api.checkUserTgIdExisting,
-        [user.id],
+        this.$api.checkUserTgUsernameExisting,
+        [user.username],
         `Не удалось получить информацию о существовании пользователя #${user.id}`,
         async () => {
           // User existing, login
