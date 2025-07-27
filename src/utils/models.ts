@@ -58,6 +58,6 @@ export interface Registration {
   lapsPassed: number,
   userName: string,
   userTel: string,
-  userTgUsername: string,
-  userAvatarUrl: string,
+  userTgUsername?: string,
+  userAvatarUrl?: string,
 }

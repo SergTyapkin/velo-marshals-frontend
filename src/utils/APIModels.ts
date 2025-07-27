@@ -272,10 +272,12 @@ export const RegistrationModel = {
   userTgUsername: {
     type: String,
     from: 'usertgusername',
+    optional: true,
   },
   userAvatarUrl: {
     type: String,
     from: 'useravatarurl',
+    optional: true,
   },
 };
 
