@@ -128,7 +128,7 @@
 
   .submit
     margin 20px 0
-    button-emp2()
+    button-emp1()
 </style>
 
 <template>

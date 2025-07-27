@@ -61,7 +61,6 @@ export default {
     },
     onInput() {
       localStorage.setItem(this.uniqueName, this.modelValue);
-      console.log(this.uniqueName, this.modelValue)
       this.$emit('update:modelValue', this.modelValue);
     }
   },

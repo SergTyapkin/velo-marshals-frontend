@@ -113,15 +113,6 @@ export default {
         () => {},
       );
 
-      console.log(
-        await this.$request(
-          this,
-          this.$api.getRegistrations,
-          [this.filters.eventId],
-          'Не удалось получить список регистраций',
-        ),
-      );
-
       this.gottenData.registrations = (
         await this.$request(
           this,

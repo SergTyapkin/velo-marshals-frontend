@@ -89,7 +89,6 @@ export default {
     },
 
     updateUserIsAdmin() {
-      console.log("UPDATE", this.$user);
       this.isUserAdmin =
         this.$user?.canEditEvents ||
         this.$user?.canAssignAchievements ||

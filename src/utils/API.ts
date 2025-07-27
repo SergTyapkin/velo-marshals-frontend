@@ -47,8 +47,6 @@ export default class API extends REST_API {
     if (!model) {
       return { ok, data: dataRes, status };
     }
-    console.log(model, dataRes);
-    console.log(validateModel(model, dataRes));
     return { ok, data: validateModel(model, dataRes), status };
   }
 

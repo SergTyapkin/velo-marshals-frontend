@@ -146,6 +146,7 @@
 import CircleLoading from '~/components/loaders/CircleLoading.vue';
 import Validators from '~/utils/validators';
 import Placeholder from '~/components/loaders/Placeholder.vue';
+import { deepClone } from '~/utils/utils';
 
 export default {
   components: { Placeholder, CircleLoading },
@@ -161,13 +162,14 @@ export default {
   methods: {
     async changeUserParam(fieldName, validatorName, overrideHavingValue = null) {
       const inputValue = await this.$modals.prompt(
-        overrideHavingValue ? 'Неверный формат' : '<img src="/static/icons/mono/edit.svg" alt="edit"> значение поля',
+        overrideHavingValue ? 'Неверный формат' : 'Изменить значение поля',
         'Введите новое значение',
         overrideHavingValue || this.$user[fieldName],
       );
       if (!inputValue) {
         return;
       }
+      const newUserData = deepClone(this.$user);
 
       if (Validators[fieldName]) {
         if (!Validators[fieldName].validate(inputValue)) {
@@ -183,11 +185,10 @@ export default {
         this,
         this.$api.updateUser,
         [newUserData],
-        `Не удалось <img src="/static/icons/mono/edit.svg" alt="edit"> значение поля ${fieldName}`,
+        `Не удалось изменить значение поля ${fieldName}`,
         () => {
           this.$user[fieldName] = newUserData[fieldName];
           this.$forceUpdate();
-          console.log(this.$user, this.$user[fieldName], newUserData[fieldName]);
         }
       );
     },
