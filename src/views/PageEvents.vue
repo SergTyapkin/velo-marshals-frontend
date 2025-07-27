@@ -24,10 +24,18 @@
       &:not(:first-child)
         filter saturate(0.2)
 
+      .description
+        margin-bottom 20px
+
+      .date
+        color colorText3
+        svg-inside(20px)
+
       .registrations-info
         font-small-extra()
         svg-inside(25px)
         color colorText3
+        margin-block 20px
         img
           margin-left 5px
           opacity 0.7
@@ -79,32 +87,26 @@
         <header>{{ event.title }}</header>
 
         <!--        <MarkdownRenderer :initial-text="event.description" />-->
-        <div class="description">{{ event.description }}</div>
+        <div class="description" v-if="event.description">{{ event.description }}</div>
 
-        <br />
+        <div class="date" v-if="event.startDate"><img src="/static/icons/mono/calendar-1-date.svg" alt="date">{{ dateFormatter(event.startDate) }}</div>
+        <div class="date" v-if="event.cameDate">Сбор в {{ timeFormatter(event.cameDate) }}</div>
 
-        <div class="date">Дата: {{ dateFormatter(event.startDate) }}</div>
-        <div class="date">Сбор маршалов: {{ timeFormatter(event.cameDate) }}</div>
-
-        <br />
-
-        <div class="registrations-info">
+        <div class="registrations-info" v-if="i === 0">
           {{ event.registrationsCount }} <img src="/static/icons/mono/people.svg" alt="man" />
         </div>
 
-        <br />
-
-        <div class="user-comment-info" v-if="event.isYouRegistered">
+        <div class="user-comment-info" v-if="event.isYouRegistered && event.yourComment">
           Ваш комментарий: "{{ event.yourComment }}"
         </div>
 
-        <div v-if="event.isYourRegistrationConfirmed === true" class="confirmed-info">
+        <div v-if="event.isYouRegistered && event.isYourRegistrationConfirmed === true" class="confirmed-info">
           Ваша регистрация подтверждена!<br />Приходите в составе маршалов
         </div>
-        <div v-else-if="event.isYourRegistrationConfirmed === false" class="unconfirmed-info">
+        <div v-else-if="event.isYouRegistered && event.isYourRegistrationConfirmed === false" class="unconfirmed-info">
           Ваша регистрация отклонена<br />К сожалению, вы не можете быть в составе маршалов в этот раз :(
         </div>
-        <div v-else class="confirmed-unknown-info">Регистрация ожидает подтверждения администраторами</div>
+        <div v-else-if="event.isYouRegistered" class="confirmed-unknown-info">Регистрация ожидает подтверждения администраторами</div>
 
         <div v-if="i === 0 && event.isYourRegistrationConfirmed !== false">
           <transition name="opacity" mode="out-in">

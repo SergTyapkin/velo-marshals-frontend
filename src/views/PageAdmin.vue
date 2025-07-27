@@ -25,6 +25,10 @@
         align-items center
         justify-content space-between
         gap 10px
+        &.rejected
+          color colorError
+        &.confirmed
+          color colorSuccess
 
         .number
           color colorText5
@@ -32,13 +36,16 @@
         .tg
           text-decoration underline
 
-        .buton-cancel
+        .buton-reject
           button-attention()
+
         .buton-confirm
           button-success()
-        .buton-cancel
+
+        .buton-reject
         .buton-confirm
           padding 5px
+
           img
             margin 0
 </style>
@@ -55,15 +62,25 @@
 
       <header>{{ gottenData.event?.title }}</header>
       <ul class="container">
-        <li v-for="(registration, i) in gottenData.registrations" class="registration">
+        <li
+          v-for="(registration, i) in gottenData.registrations"
+          class="registration"
+          :class="{ rejected: registration.isConfirmed === false, confirmed: registration.isConfirmed === true }"
+        >
           <div class="number">{{ i }}</div>
           <div class="username">{{ registration.userName }}</div>
           <a class="tg" :href="`https://t.me/${registration.userTgUsername}`">@{{ registration.userTgUsername }}</a>
-          <button @click="setRegistrationConfirmed(false, registration)" class="buton-cancel" v-if="registration.isConfirmed !== false">
-            <img src="/static/icons/color/cross.svg" alt="cancel" >
+          <button
+            @click="setRegistrationConfirmed(false, registration)"
+            class="buton-reject"
+            v-if="registration.isConfirmed !== false">
+            <img src="/static/icons/color/cross.svg" alt="reject" />
           </button>
-          <button @click="setRegistrationConfirmed(true, registration)" class="buton-confirm" v-if="registration.isConfirmed !== true">
-            <img src="/static/icons/color/done.svg" alt="confirm" >
+          <button
+            @click="setRegistrationConfirmed(true, registration)"
+            class="buton-confirm"
+            v-if="registration.isConfirmed !== true">
+            <img src="/static/icons/color/done.svg" alt="confirm" />
           </button>
         </li>
       </ul>

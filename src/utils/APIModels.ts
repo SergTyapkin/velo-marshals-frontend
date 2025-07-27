@@ -123,10 +123,12 @@ export const EventModel = {
   startDate: {
     type: Date,
     from: 'startdate',
+    optional: true,
   },
   cameDate: {
     type: Date,
     from: 'camedate',
+    optional: true,
   },
   previewUrl: {
     type: String,
