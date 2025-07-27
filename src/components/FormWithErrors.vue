@@ -89,6 +89,8 @@
       position absolute
       right 20px
       bottom 12px
+      //left 10px
+      //bottom -1.4em
       opacity 0
       transition opacity 0.2s ease
       font-small-extra()
@@ -149,7 +151,7 @@
         error: field.__error,
         success: field.__success,
         'with-image': field.image,
-        'hideable': field.hideable,
+        hideable: field.hideable,
       }"
     >
       <label :for="`${uid}-${fieldKey}`">{{ field.title }}</label>
@@ -215,7 +217,7 @@ export type Field = {
   title?: string,
   info?: string,
   errorText?: string,
-  overrideErrorText?: string,
+  overrideErrorText?: string | null,
   successText?: string,
   value?: any, // initial value
   regExp?: RegExp,
@@ -263,6 +265,9 @@ export default {
     };
   },
 
+  mounted() {
+  },
+
   methods: {
     submit() {
       this.isSubmittedAlready = true;
@@ -308,7 +313,7 @@ export default {
       this.fields[fieldKey].__error = true;
       this.fields[fieldKey].overrideErrorText = errorText;
     },
-    setError(fieldKeys: string[], errorText: string) {
+    setError(fieldKeys: string[] | string, errorText: string) {
       if (Array.isArray(fieldKeys)) {
         fieldKeys.forEach(fieldKey => this.__setErrorOnField(fieldKey, errorText));
         return;

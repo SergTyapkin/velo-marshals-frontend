@@ -6,37 +6,39 @@ export type Validator = {
 
 const Validators = {
   fullname: {
-    regExp: /^(([а-я]+-)*[a-я]+) +(([а-я]+-)*[a-я]+)( +(([а-я]+-)*[a-я]+))?$/i,
-    prettifyResult: (str: string): string => str.replaceAll(/ {2,}/g, ' '),
+    regExp: /^ *(([а-я]+-)*[a-я]+) +(([а-я]+-)*[a-я]+)( +(([а-я]+-)*[a-я]+))? *$/i,
+    prettifyResult: (str: string): string => str.trim().replaceAll(/ {2,}/g, ' '),
   },
   name: {
-    regExp: /^(([а-я]+-)*[а-я]+)$/i,
-    prettifyResult: (str: string) => str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase(),
+    regExp: /^ *(([а-я]+-)*[а-я]+) *$/i,
+    prettifyResult: (str: string) => str.trim().slice(0, 1).toUpperCase() + str.trim().slice(1).toLowerCase(),
   },
   tg: {
-    regExp: /^((https:\/\/)?(t\.me\/)|@)?\w{5,}$/i,
+    regExp: /^ *((https:\/\/)?(t\.me\/)|@)?\w{5,} *$/i,
     prettifyResult: (str: string): string =>
       str
+        .trim()
         .replace(/https:\/\//i, '')
         .replace(/t\.me\//i, '')
         .replace('@', ''),
   },
   vk: {
-    regExp: /^(https:\/\/)?(vk\.com\/|@)?(\w+\.)*\w+$/i,
+    regExp: /^ *(https:\/\/)?(vk\.com\/|@)?(\w+\.)*\w+ *$/i,
     prettifyResult: (str: string): string =>
       str
+        .trim()
         .replace(/https:\/\//i, '')
         .replace(/vk\.com\//i, '')
         .replace('@', ''),
   },
   email: {
     regExp:
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i,
-    prettifyResult: (str: string): string => str.toLowerCase(),
+      /^ *(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})) *$/i,
+    prettifyResult: (str: string): string => str.trim().toLowerCase(),
   },
   phone: {
-    regExp: /^((\+7)|8)[-\s.]?((\(\d\d\d\))|(\d\d\d))[-\s.]?\d\d\d[-\s.]?\d\d[-\s.]?\d\d$/,
-    prettifyResult: (str: string): string => str.replace('+7', '8').replace('-', '').replace('(', '').replace(')', ''),
+    regExp: /^ *((\+7)|8)[-\s.]?((\(\d\d\d\))|(\d\d\d))[-\s.]?\d\d\d[-\s.]?\d\d[-\s.]?\d\d *$/,
+    prettifyResult: (str: string): string => str.trim().replace('+7', '8').replace('-', '').replace('(', '').replace(')', ''),
   },
   password: {
     regExp: /^.{6,}$/i,

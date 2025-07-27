@@ -80,7 +80,7 @@ export function deleteCookie(name: string) {
 }
 
 export function detectBrowser() {
-  let result = 'Other';
+  let result = 'Other Browser';
   if (navigator.userAgent.indexOf('YaBrowser') !== -1) {
     result = 'Yandex Browser';
   } else if (navigator.userAgent.indexOf('Firefox') !== -1) {
@@ -89,12 +89,12 @@ export function detectBrowser() {
     result = 'Internet Exploder';
   } else if (navigator.userAgent.indexOf('Edge') !== -1) {
     result = 'Microsoft Edge';
-  } else if (navigator.userAgent.indexOf('Safari') !== -1) {
-    result = 'Safari';
-  } else if (navigator.userAgent.indexOf('Opera') !== -1) {
-    result = 'Opera';
   } else if (navigator.userAgent.indexOf('Chrome') !== -1) {
     result = 'Google Chrome';
+  } else if (navigator.userAgent.indexOf('Opera') !== -1) {
+    result = 'Opera';
+  } else if (navigator.userAgent.indexOf('Safari') !== -1) {
+    result = 'Safari';
   }
   return result;
 }

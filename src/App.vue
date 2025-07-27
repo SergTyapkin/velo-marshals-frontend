@@ -87,14 +87,15 @@
 <template>
   <!--  <HeaderComponent class="header" />-->
 
-  <section class="background" :class="{blured: $user?.isSignedIn}">
+  <section class="background" :class="{ blured: $user?.isSignedIn }">
     <img src="/static/icons/color/logo-velo.svg" alt="" class="logo-bg">
   </section>
 
   <div class="wrapper">
     <router-view #default="{ Component }">
       <transition name="scale-in">
-        <component :is="Component" />
+        <component v-if="Component" :is="Component" />
+        <CircleLinesLoading v-else centered />
       </transition>
     </router-view>
   </div>
@@ -115,6 +116,7 @@ import { getRequestFoo, saveAllAssetsByServiceWorker, setDisableCachingUrlsBySer
 import HeaderComponent from '~/components/HeaderComponent.vue';
 import FooterComponent from '~/components/FooterComponent.vue';
 import { API_PREFIX, DISABLED_CACHING_URLS } from '~/constants';
+import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 
 function removeAllHoverStyles() {
   try {
@@ -137,7 +139,7 @@ function removeAllHoverStyles() {
 }
 
 export default {
-  components: { HeaderComponent, FooterComponent, Modals, Popups },
+  components: { CircleLinesLoading, HeaderComponent, FooterComponent, Modals, Popups },
 
   data(): {
     transitionName: string;
@@ -186,7 +188,7 @@ export default {
     update() {
       this.$forceUpdate();
       (this.$refs.footer as typeof FooterComponent)?.update();
-    }
+    },
   },
 
   watch: {

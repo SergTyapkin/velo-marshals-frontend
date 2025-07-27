@@ -33,51 +33,7 @@
             submit-text="Зарегистрироваться"
             @success="createAccount"
             :loading="loading"
-            :fields="{
-              email: {
-                title: 'Электронная почта',
-                type: 'text',
-                placeholder: 'marshall@site.ru',
-                validationRegExp: Validators.email.regExp,
-                prettifyResult: Validators.email.prettifyResult,
-                autocomplete: 'email',
-              },
-              tel: {
-                title: 'Телефон',
-                info: 'В любом формате',
-                type: 'tel',
-                placeholder: '+7-999-XXXXXXXX',
-                validationRegExp: Validators.phone.regExp,
-                prettifyResult: Validators.phone.prettifyResult,
-                autocomplete: 'tel',
-              },
-              familyName: {
-                title: 'Фамилия',
-                info: 'Как в паспорте',
-                placeholder: 'Маршалов',
-                validationRegExp: Validators.name.regExp,
-                prettifyResult: Validators.name.prettifyResult,
-                autocomplete: 'lastname',
-                value: tgUser?.last_name,
-              },
-              givenName: {
-                title: 'Имя',
-                info: 'Как в паспорте',
-                placeholder: 'Маршал',
-                validationRegExp: Validators.name.regExp,
-                prettifyResult: Validators.name.prettifyResult,
-                autocomplete: 'firstname',
-                value: tgUser?.first_name,
-              },
-              middleName: {
-                title: 'Отчество',
-                info: 'Как в паспорте',
-                placeholder: 'Маршалович',
-                validationRegExp: Validators.name.regExp,
-                prettifyResult: Validators.name.prettifyResult,
-                autocomplete: 'middlename',
-              },
-            }"
+            :fields="formFields"
           />
         </section>
       </transition>
@@ -88,7 +44,7 @@
 <script lang="ts">
 import { detectBrowser, detectOS } from '~/utils/utils';
 import TGAuth, { type TGUser } from '~/components/TGAuth.vue';
-import FormWithErrors from '~/components/FormWithErrors.vue';
+import FormWithErrors, { Field } from '~/components/FormWithErrors.vue';
 import Validators from '~/utils/validators';
 
 export default {
@@ -99,20 +55,63 @@ export default {
       loading: false,
       isNeedsToRegister: false,
       tgUser: {
-        // auth_date: 1,
-        // first_name: "",
-        // hash: "",
-        // id: 1,
-        // last_name: "",
-        // photo_url: ""
-        // username: "",
+        // auth_date: 1753657645,
+        // first_name: "Сергей",
+        // hash: "xxxx",
+        // id: 897452398,
+        // last_name: "Тяпкин 🔥",
+        // photo_url: "https://t.me/i/userpic/320/VAi-EEjunOcTgZG36icSc6982Znc9mfEUNrphVxV4J4.jpg",
+        // username: "Tyapkin_S",
       } as TGUser,
 
-      Validators,
+      formFields: {
+        email: {
+          title: 'Электронная почта',
+          type: 'text',
+          placeholder: 'marshall@site.ru',
+          validationRegExp: Validators.email.regExp,
+          prettifyResult: Validators.email.prettifyResult,
+          autocomplete: 'email',
+        },
+        tel: {
+          title: 'Телефон',
+          info: 'В любом формате',
+          type: 'tel',
+          placeholder: '+7-999-XXXXXXXX',
+          validationRegExp: Validators.phone.regExp,
+          prettifyResult: Validators.phone.prettifyResult,
+          autocomplete: 'tel',
+        },
+        familyName: {
+          title: 'Фамилия',
+          info: 'Как в паспорте',
+          placeholder: 'Маршалов',
+          validationRegExp: Validators.name.regExp,
+          prettifyResult: Validators.name.prettifyResult,
+          autocomplete: 'lastname',
+        },
+        givenName: {
+          title: 'Имя',
+          info: 'Как в паспорте',
+          placeholder: 'Маршал',
+          validationRegExp: Validators.name.regExp,
+          prettifyResult: Validators.name.prettifyResult,
+          autocomplete: 'firstname',
+        },
+        middleName: {
+          title: 'Отчество',
+          info: 'Как в паспорте',
+          placeholder: 'Маршалович',
+          validationRegExp: Validators.name.regExp,
+          prettifyResult: Validators.name.prettifyResult,
+          autocomplete: 'middlename',
+        },
+      } as Record<PropertyKey, Field>,
     };
   },
 
-  async mounted() {},
+  async mounted() {
+  },
 
   methods: {
     async onLogin(user: TGUser) {
@@ -123,7 +122,11 @@ export default {
         `Не удалось получить информацию о существовании пользователя #${user.id}`,
         async () => {
           // User existing, login
-          await this.login(user);
+          const res = await this.login(user);
+          if (!res) {
+            this.$popups.error('Внутренняя ошибка', 'Не удалось войти в существующий аккаунт');
+            return;
+          }
 
           this.loading = true;
           await this.$store.dispatch('GET_USER');
@@ -133,6 +136,8 @@ export default {
         undefined,
         {
           404: () => {
+            this.formFields.familyName.value = user?.last_name;
+            this.formFields.givenName.value = user?.first_name;
             this.isNeedsToRegister = true;
             this.tgUser = user;
           }
@@ -186,7 +191,7 @@ export default {
     },
 
     async login(user: TGUser) {
-      await this.$request(
+      return await this.$request(
         this,
         this.$api.signIn,
         [
@@ -204,7 +209,8 @@ export default {
         async () => {
           await this.$store.dispatch('GET_USER');
           this.$router.push({name: 'profile'});
-        }
+        },
+        null,
       );
     },
   },

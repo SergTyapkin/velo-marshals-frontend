@@ -14,6 +14,7 @@ export const UserModel = {
   email: {
     type: String,
     from: 'email',
+    optional: true,
   },
   isConfirmedEmail: {
     type: Boolean,
@@ -154,6 +155,7 @@ export const EventModel = {
   authorId: {
     type: String,
     from: 'authorid',
+    optional: true,
   },
   isYouRegistered: {
     type: Boolean,
