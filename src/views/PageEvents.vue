@@ -150,7 +150,7 @@ export default {
 
     async updateEvents() {
       this.events = (
-        await this.$request(this, this.$api.getEvents, [], 'Не удалось получить список событий', () => {}, {
+        await this.$request(this, this.$api.getEvents, [{type: 'future'}], 'Не удалось получить список событий', () => {}, {
           events: [],
         })
       ).events;

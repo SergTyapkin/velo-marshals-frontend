@@ -19,7 +19,7 @@
 
 .background
   background mix(red, black, 40%)
-  position absolute
+  position fixed
   right 0
   top 30%
   width 50vh
