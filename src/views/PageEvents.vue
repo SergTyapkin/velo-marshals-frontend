@@ -26,6 +26,8 @@
 
       .description
         margin-bottom 20px
+        padding 0
+        font-medium()
 
       .date
         color colorText3
@@ -81,19 +83,18 @@
 
     <ul class="events-container">
       <li v-for="(event, i) in events" class="event">
-        <img class="background" :src="event.previewUrl" alt="bg" />
+        <img class="background" :src="event.previewUrl" alt="bg">
         <div class="background-overlay" />
 
         <header>{{ event.title }}</header>
 
-        <!--        <MarkdownRenderer :initial-text="event.description" />-->
-        <div class="description" v-if="event.description">{{ event.description }}</div>
+        <MarkdownRenderer class="description" v-if="event.description" :initial-text="event.description" />
 
         <div class="date" v-if="event.startDate"><img src="/static/icons/mono/calendar-1-date.svg" alt="date">{{ dateFormatter(event.startDate) }}</div>
         <div class="date" v-if="event.cameDate">Сбор в {{ timeFormatter(event.cameDate) }}</div>
 
         <div class="registrations-info" v-if="i === 0">
-          {{ event.registrationsCount }} <img src="/static/icons/mono/people.svg" alt="man" />
+          {{ event.registrationsCount }} <img src="/static/icons/mono/people.svg" alt="man">
         </div>
 
         <div class="user-comment-info" v-if="event.isYouRegistered && event.yourComment">
@@ -101,10 +102,10 @@
         </div>
 
         <div v-if="event.isYouRegistered && event.isYourRegistrationConfirmed === true" class="confirmed-info">
-          Ваша регистрация подтверждена!<br />Приходите в составе маршалов
+          Ваша регистрация подтверждена!<br>Приходите в составе маршалов
         </div>
         <div v-else-if="event.isYouRegistered && event.isYourRegistrationConfirmed === false" class="unconfirmed-info">
-          Ваша регистрация отклонена<br />К сожалению, вы не можете быть в составе маршалов в этот раз :(
+          Ваша регистрация отклонена<br>К сожалению, вы не можете быть в составе маршалов в этот раз :(
         </div>
         <div v-else-if="event.isYouRegistered" class="confirmed-unknown-info">Регистрация ожидает подтверждения администраторами</div>
 
@@ -125,12 +126,13 @@
 
 <script lang="ts">
 import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
+import MarkdownRenderer from '@sergtyapkin/vue3-markdown/MarkdownRenderer.vue';
 
 import type { Event } from '~/utils/models';
 import { dateFormatter, timeFormatter } from '~/utils/formatters';
 
 export default {
-  components: { CircleLinesLoading },
+  components: { CircleLinesLoading, MarkdownRenderer },
 
   data() {
     return {
