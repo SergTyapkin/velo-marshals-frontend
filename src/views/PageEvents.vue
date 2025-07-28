@@ -15,8 +15,9 @@
 
     .event
       block-shadow()
-      margin-bottom 30px
+
       position relative
+      margin-bottom 30px
 
       &:first-child
         margin-bottom 100px
@@ -36,8 +37,9 @@
       .registrations-info
         font-small-extra()
         svg-inside(25px)
-        color colorText3
+
         margin-block 20px
+        color colorText3
         img
           margin-left 5px
           opacity 0.7
@@ -47,33 +49,37 @@
 
       .confirmed-info
         font-small-extra()
+
         color colorSuccess
 
       .unconfirmed-info
         font-small-extra()
+
         color colorError
 
       .confirmed-unknown-info
         font-small-extra()
+
         color colorText4
 
       button
         button()
+
         margin-top 10px
 
       .background
         position absolute
-        object-fit cover
-        inset 0
         z-index -1
+        inset 0
         width 100%
         height 100%
+        object-fit cover
 
       .background-overlay
         content ""
         position absolute
-        inset 0
         z-index -1
+        inset 0
         background linear-gradient(60deg, colorBlockBg 30%, mix(colorBlockBg, transparent, 30%))
 </style>
 

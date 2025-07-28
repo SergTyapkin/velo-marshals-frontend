@@ -12,11 +12,12 @@
 
   .header-row
     display flex
-    justify-content space-between
     align-items flex-start
+    justify-content space-between
 
     .logout-button
       button-attention()
+
       padding 10px
 
       img
@@ -33,8 +34,9 @@
 
       .user-image-group
         centered-margin()
-        width 80%
+
         position relative
+        width 80%
         max-width 350px
 
         .placeholder
@@ -42,17 +44,17 @@
           border-radius radiusMax
 
         img
+          display block
+          aspect-ratio 1 / 1
           width 100%
           height 100%
-          aspect-ratio 1 / 1
           object-fit cover
           border-radius radiusMax
-          display block
 
         img.bg
           position absolute
-          inset 0
           z-index -1
+          inset 0
           transform scale(1.5)
           opacity 0.7
           filter blur(10px) brightness(0.3)
@@ -64,11 +66,13 @@
 
         .info
           font-small()
+
           color colorText3
 
     .user-data-block
       block-shadow()
       block-bg-transparent()
+
       display grid
       grid-template-columns 1fr 1fr 30px
       gap 20px
@@ -84,14 +88,16 @@
           .info-success
           .info-error
             font-small-extra()
-            white-space nowrap
+
             color colorSuccess
+            white-space nowrap
 
           .info-error
             color colorError
 
         .button-edit
           button-no-fill()
+
           padding 0
 </style>
 
@@ -99,7 +105,7 @@
   <div class="root-profile">
     <section class="header-row">
       <header class="header">ПРОФИЛЬ</header>
-      <button class="logout-button" @click="logout"><img src="/static/icons/color/logout.svg" alt="logout" /></button>
+      <button class="logout-button" @click="logout"><img src="/static/icons/color/logout.svg" alt="logout"></button>
     </section>
 
     <section class="user-block">
@@ -112,8 +118,8 @@
               alt="avatar"
               @load="$refs.placeholder.setHidden()"
               @error="$refs.placeholder.setError()"
-            />
-            <img :src="$user.avatarUrl || ImageProfileDefault" alt="avatar" class="bg" />
+            >
+            <img :src="$user.avatarUrl || ImageProfileDefault" alt="avatar" class="bg">
           </div>
           <div class="user-name-group">
             <div class="name">{{ $user.givenName }} {{ $user.familyName }}</div>
@@ -129,21 +135,21 @@
           <div class="field">Фамилия</div>
           <div class="data">{{ $user.familyName }}</div>
           <button class="button-edit" @click="changeUserParam('familyName', 'name')">
-            <img src="/static/icons/mono/edit.svg" alt="edit" />
+            <img src="/static/icons/mono/edit.svg" alt="edit">
           </button>
         </div>
         <div class="data-row">
           <div class="field">Имя</div>
           <div class="data">{{ $user.givenName }}</div>
           <button class="button-edit" @click="changeUserParam('givenName', 'name')">
-            <img src="/static/icons/mono/edit.svg" alt="edit" />
+            <img src="/static/icons/mono/edit.svg" alt="edit">
           </button>
         </div>
         <div class="data-row">
           <div class="field">Отчество</div>
           <div class="data">{{ $user.middleName }}</div>
           <button class="button-edit" @click="changeUserParam('middleName', 'name')">
-            <img src="/static/icons/mono/edit.svg" alt="edit" />
+            <img src="/static/icons/mono/edit.svg" alt="edit">
           </button>
         </div>
         <div class="data-row">
@@ -156,14 +162,14 @@
             <div class="data">{{ $user.email }}</div>
           </div>
           <button class="button-edit" @click="changeUserParam('email', 'email')">
-            <img src="/static/icons/mono/edit.svg" alt="edit" />
+            <img src="/static/icons/mono/edit.svg" alt="edit">
           </button>
         </div>
         <div class="data-row">
           <div class="field">Телефон</div>
           <div class="data">{{ $user.tel }}</div>
           <button class="button-edit" @click="changeUserParam('tel', 'phone')">
-            <img src="/static/icons/mono/edit.svg" alt="edit" />
+            <img src="/static/icons/mono/edit.svg" alt="edit">
           </button>
         </div>
       </section>

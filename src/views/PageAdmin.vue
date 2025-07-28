@@ -24,9 +24,9 @@
 
       .registration
         display flex
+        gap 10px
         align-items center
         justify-content space-between
-        gap 10px
         &.rejected
           color colorError
         &.confirmed
@@ -83,20 +83,22 @@
             @click="$modals.alert('Комментарий', registration.userComment)"
             class="buton-comment"
           >
-            <img src="/static/icons/mono/message.svg" alt="message" />
+            <img src="/static/icons/mono/message.svg" alt="message">
           </button>
 
           <button
             @click="setRegistrationConfirmed(false, registration)"
             class="buton-reject"
-            v-if="registration.isConfirmed !== false">
-            <img src="/static/icons/color/cross.svg" alt="reject" />
+            v-if="registration.isConfirmed !== false"
+          >
+            <img src="/static/icons/color/cross.svg" alt="reject">
           </button>
           <button
             @click="setRegistrationConfirmed(true, registration)"
             class="buton-confirm"
-            v-if="registration.isConfirmed !== true">
-            <img src="/static/icons/color/done.svg" alt="confirm" />
+            v-if="registration.isConfirmed !== true"
+          >
+            <img src="/static/icons/color/done.svg" alt="confirm">
           </button>
         </li>
       </ul>

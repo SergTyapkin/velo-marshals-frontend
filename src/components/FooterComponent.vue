@@ -41,10 +41,10 @@
 
       &.router-link-active
         gap 0
-        background radial-gradient(mix(colorEmp1, transparent, 30%), colorBlockBg 75%) no-repeat 50% 50%
         color colorEmp1
+        background radial-gradient(mix(colorEmp1, transparent, 30%), colorBlockBg 75%) no-repeat 50% 50%
 
-      //img
+      // img
       //  width 28px
       centered-flex-container()
       font-small()
@@ -54,17 +54,27 @@
 <template>
   <footer class="root-footer" v-if="$user?.isSignedIn">
     <nav class="buttons">
-      <router-link :to="{ name: 'events' }" class="button"
-        ><img src="/static/icons/mono/listing.svg" alt="" />Фестивали
+      <router-link
+        :to="{ name: 'events' }"
+        class="button"
+      >
+        <img src="/static/icons/mono/listing.svg" alt="">Фестивали
       </router-link>
       <!--      <router-link :to="{ name: 'login' }" class="button"><img src="/static/icons/listing.svg" alt="">Фестиваль</router-link>-->
       <!--      <router-link :to="{ name: 'default' }" class="button"><img src="/static/icons/external-link.svg" alt="">Ссылки</router-link>-->
       <!--      <router-link :to="{ name: 'default' }" class="button"><img src="/static/icons/work.svg" alt="">Оборудование</router-link>-->
-      <router-link :to="{ name: 'profile' }" class="button"
-        ><img src="/static/icons/mono/profile.svg" alt="" />Профиль
+      <router-link
+        :to="{ name: 'profile' }"
+        class="button"
+      >
+        <img src="/static/icons/mono/profile.svg" alt="">Профиль
       </router-link>
-      <router-link :to="{ name: 'admin' }" v-if="isUserAdmin" class="button"
-        ><img src="/static/icons/mono/admin.svg" alt="" />Админская
+      <router-link
+        :to="{ name: 'admin' }"
+        v-if="isUserAdmin"
+        class="button"
+      >
+        <img src="/static/icons/mono/admin.svg" alt="">Админская
       </router-link>
     </nav>
   </footer>
