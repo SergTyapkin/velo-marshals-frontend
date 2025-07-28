@@ -1,23 +1,51 @@
 <style scoped lang="stylus">
-@import '../styles/constants.styl'
-@import '../styles/components.styl'
-@import '../styles/buttons.styl'
-@import '../styles/fonts.styl'
-@import '../styles/utils.styl'
-@import '../styles/animations.styl'
-@import '../styles/scrollbars.styl'
+@import '../../styles/constants.styl'
+@import '../../styles/components.styl'
+@import '../../styles/buttons.styl'
+@import '../../styles/fonts.styl'
+@import '../../styles/utils.styl'
+@import '../../styles/animations.styl'
+@import '../../styles/scrollbars.styl'
 
-.root-page-events
-  page-root()
+.root-page-admin-registrations
+  .filters-block
+    block-bg()
+    block-shadow()
+    margin-bottom 15px
 
-  .registrations
+    header
+      font-large-extra()
+
+    .filters-group
+      list-no-styles()
+      display grid
+      grid-template-columns 1fr 1fr 40px
+      gap 20px
+
+      .event
+        display contents
+        .title
+          trans()
+          min-width 0
+        .date
+          color colorText5
+        .count
+          trans()
+          svg-inside(25px, 5px, 0)
+          img
+            opacity 0.3
+        &.selected
+          .title
+          .count
+            color colorEmp1
+
+
+  .results-block
     block-bg()
     block-shadow()
 
-    .filters-group
-      margin-bottom 30px
-      .button-get
-        button()
+    header
+      font-large()
 
     .results-container
       list-no-styles()
@@ -57,21 +85,24 @@
 </style>
 
 <template>
-  <div class="root-page-events">
-    <header>Админстрирование</header>
-
-    <section class="registrations">
+  <div class="root-page-admin-registrations">
+    <section class="filters-block">
       <header>Регистрации</header>
 
-      <section class="filters-group">
-        <InputComponent v-model="filters.eventId" placeholder="id мероприятия" />
-        <button class="button-get" @click="updateRegistrations">Получить</button>
-      </section>
+      <ul class="filters-group">
+        <li @click="updateRegistrations(event.id)" class="event" v-for="event in events" :class="{selected: event.id === selectedEventId}">
+          <div class="title">{{ event.title }}</div>
+          <div class="date">{{ dateFormatter(event.startDate) }}</div>
+          <div class="count">{{ event.registrationsCount }}<img src="/static/icons/mono/people.svg" alt="people"></div>
+        </li>
+      </ul>
+    </section>
 
-      <header>{{ gottenData.event?.title }}</header>
+    <section class="results-block">
+      <header>{{ selectedEvent?.title }}</header>
       <ul class="results-container">
         <li
-          v-for="(registration, i) in gottenData.registrations"
+          v-for="(registration, i) in registrations"
           class="registration"
           :class="{ rejected: registration.isConfirmed === false, confirmed: registration.isConfirmed === true }"
         >
@@ -110,49 +141,56 @@
 
 <script lang="ts">
 import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
-
 import type { Event, Registration } from '~/utils/models';
-import InputComponent from '~/components/InputComponent.vue';
+import { dateFormatter } from '~/utils/formatters';
+
 
 export default {
-  components: { InputComponent, CircleLinesLoading },
+  components: { CircleLinesLoading },
 
   data() {
     return {
       loading: false,
 
-      filters: {
-        eventId: '',
-      },
-      gottenData: {
-        event: null as Event | null,
-        registrations: [] as Registration[],
-      },
+      events: [] as Event[],
+      registrations: [] as Registration[],
+
+      selectedEventId: null as string | null,
+      selectedEvent: null as Event | null,
     };
   },
 
   mounted() {
-    // this.updateEvents();
+    this.updateEvents();
   },
 
   methods: {
-    async updateRegistrations() {
-      if (this.filters.eventId === undefined) {
-        return;
-      }
-      this.gottenData.event = await this.$request(
+    dateFormatter,
+
+    async updateEvents() {
+      this.events = (
+        await this.$request(this, this.$api.getEvents, [{type: 'all'}], 'Не удалось получить список событий', () => {}, {
+          events: [],
+        })
+      ).events;
+    },
+
+    async updateRegistrations(eventId: string) {
+      this.selectedEventId = eventId;
+
+      this.selectedEvent = await this.$request(
         this,
         this.$api.getEventById,
-        [this.filters.eventId],
+        [this.selectedEventId],
         'Не удалось получить мероприятие',
         () => {},
       );
 
-      this.gottenData.registrations = (
+      this.registrations = (
         await this.$request(
           this,
           this.$api.getRegistrations,
-          [this.filters.eventId],
+          [this.selectedEventId],
           'Не удалось получить список регистраций',
           () => {},
           {

@@ -10,7 +10,8 @@ import PageConfirmEmail from '~/views/User/PageConfirmEmail.vue';
 import routes from '~/routes';
 import { RouteRecordRaw } from 'vue-router';
 import PageEvents from '~/views/PageEvents.vue';
-import PageAdmin from '~/views/PageAdmin.vue';
+import PageAdmin from '~/views/Admin/PageAdmin.vue';
+import PageAdminRegistrations from '~/views/Admin/PageAdminRegistrations.vue';
 
 type MyRoute = RouteRecordRaw & {
   path: keyof typeof routes,
@@ -29,7 +30,14 @@ export default function createVueRouter(Store: Store): Router {
     { path: '/email/confirm', name: 'confirmEmail', component: PageConfirmEmail, meta: {loginRequired: true} },
 
     { path: '/events', name: 'events', component: PageEvents, meta: {loginRequired: true} },
-    { path: '/admin', name: 'admin', component: PageAdmin, meta: {loginRequired: true} },
+    { path: '/admin', name: 'admin', component: PageAdmin, redirect: {name: 'adminRegistrations'}, meta: {loginRequired: true}, children: [
+        { path: '/admin/registrations', name: 'adminRegistrations', component: PageAdminRegistrations, meta: {loginRequired: true} },
+        { path: '/admin/events', name: 'adminEvents', component: PageAdminRegistrations, meta: {loginRequired: true} },
+        { path: '/admin/users', name: 'adminUsers', component: PageAdminRegistrations, meta: {loginRequired: true} },
+        { path: '/admin/equipment', name: 'adminEquipment', component: PageAdminRegistrations, meta: {loginRequired: true} },
+        { path: '/admin/achievements', name: 'adminAchievements', component: PageAdminRegistrations, meta: {loginRequired: true} },
+      ]
+    },
 
     { path: '/:pathMatch(.*)*', name: 'page404', component: Page404 },
   ];

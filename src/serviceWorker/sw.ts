@@ -16,7 +16,7 @@ const CACHE_MAX_AGE_MS = 86400000; // 1 day
 // true - сначала отдавать из кэша, а потом по возможности обновлять ресурс.
 // Но после истечения CACHE_MAX_AGE_MS стратегия переключится на false, пока актуальная версия ресурса не будет получена
 // false - сначала ждать ответа на запрос, а потом отдавать из кэша, если запрос не прошел
-const STRATEGY_CACHE_FIRST = true;
+const STRATEGY_CACHE_FIRST = false;
 
 // regExp-ссылок на НЕ-кэшируемые файлы
 const DISABLE_CACHING_URLS_REGEXPS = [/sw\.js/];

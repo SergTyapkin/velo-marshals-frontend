@@ -88,7 +88,8 @@
     <header>Все фестивали</header>
 
     <ul class="events-container">
-      <li v-for="(event, i) in events" class="event">
+      <li class="info" v-if="!events.length">Мероприятий не найдено</li>
+      <li v-else v-for="(event, i) in events" class="event">
         <img class="background" :src="event.previewUrl" alt="bg">
         <div class="background-overlay" />
 
