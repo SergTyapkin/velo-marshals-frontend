@@ -89,8 +89,8 @@
       position absolute
       right 20px
       bottom 12px
-      //left 10px
-      //bottom -1.4em
+      // left 10px
+      // bottom -1.4em
       opacity 0
       transition opacity 0.2s ease
       font-small-extra()

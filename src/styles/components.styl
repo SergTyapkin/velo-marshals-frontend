@@ -13,6 +13,7 @@ page-root()
   header
     font-large-extra()
     font-bold()
+
     margin-bottom 20px
 
 
@@ -34,6 +35,7 @@ block(colorBorder=colorBorder)
 
 block-border(borderColor=colorEmp1)
   block()
+
   border 2px solid borderColor
 
 
@@ -45,10 +47,11 @@ block-shadow()
   &::before
   &::after
     block-border()
+
     content ""
     position absolute
-    inset -5px
     z-index -1
+    inset -5px
     background colorEmp1
   &::before
     clip-path polygon(0 0, 30% 0, 70% 100%, 30% 100%, 0 30%)
@@ -60,6 +63,7 @@ block-bg(colorBg=colorBlockBg)
 
   display block
   background colorBg
+
 block-bg-transparent(colorBg=colorBlockBg)
   block()
 

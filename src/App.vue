@@ -18,21 +18,21 @@
     min-height 100vh
 
 .background
-  background mix(red, black, 40%)
   position fixed
-  right 0
-  top 30%
-  width 50vh
   z-index -999999
+  top 30%
+  right 0
+  width 50vh
+  background mix(red, black, 40%)
   trans()
   &.blured
     filter blur(10px)
   .logo-bg
     position absolute
-    width 100%
     right -2%
-    fill colorEmp1
     transform scale(-1, 1)
+    width 100%
+    fill colorEmp1
 </style>
 
 <style lang="stylus">
