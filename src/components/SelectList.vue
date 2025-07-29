@@ -200,7 +200,7 @@ import { getCurrentInstance, nextTick, PropType } from 'vue';
 const HEIGHT_SAVE_ZONE_OFFSET = 75; // px
 const WIDTH_SAVE_ZONE_OFFSET = 0; // px
 
-const INITIAL_Z_INDEX = 999999; // z-index
+const INITIAL_Z_INDEX = 9999; // z-index
 
 
 export default {

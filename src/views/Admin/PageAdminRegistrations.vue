@@ -23,7 +23,10 @@
       gap 20px
 
       .event
+        cursor pointer
         display contents
+        &:hover
+          background brightness(colorBlockBg, 1.5)
 
         .title
           trans()
