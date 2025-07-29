@@ -166,7 +166,6 @@ export default {
           await this.$store.dispatch('GET_USER');
           this.loading = false;
           this.$router.push({ name: 'profile' });
-          this.$app.checkUserHasFullProfileData();
         },
       );
     },
@@ -182,7 +181,6 @@ export default {
           await this.$store.dispatch('GET_USER');
           this.loading = false;
           this.$router.push({ name: 'profile' });
-          this.$app.checkUserHasFullProfileData();
         },
       );
     },
