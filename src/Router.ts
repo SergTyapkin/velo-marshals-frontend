@@ -12,6 +12,7 @@ import { RouteRecordRaw } from 'vue-router';
 import PageEvents from '~/views/PageEvents.vue';
 import PageAdmin from '~/views/Admin/PageAdmin.vue';
 import PageAdminRegistrations from '~/views/Admin/PageAdminRegistrations.vue';
+import PageAdminSqlExecute from '~/views/Admin/PageAdminSqlExecute.vue';
 
 type MyRoute = RouteRecordRaw & {
   path: keyof typeof routes,
@@ -36,6 +37,7 @@ export default function createVueRouter(Store: Store): Router {
         { path: '/admin/users', name: 'adminUsers', component: PageAdminRegistrations, meta: {loginRequired: true} },
         { path: '/admin/equipment', name: 'adminEquipment', component: PageAdminRegistrations, meta: {loginRequired: true} },
         { path: '/admin/achievements', name: 'adminAchievements', component: PageAdminRegistrations, meta: {loginRequired: true} },
+        { path: '/admin/sql', name: 'adminSQL', component: PageAdminSqlExecute, meta: {loginRequired: true} },
       ]
     },
 

@@ -62,3 +62,12 @@ export interface Registration {
   userAvatarUrl?: string,
   userLevel: string,
 }
+
+
+export interface SQLHistory {
+  id: string,
+  userId: string,
+  text: string,
+  date: Date,
+}
+

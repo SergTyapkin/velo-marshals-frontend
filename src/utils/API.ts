@@ -6,11 +6,12 @@ import {
   EventModel,
   EventModelMockData,
   RegistrationListModel,
-  RegistrationListModelMockData, RegistrationModel, RegistrationModelMockData,
+  RegistrationListModelMockData,
+  SQLHistoryListModel, SQLHistoryListModelMockData,
   UserModel,
   UserModelMockData,
 } from '~/utils/APIModels';
-import type { User, Event, Registration } from '~/utils/models';
+import { User, Event, Registration, SQLHistory } from '~/utils/models';
 
 type RequestFunc = (url: string, data?: object) => Promise<{ data: object; status: number; ok: boolean }>;
 type MyResponse<T> = Promise<{ data: T; status: number; ok: boolean }> | { data: T; status: number; ok: boolean };
@@ -82,7 +83,9 @@ export default class API extends REST_API {
   getUser = () => this.#GET(`/user`, {}, UserModel, Response200(UserModelMockData)) as MyResponse<User>;
   // getAnotherUser = (id) => this.#GET(`/user`, {id}, UserModel, Response200(UserModelMockData)) as MyResponse<User>;
   checkUserTgExisting = (tgUsername: string, tgId: string) =>
-    this.#GET(`/user`, { tgUsername, tgId }, { id: String }, Response200({ id: 'USER_ID' })) as MyResponse<{ id: string }>;
+    this.#GET(`/user`, { tgUsername, tgId }, { id: String }, Response200({ id: 'USER_ID' })) as MyResponse<{
+      id: string;
+    }>;
   updateUser = (userData: User) =>
     this.#PUT(`/user`, userData, UserModel, Response200(UserModelMockData)) as MyResponse<User>;
 
@@ -186,12 +189,7 @@ export default class API extends REST_API {
       registrations: Registration[];
     }>;
   updateRegistration = (registration: Registration) =>
-    this.#PUT(
-      `/registration`,
-      registration,
-      {},
-      Response200({}),
-    ) as MyResponse<unknown>;
+    this.#PUT(`/registration`, registration, {}, Response200({})) as MyResponse<unknown>;
   // getRegistrationRatingWithDates = (dateStart, dateEnd) => this.#GET(`/ratings`, {dateStart, dateEnd});
   // getRegistrationRating = () => this.#GET(`/ratings`);
   // getRegistrationsExtract = () => this.#GET(`/registration/extract`);
@@ -216,7 +214,10 @@ export default class API extends REST_API {
   //
   // uploadImage = (dataUrl) => this.#POST(`/image`, {dataUrl});
   // deleteImage = (imageId) => this.#DELETE(`/image`, {imageId});
-  //
-  // executeSql = (sql) => this.#POST(`/sql`, {sql});
-  // getSqlHistory = () => this.#GET(`/sql/history`);
+
+  executeAdminSql = (sql: string) => this.#POST(`/sql`, { sql });
+  getSQLHistory = (filters: {limit?: number} = {}) =>
+    this.#GET(`/sql/history`, filters, SQLHistoryListModel, Response200(SQLHistoryListModelMockData)) as MyResponse<{
+      history: SQLHistory[];
+    }>;
 }

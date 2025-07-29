@@ -319,3 +319,36 @@ export const RegistrationListModelMockData = {
   ]
 }
 
+
+// ------------------------------
+
+export const SQLHistoryModel = {
+  id: String,
+  date: Date,
+  text: String,
+  userId: {
+    type: String,
+    from: 'userid',
+  },
+};
+
+export const SQLHistoryModelMockData = validateModel(SQLHistoryModel, {
+  id: 'HISTORY_ID_1',
+  userid: 'USER_ID_1',
+  date: '2025-07-29',
+  text: 'SELECT * FROM users',
+});
+export const SQLHistoryListModel = {
+  history: ArrayType(SQLHistoryModel),
+}
+console.log(SQLHistoryListModel);
+export const SQLHistoryListModelMockData = {
+  history: [
+    Object.assign({}, SQLHistoryModelMockData, {id: 'HISTORY_ID_1', text: 'SELECT * FROM users'}),
+    Object.assign({}, SQLHistoryModelMockData, {id: 'HISTORY_ID_2', text: 'SELECT * FROM events'}),
+    Object.assign({}, SQLHistoryModelMockData, {id: 'HISTORY_ID_3', text: 'SELECT * FROM registrations'}),
+  ]
+}
+
+
+// ------------------------------
