@@ -31,7 +31,7 @@
   <div class="root-page">
     <header>Сервер недоступен</header>
     <article class="info-block">
-      <img src="/static/icons/technical-works.svg" alt="technical-works">
+      <img src="/static/icons/technical-works.svg" alt="technical-works" />
       <div class="text">
         <div>Варианта два:</div>
         <div>- Либо у вас пропало соединение, проверьте подключение.</div>
@@ -61,9 +61,10 @@ export default {
 
   mounted() {
     this.checkIsHealthly();
-    window.addEventListener("online", () => {
-      this.startCheckingCycle();
-    });
+    window.addEventListener("online", this.startCheckingCycle);
+  },
+  unmounted() {
+    window.removeEventListener("online", this.startCheckingCycle);
   },
 
   methods: {
