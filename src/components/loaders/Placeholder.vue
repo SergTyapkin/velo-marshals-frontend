@@ -16,6 +16,7 @@ c2 = mix(white, transparent, 15%)
   text-align center
   background linear-gradient(60deg, c1 0, c1 40%, c2 50%, c1 60%, c1 100%)
   background-size 400% 100%
+  pointer-events none
   &.absolute
     position absolute
     top 0
