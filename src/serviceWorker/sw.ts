@@ -19,7 +19,7 @@ const CACHE_MAX_AGE_MS = 86400000; // 1 day
 const STRATEGY_CACHE_FIRST = false;
 
 // regExp-ссылок на НЕ-кэшируемые файлы
-const DISABLE_CACHING_URLS_REGEXPS = [/sw\.js/];
+const DISABLE_CACHING_URLS_REGEXPS = new Set([/\/sw\.js/]);
 
 // кол-во попыток загрузки файла, если они заканчиваются ошибкой
 const FILES_LOADING_RETRIES_COUNT = 3;
@@ -85,7 +85,7 @@ sw.addEventListener('active', function (event) {
 
 function isUrlNotCachable(url: string) {
   console.log("CHECK DISABLE REGEXPS", DISABLE_CACHING_URLS_REGEXPS, url);
-  return DISABLE_CACHING_URLS_REGEXPS.some(regExp => {
+  return Array.from(DISABLE_CACHING_URLS_REGEXPS).some(regExp => {
     console.log("| CHECK DISABLE REGEXP", regExp, url, regExp.test(url));
     return regExp.test(url);
   });
@@ -230,7 +230,7 @@ sw.addEventListener('message', async event => {
     Object.assign(OVERRIDE_RESOURCE_MAPPING_REGEXPS, event.data.payload);
     broadcastPostMessage(PostMessage(PostMessagesNames.overrideResourceRegexpsSaved, null, event.data.uid));
   } else if (event.data.type === PostMessagesNames.saveDisableCachingRegexps) {
-    DISABLE_CACHING_URLS_REGEXPS.push(...event.data.payload);
+    event.data.payload.forEach((regExp: RegExp) => DISABLE_CACHING_URLS_REGEXPS.add(regExp));
     broadcastPostMessage(PostMessage(PostMessagesNames.disableCachingRegexpsSaved, null, event.data.uid));
   }
 });
