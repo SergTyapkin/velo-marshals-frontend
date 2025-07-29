@@ -68,6 +68,9 @@ export default class API extends REST_API {
   }
 
   // Api configuration
+  // Health
+  getHealthCheck = () => this.#GET(`/health`, {}, {}, Response200({})) as MyResponse<unknown>;
+
   // User
   // deleteAnotherSessions = () => this.#DELETE'/user/sessions/another');
   // getAllSessions = () => this.#GET'/user/sessions/all');
@@ -86,7 +89,7 @@ export default class API extends REST_API {
     this.#GET(`/user`, { tgUsername, tgId }, { id: String }, Response200({ id: 'USER_ID' })) as MyResponse<{
       id: string;
     }>;
-  updateUser = (userData: User) =>
+  updateUser = (userData: Partial<User> | {id: string}) =>
     this.#PUT(`/user`, userData, UserModel, Response200(UserModelMockData)) as MyResponse<User>;
 
   signIn = (
@@ -121,7 +124,7 @@ export default class API extends REST_API {
       {code, clientBrowser, clientOS},
       {},
     ) as MyResponse<unknown>;
-  signUp = (
+  update = (
     tgId: string,
     tgUsername: string,
     tgHash: string,
@@ -138,7 +141,7 @@ export default class API extends REST_API {
     clientBrowser: string,
     clientOS: string,
   ) =>
-    this.#POST(
+    this.#PUT(
       `/user`,
       {
         tgId,

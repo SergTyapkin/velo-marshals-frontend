@@ -53,7 +53,7 @@
 </style>
 
 <template>
-  <footer class="root-footer" v-if="$user?.isSignedIn">
+  <footer class="root-footer" v-if="$user?.isSignedIn && $user?.isFilledFullData">
     <nav class="buttons">
       <router-link
         :to="{ name: 'events' }"

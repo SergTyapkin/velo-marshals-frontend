@@ -73,13 +73,16 @@
       block-bg-transparent()
 
       display grid
-      grid-template-columns 1fr 1fr 30px
-      gap 20px
+      grid-template-columns max-content 1fr 30px
+      gap 20px 15px
       width 100%
       margin-block 50px
 
       .data-row
         display contents
+
+        .data
+          word-wrap anywhere
 
         .field
           color colorText4
@@ -182,6 +185,7 @@ import Validators from '~/utils/validators';
 import Placeholder from '~/components/loaders/Placeholder.vue';
 
 import ImageProfileDefault from '#/icons/mono/profile-default.svg';
+import { User } from '~/utils/models';
 
 export default {
   components: { Placeholder, CircleLoading },
@@ -197,7 +201,7 @@ export default {
   async mounted() {},
 
   methods: {
-    async changeUserParam(fieldName: string, validatorName: string, overrideHavingValue: string | null = null) {
+    async changeUserParam(fieldName: keyof User, validatorName: string, overrideHavingValue: string | null = null) {
       const inputValue = await this.$modals.prompt(
         overrideHavingValue ? 'Неверный формат' : 'Изменить значение поля',
         'Введите новое значение',
@@ -206,7 +210,7 @@ export default {
       if (!inputValue) {
         return;
       }
-      const newUserData = {id: this.$user.id};
+      const newUserData = {id: this.$user.id} as Partial<User>;
 
       if (Validators[validatorName]) {
         if (!Validators[validatorName].validate(inputValue)) {

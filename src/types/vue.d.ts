@@ -3,6 +3,8 @@ import API from "~/utils/API";
 import { Modals, Popups } from '@sergtyapkin/modals-popups';
 import { WS } from '@sergtyapkin/reconnecting-websocket';
 
+type RequestHandler<ApiFoo> = (data: Awaited<ReturnType<ApiFoo>>['data'], status: number) => any
+
 declare module 'vue' {
   interface ComponentCustomProperties {
     $app: App,
@@ -17,9 +19,9 @@ declare module 'vue' {
       apiRequest: APIFoo,
       args: Parameters<APIFoo>,
       errorText: string,
-      callback?: (data: Awaited<ReturnType<APIFoo>>['data'], status: number) => any,
+      callback?: RequestHandler<APIFoo>,
       toFallbackValue?: Fallback,
-      errorCallbacks?: {[key: number]: (data: Awaited<ReturnType<APIFoo>>['data'], status: number) => any},
+      errorCallbacks?: {[key: number]: RequestHandler<APIFoo>} | RequestHandler<APIFoo>,
     ) => Promise<Awaited<ReturnType<APIFoo>>['data'] | Fallback>,
   }
 }

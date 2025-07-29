@@ -9,8 +9,10 @@
 
 .root-signin
   page-root()
+
   .form-container
     block-bg-shadow()
+
     margin-bottom 30px
 
     .auth-widget
@@ -21,8 +23,8 @@
       font-small()
 
     .alternative-open-button
-      color colorText5
       margin-top 30px
+      color colorText5
       font-small-extra()
 
     .button-send-code
@@ -63,7 +65,7 @@
           <FormWithErrors
             ref="form"
             submit-text="Зарегистрироваться"
-            @success="createAccount"
+            @success="createAccountWithData"
             :loading="loading"
             :fields="formFields"
           />
@@ -124,7 +126,7 @@ export default {
         },
         middleName: {
           title: 'Отчество',
-          info: 'Как в паспорте',
+          info: 'Как в паспорте. Оставьте пустым, если нет',
           placeholder: 'Маршалович',
           validationRegExp: Validators.name.regExp,
           prettifyResult: Validators.name.prettifyResult,
@@ -143,84 +145,8 @@ export default {
   },
 
   methods: {
-    async onLogin(user: TGUser) {
-      await this.$request(
-        this,
-        this.$api.checkUserTgExisting,
-        [user.username, user.id],
-        `Не удалось получить информацию о существовании пользователя #${user.id}`,
-        async () => {
-          // User existing, login
-          const res = await this.login(user);
-          if (!res) {
-            this.$popups.error('Внутренняя ошибка', 'Не удалось войти в существующий аккаунт');
-            return;
-          }
-
-          this.loading = true;
-          await this.$store.dispatch('GET_USER');
-          this.loading = false;
-          this.$router.push({ name: 'profile' });
-        },
-        undefined,
-        {
-          404: () => {
-            this.tgUser = user;
-            this.formFields.familyName.value = user?.last_name;
-            this.formFields.givenName.value = user?.first_name;
-            this.isNeedsToRegister = true;
-          }
-        }
-      );
-    },
-
-    async createAccount(userData: {
-      email: string;
-      tel: string;
-      familyName: string;
-      givenName: string;
-      middleName: string;
-    }) {
-      if (!this.tgUser) {
-        return;
-      }
-
-      await this.$request(
-        this,
-        this.$api.signUp,
-        [
-          this.tgUser.id,
-          this.tgUser.username,
-          this.tgUser.hash,
-          this.tgUser.auth_date,
-          this.tgUser.photo_url,
-          this.tgUser.first_name,
-          this.tgUser.last_name,
-          userData.email,
-          userData.tel,
-          this.tgUser.photo_url,
-          userData.familyName,
-          userData.givenName,
-          userData.middleName,
-          detectBrowser(),
-          detectOS(),
-        ],
-        'Не удалось создать аккаунт',
-        async () => {
-          await this.$store.dispatch('GET_USER');
-          this.$router.push({name: 'profile'});
-        },
-        undefined,
-        {
-          409: () => {
-            (this.$refs.form as typeof FormWithErrors).setError(['email', 'tel'], 'Email или телефон уже зарегистрированы')
-          }
-        }
-      );
-    },
-
     async login(user: TGUser) {
-      return await this.$request(
+      await this.$request(
         this,
         this.$api.signIn,
         [
@@ -236,8 +162,11 @@ export default {
         ],
         'Не удалось войти в аккаунт',
         async () => {
+          this.loading = true;
           await this.$store.dispatch('GET_USER');
-          this.$router.push({name: 'profile'});
+          this.loading = false;
+          this.$router.push({ name: 'profile' });
+          this.$app.checkUserHasFullProfileData();
         },
       );
     },
@@ -249,18 +178,11 @@ export default {
         [code, detectBrowser(), detectOS()],
         'Не удалось войти в аккаунт по коду',
         async () => {
+          this.loading = true;
           await this.$store.dispatch('GET_USER');
-          this.$router.push({name: 'profile'});
-        },
-        null,
-        {
-          418: (data: any) => {
-            console.log("Gotten user logined by code:", data);
-            this.tgUser = data;
-            this.formFields.familyName.value = data.last_name;
-            this.formFields.givenName.value = data.first_name;
-            this.isNeedsToRegister = true;
-          }
+          this.loading = false;
+          this.$router.push({ name: 'profile' });
+          this.$app.checkUserHasFullProfileData();
         },
       );
     },

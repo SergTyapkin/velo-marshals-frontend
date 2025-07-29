@@ -141,13 +141,12 @@ function removeAllHoverStyles() {
 export default {
   components: { CircleLinesLoading, HeaderComponent, FooterComponent, Modals, Popups },
 
-  data(): {
-    transitionName: string;
-    global?: Record<string, any>;
-  } {
+  data() {
     return {
+      loading: false,
+
       transitionName: '',
-      global: undefined,
+      global: undefined as undefined | Record<string, any>,
     };
   },
 
@@ -169,6 +168,8 @@ export default {
       console.log(`Saved resource by SW: ${current}. Progress: ${progress}/${total}`);
     });
     setDisableCachingUrlsByServiceWorker(DISABLED_CACHING_URLS);
+
+    this.checkIsHealthly();
   },
 
   unmounted() {
@@ -183,6 +184,22 @@ export default {
         return;
       }
       this.global!.$isMobile = false;
+    },
+
+    checkIsHealthly() {
+      this.$request(
+        this,
+        this.$api.getHealthCheck,
+        [],
+        '',
+        () => {},
+        null,
+        () => {
+          if (navigator.onLine) {
+            this.$router.push({ name: 'notHealthly' });
+          }
+        }
+      )
     },
 
     update() {

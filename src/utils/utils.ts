@@ -1,5 +1,6 @@
 import swAPI from '~/serviceWorker/swAPI';
 import routes from '~/routes';
+import { RequestHandler } from '~/types/vue';
 
 export function getRequestFoo<APIFoo extends (...args: any) => any, Fallback>(
   popupsError: (title: string, desc: string) => any,
@@ -9,16 +10,19 @@ export function getRequestFoo<APIFoo extends (...args: any) => any, Fallback>(
     apiRequest: APIFoo,
     args: Parameters<APIFoo>,
     errorText: string,
-    callback?: (data: Awaited<ReturnType<APIFoo>>['data'], status: number) => any,
+    callback?: RequestHandler<APIFoo>,
     toFallbackValue?: Fallback,
-    errorCallbacks?: {[key: number]: (data: Awaited<ReturnType<APIFoo>>['data'], status: number) => any},
+    errorCallbacks?: {[key: number]: RequestHandler<APIFoo>} | RequestHandler<APIFoo>,
   ) => {
     context.loading = true;
     try {
       const { status, ok, data } = await apiRequest(...<[]>args);
       context.loading = false;
       if (!ok) {
-        const errCallback = errorCallbacks?.[status];
+        const errCallback =
+          typeof errorCallbacks === 'function' ?
+            errorCallbacks :
+            errorCallbacks?.[status];
         if (errCallback) {
           errCallback(data, status);
           return toFallbackValue;

@@ -23,6 +23,7 @@ export const UserModel = {
   tel: {
     type: String,
     from: 'tel',
+    optional: true,
   },
   avatarUrl: {
     type: String,

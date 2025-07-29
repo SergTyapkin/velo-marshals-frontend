@@ -30,6 +30,7 @@ export default new Vuex.Store({
       state.user.canEditHistory = userData.canEditHistory;
 
       state.user.isSignedIn = true;
+      state.user.isFilledFullData = !!state.user.tel && !!state.user.email;
     },
     DELETE_USER(state: State) {
       state.user.isSignedIn = false;

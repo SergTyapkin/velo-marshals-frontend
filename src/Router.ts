@@ -13,6 +13,8 @@ import PageEvents from '~/views/PageEvents.vue';
 import PageAdmin from '~/views/Admin/PageAdmin.vue';
 import PageAdminRegistrations from '~/views/Admin/PageAdminRegistrations.vue';
 import PageAdminSqlExecute from '~/views/Admin/PageAdminSqlExecute.vue';
+import PageFillProfileData from '~/views/User/PageFillProfileData.vue';
+import PageNotHealthly from '~/views/PageNotHealthly.vue';
 
 type MyRoute = RouteRecordRaw & {
   path: keyof typeof routes,
@@ -25,8 +27,10 @@ type MyRoute = RouteRecordRaw & {
 export default function createVueRouter(Store: Store): Router {
   const routesList: MyRoute[] = [
     { path: '/', name: 'default', component: Page },
+    { path: '/not-healthly', name: 'notHealthly', component: PageNotHealthly },
 
     { path: '/profile', name: 'profile', component: PageProfile, meta: {loginRequired: true} },
+    { path: '/profile/fill', name: 'fillProfile', component: PageFillProfileData, meta: {loginRequiredPartial: true} },
     { path: '/login', name: 'login', component: PageLogin, meta: {noLoginRequired: true} },
     { path: '/email/confirm', name: 'confirmEmail', component: PageConfirmEmail, meta: {loginRequired: true} },
 
@@ -62,9 +66,16 @@ export default function createVueRouter(Store: Store): Router {
     const loginedRedirect = {
       name: 'profile',
     };
+    const loginedPartialRedirect = {
+      name: 'fillProfile',
+    };
 
     if (to.path === '/' || to.path === '') {
       if (Store.state.user.isSignedIn) {
+        if (!Store.state.user.isFilledFullData) {
+          next(loginedPartialRedirect);
+          return;
+        }
         next(loginedRedirect);
         return;
       }
@@ -73,27 +84,60 @@ export default function createVueRouter(Store: Store): Router {
     }
 
     // Login required redirects
-    if (to.matched.some(record => record.meta.loginRequired === true || record.meta.adminRequired === true)) {
-      if (Store.state.user.isSignedIn) {
-        next();
+    if (to.matched.some(record => record.meta.loginRequired === true)) {
+      if (!Store.state.user.isSignedIn) {
+        next(notLoginedRedirect);
         return;
       }
-      next(notLoginedRedirect);
+      if (!Store.state.user.isFilledFullData) {
+        next(loginedPartialRedirect);
+        return;
+      }
+      next();
+      return;
+    } else if (to.matched.some(record => record.meta.loginRequiredPartial === true)) {
+      if (!Store.state.user.isSignedIn) {
+        next(notLoginedRedirect);
+        return;
+      }
+      if (Store.state.user.isFilledFullData) {
+        next(loginedRedirect);
+        return;
+      }
+      next();
       return;
     } else if (to.matched.some(record => record.meta.noLoginRequired === true)) {
-      if (!Store.state.user.isSignedIn) {
-        next();
+      if (Store.state.user.isSignedIn) {
+        next(loginedRedirect);
         return;
       }
-      next(loginedRedirect);
+      next();
       return;
     }
     if (to.matched.some(record => record.meta.adminRequired === true)) {
-      if (Store.state.user.isAdmin) {
-        next();
+      if (!Store.state.user.isSignedIn) {
+        next(notLoginedRedirect);
         return;
       }
-      next(loginedRedirect);
+      if (!Store.state.user.isFilledFullData) {
+        next(loginedPartialRedirect);
+        return;
+      }
+      if (
+        !Store.state.user.canEditAchievements &&
+        !Store.state.user.canAssignAchievements &&
+        !Store.state.user.canEditRegistrations &&
+        !Store.state.user.canEditEvents &&
+        !Store.state.user.canEditUsersData &&
+        !Store.state.user.canEditDocs &&
+        !Store.state.user.canExecuteSQL &&
+        !Store.state.user.canEditHistory
+      ) {
+        Store.$app.$popups.error('Нет доступа', 'Вы пытались попасть на админскую страницу');
+        next(loginedRedirect);
+        return;
+      }
+      next();
       return;
     }
     next();

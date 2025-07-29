@@ -4,7 +4,7 @@ export interface User {
   tgId: string,
   email?: string,
   isConfirmedEmail: boolean,
-  tel: string,
+  tel?: string,
   avatarUrl?: string,
   familyName: string,
   givenName: string,
@@ -21,6 +21,7 @@ export interface User {
   canExecuteSQL: boolean,
   canEditHistory: boolean,
 
+  isFilledFullData: boolean,
   isSignedIn: boolean,
 }
 

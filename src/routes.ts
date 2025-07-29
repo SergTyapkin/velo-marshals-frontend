@@ -1,9 +1,11 @@
 export default {
   // Other pages
   '/': false, // root is always false
+  '/not-healthly': false,
 
   // User pages
   '/profile': true,
+  '/profile/fill': false,
   '/login': true,
   '/signup': true,
   '/password/restore': false,
