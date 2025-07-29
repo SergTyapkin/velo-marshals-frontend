@@ -11,6 +11,7 @@
   .filters-block
     block-bg()
     block-shadow()
+
     margin-bottom 15px
 
     header
@@ -18,6 +19,7 @@
 
     .filters-group
       list-no-styles()
+
       display grid
       grid-template-columns 1fr 1fr 40px
       gap 20px
@@ -30,6 +32,7 @@
 
         .title
           trans()
+
           min-width 0
 
         .date
@@ -54,11 +57,13 @@
 
     > header
       font-medium()
-      color colorText5
+
       margin-bottom 20px
+      color colorText5
 
     .filters-group
       list-no-styles()
+
       display flex
       flex-direction column
 
@@ -70,18 +75,20 @@
 
     .info
       font-small()
-      text-align center
-      color colorText3
+
       margin-top 20px
+      color colorText3
+      text-align center
 
     .results-container
       list-no-styles()
+
       display flex
       flex-direction column
       gap 30px
       margin-top 20px
 
-      //.registration
+      // .registration
       //  display contents
 </style>
 

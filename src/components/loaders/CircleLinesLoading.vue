@@ -17,8 +17,6 @@ borderWidth = 3px
   border borderWidth solid colorBlockBg
   border-radius 50%
   animation opacity-in 0.4s linear forwards, rotation 1s linear infinite
-  &.centered
-    centered-absolute-transform()
   &::after
     content ''
     position absolute
@@ -31,6 +29,8 @@ borderWidth = 3px
     border borderWidth solid
     border-color colorEmp1 transparent
     border-radius 50%
+  &.centered
+    centered-absolute-transform()
 
   @keyframes opacity-in
     0%

@@ -36,16 +36,18 @@ field()
   height height
   margin 0
   padding 0
-  transition transform 0.2s ease
   color colorText1
+  transition transform 0.2s ease
 
   .title
     font-small()
+
     pointer-events none
     position absolute
     top -6px
     left 4px
     trans()
+
     background colorBlockBg
 
   .selected-item
@@ -56,8 +58,8 @@ field()
     width 100%
     height height
     color colorText1
-    border 2px solid colorBorder
     background colorBlockBg
+    border 2px solid colorBorder
     &.default
       color colorText2
 
@@ -72,7 +74,6 @@ field()
   .list
     scrollable()
 
-    background colorBlockBg
     position absolute
     top height
     overflow-y auto
@@ -81,6 +82,7 @@ field()
     margin 0
     padding 0
     list-style none
+    background colorBlockBg
     border 1px solid colorBorder
     border-radius radiusM
     transition all 0.2s ease
@@ -122,7 +124,7 @@ field()
 
   &:not(.unrolled)
     .list
-      //max-height 0
+      // max-height 0
       pointer-events none
       opacity 0
 

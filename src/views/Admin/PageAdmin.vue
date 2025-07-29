@@ -13,6 +13,7 @@
   .navigation-block
     block-bg-transparent()
     block-shadow()
+
     display flex
     flex-direction column
     gap 20px

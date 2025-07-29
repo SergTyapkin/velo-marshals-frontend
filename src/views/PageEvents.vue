@@ -11,10 +11,10 @@
   page-root()
 
   .info
+    margin-top 20px
+    color colorText3
     text-align center
     font-small()
-    color colorText3
-    margin-top 20px
 
   .events-container
     list-no-styles()

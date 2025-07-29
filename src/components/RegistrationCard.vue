@@ -11,8 +11,8 @@
   display grid
   grid-template-columns 1fr 1fr 1fr
   gap 10px
-  background mix(colorText1, transparent, 10%)
   padding 10px
+  background mix(colorText1, transparent, 10%)
   border-radius radiusM
   trans()
 
@@ -28,13 +28,13 @@
     color colorText5
 
   .tg
-    text-decoration underline
     justify-self end
+    text-decoration underline
 
   .buttons
     display flex
-    justify-content flex-end
     gap 3px
+    justify-content flex-end
 
     .buton-comment
       button()
@@ -62,9 +62,10 @@
   .save
     button-success()
     font-small()
-    padding 5px 10px
-    width fit-content
+
     justify-self end
+    width fit-content
+    padding 5px 10px
 </style>
 
 <template>

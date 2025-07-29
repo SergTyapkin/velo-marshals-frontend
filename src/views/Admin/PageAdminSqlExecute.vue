@@ -9,47 +9,53 @@
 
 
 .root-page-sql
-  margin-top 50px
-  max-width unset
   display flex
   flex-direction column
+  max-width unset
+  margin-top 50px
 
   textarea
     input()
     scrollable()
     font-medium()
-    height initial
+
     resize vertical
     width 100%
+    height initial
+    padding 10px
     white-space pre-wrap
     transition border-color 0.2s ease
-    padding 10px
     &.small
       font-small()
 
   .group
     block-shadow()
     block-bg()
+
     margin-block 20px
     .info
       font-small()
+
       color colorText5
     header
       font-large()
     .button-submit
       button-emp1()
       centered-margin()
+
       margin-top 10px
 
   .group.history
     .history-container
       list-no-styles()
       scrollable()
-      max-height 500px
-      overflow-y auto
+
       overflow-x hidden
+      overflow-y auto
+      max-height 500px
       .history
         button()
+
         display block
         margin-block 10px
         .datetime
