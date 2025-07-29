@@ -41,7 +41,7 @@
         <article class="form-container">
           <header>ВХОД</header>
 
-          <TGAuth @login="onLogin" class="auth-widget" />
+          <TGAuth @login="login" class="auth-widget" />
 
           <div class="alternative-open-button">
             Не получается войти?<br>
