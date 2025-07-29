@@ -152,6 +152,10 @@ export const EventModel = {
     from: 'medalpreviewurl',
     optional: true,
   },
+  isRegistrationOpened: {
+    type: Boolean,
+    from: 'isregistrationopened',
+  },
   authorId: {
     type: String,
     from: 'authorid',
@@ -190,6 +194,7 @@ export const EventModelMockData = validateModel(EventModel, {
   lapdistancekm: 21.15,
   medalpreviewurl: 'https://wallpaperbat.com/img/47279-3d-cat-wallpaper.jpg',
   authorid: 'USER_ID_1',
+  isregistrationopened: true,
   isyouregistered: false,
   yourcomment: 'Путите пж',
   isyourregistrationconfirmed: null,

@@ -16,7 +16,7 @@
   &:first-child
     margin-bottom 100px
 
-  &:not(:first-child)
+  &:not(.registration-opened)
     filter saturate(0.2)
 
   .description
@@ -68,6 +68,7 @@
     width 100%
     height 100%
     object-fit cover
+    border-radius radiusM
 
   .background-overlay
     content ""
@@ -75,10 +76,11 @@
     z-index -1
     inset 0
     background linear-gradient(60deg, colorBlockBg 30%, mix(colorBlockBg, transparent, 30%))
+    border-radius radiusM
 </style>
 
 <template>
-  <div class="root-event-card">
+  <div class="root-event-card" :class="{'registration-opened': event.isRegistrationOpened}">
     <Placeholder width="100%" height="100%" ref="placeholder" absolute />
     <img class="background" :src="event.previewUrl" alt="bg" @load="$refs.placeholder.setHidden()" />
     <div class="background-overlay" />
@@ -92,7 +94,7 @@
     </div>
     <div class="date" v-if="event.cameDate">Сбор в {{ timeFormatter(event.cameDate) }}</div>
 
-    <div class="registrations-info" v-if="canRegister">
+    <div class="registrations-info" v-if="event.isRegistrationOpened">
       {{ event.registrationsCount }} <img src="/static/icons/mono/people.svg" alt="man" />
     </div>
 
@@ -110,7 +112,7 @@
       Регистрация ожидает подтверждения администраторами
     </div>
 
-    <div v-if="canRegister && event.isYourRegistrationConfirmed !== false">
+    <div v-if="event.isRegistrationOpened && event.isYourRegistrationConfirmed !== false">
       <transition name="opacity" mode="out-in">
         <button v-if="event.isYouRegistered" class="unregister" :disabled="loading" @click="unregister(event)">
           Отменить регистрацию
@@ -140,7 +142,6 @@ export default {
       type: Object as PropType<Event>,
       required: true,
     },
-    canRegister: Boolean,
   },
 
   data() {

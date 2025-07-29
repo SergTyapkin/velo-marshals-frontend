@@ -36,6 +36,7 @@ export interface Event {
   customCSS?: string,
   lapDistanceKm: number,
   medalPreviewUrl: string,
+  isRegistrationOpened: boolean,
   authorId?: string,
   isYouRegistered: boolean,
   isYourRegistrationConfirmed?: boolean,

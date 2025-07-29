@@ -115,6 +115,12 @@ export default class API extends REST_API {
       },
       {},
     ) as MyResponse<unknown>;
+  signInByCode = (code: string, clientBrowser: string, clientOS: string) =>
+    this.#POST(
+      `/user/auth/code`,
+      {code, clientBrowser, clientOS},
+      {},
+    ) as MyResponse<unknown>;
   signUp = (
     tgId: string,
     tgUsername: string,

@@ -27,10 +27,9 @@
     <div v-if="!events.length && !loading" class="info">Мероприятий не найдено</div>
     <ul v-else class="events-container">
       <EventCard
-        v-for="(event, i) in events"
+        v-for="event in events"
         :event="event"
         :key="event"
-        :can-register="i === 0"
         @register="updateEvents"
         @unregister="updateEvents"
       />

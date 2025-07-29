@@ -11,21 +11,53 @@
   page-root()
   .form-container
     block-bg-shadow()
+    margin-bottom 30px
+
     .auth-widget
       text-align center
+
     .info
       color colorText5
       font-small()
+
+    .alternative-open-button
+      color colorText5
+      margin-top 30px
+      font-small-extra()
+
+    .button-send-code
+      button()
+
+    section
+      margin-block 20px
 </style>
 
 <template>
   <div class="root-signin">
-    <article class="form-container">
-      <header>ВХОД</header>
+    <transition name="opacity" mode="out-in">
+      <div v-if="!isNeedsToRegister">
+        <article class="form-container">
+          <header>ВХОД</header>
 
-      <transition name="opacity" mode="out-in">
-        <TGAuth @login="onLogin" v-if="!isNeedsToRegister" class="auth-widget" />
-        <section v-else>
+          <TGAuth @login="onLogin" class="auth-widget" />
+
+          <div class="alternative-open-button">
+            Не получается войти?<br>
+            Используйте вход чеез бота
+          </div>
+        </article>
+
+        <article class="form-container">
+          <header>ВХОД ЧЕРЕЗ БОТА</header>
+
+          <a class="button-send-code" href="https://t.me/velomarshal_bot?start=auth_by_code" target="_blank">Войти</a>
+        </article>
+      </div>
+
+      <article v-else>
+        <header>ВХОД</header>
+
+        <section>
           Видим вас впервые. Давайте знакомиться!
           <div class="info">Вы вошли в Telegram: {{ tgUser.username ?? tgUser.id }}</div>
           <FormWithErrors
@@ -36,8 +68,8 @@
             :fields="formFields"
           />
         </section>
-      </transition>
-    </article>
+      </article>
+    </transition>
   </div>
 </template>
 
@@ -54,15 +86,7 @@ export default {
     return {
       loading: false,
       isNeedsToRegister: false,
-      tgUser: {
-        // auth_date: 1753657645,
-        // first_name: "Сергей",
-        // hash: "xxxx",
-        // id: 897452398,
-        // last_name: "Тяпкин 🔥",
-        // photo_url: "https://t.me/i/userpic/320/VAi-EEjunOcTgZG36icSc6982Znc9mfEUNrphVxV4J4.jpg",
-        // username: "Tyapkin_S",
-      } as TGUser,
+      tgUser: {} as TGUser,
 
       formFields: {
         email: {
@@ -107,10 +131,15 @@ export default {
           autocomplete: 'middlename',
         },
       } as Record<PropertyKey, Field>,
+
+      authSecretCode: this.$route.query.code as string | undefined,
     };
   },
 
   async mounted() {
+    if (this.authSecretCode) {
+      this.loginByCode(this.authSecretCode);
+    }
   },
 
   methods: {
@@ -210,7 +239,19 @@ export default {
           await this.$store.dispatch('GET_USER');
           this.$router.push({name: 'profile'});
         },
-        null,
+      );
+    },
+
+    async loginByCode(code: string) {
+      return await this.$request(
+        this,
+        this.$api.signInByCode,
+        [code, detectBrowser(), detectOS()],
+        'Не удалось войти в аккаунт по коду',
+        async () => {
+          await this.$store.dispatch('GET_USER');
+          this.$router.push({name: 'profile'});
+        },
       );
     },
   },
