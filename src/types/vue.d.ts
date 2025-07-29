@@ -19,7 +19,7 @@ declare module 'vue' {
       errorText: string,
       callback?: (data: Awaited<ReturnType<APIFoo>>['data'], status: number) => any,
       toFallbackValue?: Fallback,
-      errorCallbacks?: {[key: number]: () => any},
+      errorCallbacks?: {[key: number]: (data: Awaited<ReturnType<APIFoo>>['data'], status: number) => any},
     ) => Promise<Awaited<ReturnType<APIFoo>>['data'] | Fallback>,
   }
 }

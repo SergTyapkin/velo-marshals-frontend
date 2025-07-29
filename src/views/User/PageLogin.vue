@@ -43,7 +43,7 @@
 
           <div class="alternative-open-button">
             Не получается войти?<br>
-            Используйте вход чеез бота
+            Используйте вход через бота
           </div>
         </article>
 
@@ -54,12 +54,12 @@
         </article>
       </div>
 
-      <article v-else>
+      <article v-else class="form-container">
         <header>ВХОД</header>
 
         <section>
           Видим вас впервые. Давайте знакомиться!
-          <div class="info">Вы вошли в Telegram: {{ tgUser.username ?? tgUser.id }}</div>
+          <div class="info">Вы вошли в Telegram: @{{ tgUser.username }} #{{ tgUser.id }}</div>
           <FormWithErrors
             ref="form"
             submit-text="Зарегистрироваться"
@@ -165,10 +165,10 @@ export default {
         undefined,
         {
           404: () => {
+            this.tgUser = user;
             this.formFields.familyName.value = user?.last_name;
             this.formFields.givenName.value = user?.first_name;
             this.isNeedsToRegister = true;
-            this.tgUser = user;
           }
         }
       );
@@ -251,6 +251,16 @@ export default {
         async () => {
           await this.$store.dispatch('GET_USER');
           this.$router.push({name: 'profile'});
+        },
+        null,
+        {
+          418: (data: any) => {
+            console.log("Gotten user logined by code:", data);
+            this.tgUser = data;
+            this.formFields.familyName.value = data.last_name;
+            this.formFields.givenName.value = data.first_name;
+            this.isNeedsToRegister = true;
+          }
         },
       );
     },

@@ -11,7 +11,7 @@ export function getRequestFoo<APIFoo extends (...args: any) => any, Fallback>(
     errorText: string,
     callback?: (data: Awaited<ReturnType<APIFoo>>['data'], status: number) => any,
     toFallbackValue?: Fallback,
-    errorCallbacks?: {[key: number]: () => any},
+    errorCallbacks?: {[key: number]: (data: Awaited<ReturnType<APIFoo>>['data'], status: number) => any},
   ) => {
     context.loading = true;
     try {
@@ -20,7 +20,7 @@ export function getRequestFoo<APIFoo extends (...args: any) => any, Fallback>(
       if (!ok) {
         const errCallback = errorCallbacks?.[status];
         if (errCallback) {
-          errCallback();
+          errCallback(data, status);
           return toFallbackValue;
         }
         if (toFallbackValue) {
