@@ -10,7 +10,7 @@ export interface User {
   givenName: string,
   middleName: string,
   joinedDate: Date,
-  level: number,
+  level: string,
 
   canEditAchievements: boolean,
   canAssignAchievements: boolean,
@@ -60,4 +60,5 @@ export interface Registration {
   userTel: string,
   userTgUsername?: string,
   userAvatarUrl?: string,
+  userLevel: string,
 }

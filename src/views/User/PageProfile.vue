@@ -40,7 +40,6 @@
         max-width 350px
 
         .placeholder
-          position absolute
           border-radius radiusMax
 
         img
@@ -112,7 +111,7 @@
       <section class="user-name-row">
         <div class="user-name-id-block">
           <div class="user-image-group">
-            <Placeholder width="100%" height="100%" class="placeholder" ref="placeholder" />
+            <Placeholder class="placeholder" ref="placeholder" absolute />
             <img
               :src="$user.avatarUrl || ImageProfileDefault"
               alt="avatar"

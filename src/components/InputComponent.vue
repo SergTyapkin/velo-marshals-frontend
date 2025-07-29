@@ -31,7 +31,7 @@
       font-small-extra()
 
       font-style italic
-      color colorText2
+      color colorText5
 
   .keys-count
     font-small-extra()

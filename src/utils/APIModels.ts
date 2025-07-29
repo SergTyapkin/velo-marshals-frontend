@@ -47,7 +47,7 @@ export const UserModel = {
     from: 'joineddate',
   },
   level: {
-    type: Number,
+    type: String,
     from: 'level',
   },
   canEditAchievements: {
@@ -279,6 +279,11 @@ export const RegistrationModel = {
   userAvatarUrl: {
     type: String,
     from: 'useravatarurl',
+    optional: true,
+  },
+  userLevel: {
+    type: String,
+    from: 'userlevel',
     optional: true,
   },
 };

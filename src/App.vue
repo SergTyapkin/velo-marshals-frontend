@@ -12,7 +12,7 @@
   width 100%
   min-height 100vh
 
-  > *
+  > *:not(.loading)
     position absolute
     width 100%
     min-height 100vh
@@ -95,7 +95,7 @@
     <router-view #default="{ Component }">
       <transition name="scale-in">
         <component v-if="Component" :is="Component" />
-        <CircleLinesLoading v-else centered />
+        <CircleLinesLoading v-else centered size="40px" class="loading" />
       </transition>
     </router-view>
   </div>

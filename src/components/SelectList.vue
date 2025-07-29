@@ -1,9 +1,12 @@
 <style lang="stylus" scoped>
 @import '../styles/constants.styl'
 @import '../styles/components.styl'
-@import '../styles/utils.styl'
+@import '../styles/buttons.styl'
 @import '../styles/fonts.styl'
+@import '../styles/utils.styl'
+@import '../styles/animations.styl'
 @import '../styles/scrollbars.styl'
+
 
 height = 45px
 bg-color = colorBlockBg
@@ -20,29 +23,29 @@ field()
   cursor pointer
   display flex
   align-items center
-  padding 0 15px
+  padding 10px 10px
   transition background-color 0.1s ease
 
 
 .select-root
   user-select none
   position relative
-  z-index 999
   transform translateY(calc(var(--overflow-y-length) * -1px)) translateX(calc(var(--overflow-x-length) * -1px))
   min-width 100px
   height height
   margin 0
   padding 0
   transition transform 0.2s ease
+  color colorText1
 
   .title
+    font-small()
     pointer-events none
     position absolute
-    top -10px
+    top -6px
     left 4px
-    font-medium()
-
-    transition all 0.2s ease
+    trans()
+    background colorBlockBg
 
   .selected-item
     input()
@@ -65,9 +68,9 @@ field()
       transition transform 0.3s ease
 
   .list
-    block-shadow()
     scrollable()
 
+    background colorBlockBg
     position absolute
     z-index 9999
     top height
@@ -77,19 +80,18 @@ field()
     margin 0
     padding 0
     list-style none
-    border-top none
-    border-radius borderRadiusM
+    border 1px solid colorBorder
+    border-radius radiusM
     transition all 0.2s ease
 
     .item
       field()
 
-      height item-height
       color colorText1
       background bg-color
 
       &.default
-        color colorText2
+        color colorText5
 
       &.selected
         letter-spacing 1px
@@ -107,6 +109,7 @@ field()
   &.unrolled
     .title
       top -16px
+      background transparent
 
     .selected-item
       background bg-color-selected
@@ -117,7 +120,8 @@ field()
 
   &:not(.unrolled)
     .list
-      max-height 0
+      //max-height 0
+      pointer-events none
       opacity 0
 
   &[readonly]:not([readonly="false"])
@@ -164,7 +168,7 @@ field()
       {{ currentSelectedIdx !== undefined ? list[currentSelectedIdx]?.name : (placeholder || 'Не выбрано') }}
       <img src="/static/icons/chevron-down.svg" alt="chevron">
     </div>
-    <ul class="list scrollable">
+    <ul class="list" ref="list">
       <li
         v-if="canBeNull"
         class="item default"
@@ -187,8 +191,11 @@ field()
 </template>
 
 <script lang="ts">
-import {PropType} from "vue";
+import { nextTick, PropType } from 'vue';
 
+
+const HEIGHT_SAVE_ZONE_OFFSET = 10; // px
+const WIDTH_SAVE_ZONE_OFFSET = 0; // px
 
 export default {
   emits: ['input', 'update:modelValue'],
@@ -211,13 +218,17 @@ export default {
       default: undefined,
     },
     selectedId: {
-      type: Number,
+      type: String,
       default: undefined,
     },
     disabled: Boolean,
     readonly: Boolean,
     opened: Boolean,
     canBeNull: Boolean,
+    nullValue: {
+      type: Object,
+      default: null,
+    },
 
     // eslint-disable-next-line vue/no-unused-properties
     modelValue: {
@@ -291,9 +302,9 @@ export default {
           this.$emit('input', idx, this.list[idx].value);
         }
       } else {
-        this.$emit('update:modelValue', undefined);
+        this.$emit('update:modelValue', this.nullValue);
         if (!disableEmitting) {
-          this.$emit('input', null, undefined);
+          this.$emit('input', null, this.nullValue);
         }
       }
       this.setClose();
@@ -310,14 +321,14 @@ export default {
       }
     },
 
-    setOpen() {
-      const rect = (this.$el as HTMLElement).getBoundingClientRect();
-      const bottomY = rect.y + rect.height;
-      const rightX = rect.x + rect.width;
-      const maxHeight = window.innerHeight;
-      const maxWidth = window.innerWidth;
-      this.overflowYLength = Math.max(bottomY - maxHeight, 0);
-      this.overflowXLength = Math.max(rightX - maxWidth, 0);
+    async setOpen() {
+      await nextTick();
+      const rect = (this.$refs.list as HTMLElement).getBoundingClientRect();
+      const maxHeight = window.innerHeight - HEIGHT_SAVE_ZONE_OFFSET;
+      const maxWidth = window.innerWidth - WIDTH_SAVE_ZONE_OFFSET;
+      console.log(rect);
+      this.overflowYLength = Math.max(rect.bottom - maxHeight, 0);
+      this.overflowXLength = Math.max(rect.right - maxWidth, 0);
       this.isUnrolled = true;
     },
     setClose() {

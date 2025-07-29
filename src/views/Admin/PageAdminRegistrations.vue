@@ -24,16 +24,21 @@
 
       .event
         display contents
+
         .title
           trans()
           min-width 0
+
         .date
           color colorText5
+
         .count
           trans()
           svg-inside(25px, 5px, 0)
+
           img
             opacity 0.3
+
         &.selected
           .title
           .count
@@ -44,44 +49,37 @@
     block-bg()
     block-shadow()
 
-    header
-      font-large()
+    > header
+      font-medium()
+      color colorText5
+      margin-bottom 20px
+
+    .filters-group
+      list-no-styles()
+      display flex
+      flex-direction column-reverse
+
+      .filter-field
+        margin-bottom 20px
+
+        header
+          margin-bottom 5px
+
+    .info
+      font-small()
+      text-align center
+      color colorText3
+      margin-top 20px
 
     .results-container
       list-no-styles()
+      display flex
+      flex-direction column
+      gap 30px
+      margin-top 20px
 
-      .registration
-        display flex
-        gap 10px
-        align-items center
-        justify-content space-between
-        &.rejected
-          color colorError
-        &.confirmed
-          color colorSuccess
-
-        .number
-          color colorText5
-
-        .tg
-          text-decoration underline
-
-        .buton-comment
-          button()
-
-        .buton-reject
-          button-attention()
-
-        .buton-confirm
-          button-success()
-
-        .buton-comment
-        .buton-reject
-        .buton-confirm
-          padding 5px
-
-          img
-            margin 0
+      //.registration
+      //  display contents
 </style>
 
 <template>
@@ -90,48 +88,53 @@
       <header>Регистрации</header>
 
       <ul class="filters-group">
-        <li @click="updateRegistrations(event.id)" class="event" v-for="event in events" :class="{selected: event.id === selectedEventId}">
+        <li
+          @click="updateRegistrations(event.id)"
+          class="event"
+          v-for="event in events"
+          :class="{ selected: event.id === selectedEventId }">
           <div class="title">{{ event.title }}</div>
           <div class="date">{{ dateFormatter(event.startDate) }}</div>
-          <div class="count">{{ event.registrationsCount }}<img src="/static/icons/mono/people.svg" alt="people"></div>
+          <div class="count">
+            {{ event.registrationsCount }}<img src="/static/icons/mono/people.svg" alt="people" />
+          </div>
         </li>
       </ul>
     </section>
 
-    <section class="results-block">
-      <header>{{ selectedEvent?.title }}</header>
-      <ul class="results-container">
-        <li
-          v-for="(registration, i) in registrations"
-          class="registration"
-          :class="{ rejected: registration.isConfirmed === false, confirmed: registration.isConfirmed === true }"
-        >
-          <div class="number">#{{ i }}</div>
-          <div class="username">{{ registration.userName }}</div>
-          <a class="tg" :href="`https://t.me/${registration.userTgUsername}`">@{{ registration.userTgUsername }}</a>
-          <button
-            v-if="registration.userComment"
-            @click="$modals.alert('Комментарий', registration.userComment)"
-            class="buton-comment"
-          >
-            <img src="/static/icons/mono/message.svg" alt="message">
-          </button>
+    <section v-if="selectedEvent" class="results-block">
+      <header>Регистрации на<br />"{{ selectedEvent?.title }}"</header>
 
-          <button
-            @click="setRegistrationConfirmed(false, registration)"
-            class="buton-reject"
-            v-if="registration.isConfirmed !== false"
-          >
-            <img src="/static/icons/color/cross.svg" alt="reject">
-          </button>
-          <button
-            @click="setRegistrationConfirmed(true, registration)"
-            class="buton-confirm"
-            v-if="registration.isConfirmed !== true"
-          >
-            <img src="/static/icons/color/done.svg" alt="confirm">
-          </button>
-        </li>
+      <ul class="filters-group">
+        <SelectList
+          class="filter-field"
+          title="Подтвержденность"
+          :list="[
+            { name: 'Все', value: null },
+            { name: 'На рассмотрении', value: undefined },
+            { name: 'Подтверждённые', value: true },
+            { name: 'Отклонённые', value: false },
+          ]"
+          v-model="filters.isConfirmed"
+          :selected-idx="0" />
+        <SelectList
+          class="filter-field"
+          title="Категория"
+          :list="Object.entries(MARSHAL_CATEGORIES).map(([key, val]) => ({ name: val, value: key }))"
+          v-model="filters.level"
+          :can-be-null="true"
+        />
+      </ul>
+
+      <div v-if="!filteredRegistrations.length && !loading" class="info">Зявок по текущим фильтрам не найдено</div>
+      <ul v-else class="results-container">
+        <RegistrationCard
+          v-for="(registration, i) in filteredRegistrations"
+          :key="registration"
+          class="registration"
+          :registration="registration"
+          :idx="i"
+        />
       </ul>
     </section>
 
@@ -143,10 +146,12 @@
 import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 import type { Event, Registration } from '~/utils/models';
 import { dateFormatter } from '~/utils/formatters';
-
+import SelectList from '~/components/SelectList.vue';
+import RegistrationCard from '~/components/RegistrationCard.vue';
+import { MARSHAL_LEVELS } from '~/constants';
 
 export default {
-  components: { CircleLinesLoading },
+  components: { RegistrationCard, SelectList, CircleLinesLoading },
 
   data() {
     return {
@@ -157,7 +162,28 @@ export default {
 
       selectedEventId: null as string | null,
       selectedEvent: null as Event | null,
+
+      filters: {
+        isConfirmed: null as null | undefined | boolean,
+        level: null as null | string,
+      },
+
+      MARSHAL_CATEGORIES: MARSHAL_LEVELS,
     };
+  },
+
+  computed: {
+    filteredRegistrations() {
+      return this.registrations.filter(reg => {
+        if (this.filters.isConfirmed !== null && reg.isConfirmed !== this.filters.isConfirmed) {
+          return false;
+        }
+        if (this.filters.level !== null && reg.userLevel !== this.filters.level) {
+          return false;
+        }
+        return true;
+      });
+    },
   },
 
   mounted() {
@@ -169,9 +195,16 @@ export default {
 
     async updateEvents() {
       this.events = (
-        await this.$request(this, this.$api.getEvents, [{type: 'all'}], 'Не удалось получить список событий', () => {}, {
-          events: [],
-        })
+        await this.$request(
+          this,
+          this.$api.getEvents,
+          [{ type: 'all' }],
+          'Не удалось получить список событий',
+          () => {},
+          {
+            events: [],
+          },
+        )
       ).events;
     },
 
@@ -198,19 +231,6 @@ export default {
           },
         )
       ).registrations;
-    },
-
-    async setRegistrationConfirmed(state: boolean, registration: Registration) {
-      await this.$request(
-        this,
-        this.$api.setRegistrationConfirmed,
-        [registration.id, state],
-        'Не удалось изменить данные регистрации',
-        () => {
-          this.$popups.success(`Изменено`);
-          registration.isConfirmed = state;
-        },
-      );
     },
   },
 };

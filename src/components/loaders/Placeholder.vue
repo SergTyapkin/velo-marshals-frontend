@@ -16,6 +16,10 @@ c2 = mix(white, transparent, 15%)
   text-align center
   background linear-gradient(60deg, c1 0, c1 40%, c2 50%, c1 60%, c1 100%)
   background-size 400% 100%
+  &.absolute
+    position absolute
+    top 0
+    left 0
   &:not(.error)
     animation-not-reduced(move-background infinite 2s linear)
 
@@ -29,7 +33,7 @@ c2 = mix(white, transparent, 15%)
 </style>
 
 <template>
-  <div class="root-placeholder" :class="{error}" :style="{'--height': height, '--width': width}" v-if="!isHidden">
+  <div class="root-placeholder" :class="{error, absolute}" :style="{'--height': height, '--width': width}" v-if="!isHidden">
     <transition name="opacity">
       <CircleLoading v-if="showLoadingSymbol && !isError" class="loading-symbol" light />
     </transition>
@@ -47,11 +51,11 @@ export default {
   props: {
     height: {
       type: String,
-      required: true,
+      default: '100%',
     },
     width: {
       type: String,
-      required: true,
+      default: '100%',
     },
     showLoadingSymbol: {
       type: Boolean,
@@ -61,6 +65,7 @@ export default {
       type: Boolean,
       default: false,
     },
+    absolute: Boolean,
   },
 
   data() {

@@ -6,7 +6,7 @@ import {
   EventModel,
   EventModelMockData,
   RegistrationListModel,
-  RegistrationListModelMockData,
+  RegistrationListModelMockData, RegistrationModel, RegistrationModelMockData,
   UserModel,
   UserModelMockData,
 } from '~/utils/APIModels';
@@ -185,13 +185,10 @@ export default class API extends REST_API {
     ) as MyResponse<{
       registrations: Registration[];
     }>;
-  setRegistrationConfirmed = (id: string, isConfirmed: boolean) =>
+  updateRegistration = (registration: Registration) =>
     this.#PUT(
       `/registration`,
-      {
-        id,
-        isConfirmed,
-      },
+      registration,
       {},
       Response200({}),
     ) as MyResponse<unknown>;
