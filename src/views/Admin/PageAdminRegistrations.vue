@@ -57,7 +57,7 @@
     .filters-group
       list-no-styles()
       display flex
-      flex-direction column-reverse
+      flex-direction column
 
       .filter-field
         margin-bottom 20px

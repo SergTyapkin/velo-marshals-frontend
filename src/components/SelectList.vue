@@ -30,6 +30,7 @@ field()
 .select-root
   user-select none
   position relative
+  z-index var(--z-index)
   transform translateY(calc(var(--overflow-y-length) * -1px)) translateX(calc(var(--overflow-x-length) * -1px))
   min-width 100px
   height height
@@ -56,6 +57,7 @@ field()
     height height
     color colorText1
     border 2px solid colorBorder
+    background colorBlockBg
     &.default
       color colorText2
 
@@ -72,7 +74,6 @@ field()
 
     background colorBlockBg
     position absolute
-    z-index 9999
     top height
     overflow-y auto
     width 100%
@@ -107,6 +108,7 @@ field()
         border-top 1px solid colorBorder
 
   &.unrolled
+    z-index 999999999999
     .title
       top -16px
       background transparent
@@ -161,6 +163,7 @@ field()
     :style="{
       '--overflow-y-length': overflowYLength,
       '--overflow-x-length': overflowXLength,
+      '--z-index': zIndex,
     }"
   >
     <span class="error-text">{{ currentError }}</span>
@@ -191,11 +194,14 @@ field()
 </template>
 
 <script lang="ts">
-import { nextTick, PropType } from 'vue';
+import { getCurrentInstance, nextTick, PropType } from 'vue';
 
 
-const HEIGHT_SAVE_ZONE_OFFSET = 10; // px
+const HEIGHT_SAVE_ZONE_OFFSET = 75; // px
 const WIDTH_SAVE_ZONE_OFFSET = 0; // px
+
+const INITIAL_Z_INDEX = 999999; // z-index
+
 
 export default {
   emits: ['input', 'update:modelValue'],
@@ -257,10 +263,21 @@ export default {
 
       overflowYLength: 0,
       overflowXLength: 0,
+
+      zIndex: 0,
     };
   },
 
   mounted() {
+    const global = getCurrentInstance()!.appContext.config.globalProperties;
+    if (!global.$__selectList_zIndex_counter) {
+      global.$__selectList_zIndex_counter = INITIAL_Z_INDEX;
+    } else {
+      global.$__selectList_zIndex_counter -= 1;
+    }
+    this.zIndex = global.$__selectList_zIndex_counter;
+
+
     window.addEventListener('click', this.onClick);
 
     if (this.$props.selectedIdx !== undefined) {
@@ -285,7 +302,7 @@ export default {
 
   methods: {
     onClick() {
-      this.isUnrolled = false;
+      this.setClose();
     },
 
     focus() {

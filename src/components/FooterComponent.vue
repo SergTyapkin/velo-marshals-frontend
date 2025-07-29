@@ -10,6 +10,7 @@
 
 .root-footer
   position fixed
+  z-index 999999999
   bottom 0
   overflow hidden
   width 100%
