@@ -89,7 +89,7 @@ export default class API extends REST_API {
     this.#GET(`/user`, { tgUsername, tgId }, { id: String }, Response200({ id: 'USER_ID' })) as MyResponse<{
       id: string;
     }>;
-  updateUser = (userData: Partial<User> | {id: string}) =>
+  updateUser = (userData: Partial<User> | { id: string }) =>
     this.#PUT(`/user`, userData, UserModel, Response200(UserModelMockData)) as MyResponse<User>;
 
   signIn = (
@@ -121,7 +121,7 @@ export default class API extends REST_API {
   signInByCode = (code: string, clientBrowser: string, clientOS: string) =>
     this.#POST(
       `/user/auth/code`,
-      {code, clientBrowser, clientOS},
+      { code, clientBrowser, clientOS },
       {},
     ) as MyResponse<unknown>;
   update = (
@@ -225,8 +225,9 @@ export default class API extends REST_API {
   // deleteImage = (imageId) => this.#DELETE(`/image`, {imageId});
 
   executeAdminSql = (sql: string) => this.#POST(`/sql`, { sql });
-  getSQLHistory = (filters: {limit?: number} = {}) =>
+  getSQLHistory = (filters: { limit?: number } = {}) =>
     this.#GET(`/sql/history`, filters, SQLHistoryListModel, Response200(SQLHistoryListModelMockData)) as MyResponse<{
       history: SQLHistory[];
     }>;
+  deleteSQLHistory = (id: string) => this.#DELETE(`/sql/history`, { id }, {}, Response200({})) as MyResponse<unknown>;
 }

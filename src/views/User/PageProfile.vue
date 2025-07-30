@@ -107,7 +107,7 @@
   <div class="root-profile">
     <section class="header-row">
       <header class="header">ПРОФИЛЬ</header>
-      <button class="logout-button" @click="logout"><img src="/static/icons/color/logout.svg" alt="logout"></button>
+      <button class="logout-button" @click="logout"><img src="/static/icons/color/logout.svg" alt="logout" /></button>
     </section>
 
     <section class="user-block">
@@ -119,17 +119,14 @@
               :src="$user.avatarUrl || ImageProfileDefault"
               alt="avatar"
               @load="$refs.placeholder.setHidden()"
-              @error="$refs.placeholder.setError()"
-            >
-            <img :src="$user.avatarUrl || ImageProfileDefault" alt="avatar" class="bg">
+              @error="$refs.placeholder.setError()" />
+            <img :src="$user.avatarUrl || ImageProfileDefault" alt="avatar" class="bg" />
           </div>
           <div class="user-name-group">
             <div class="name">{{ $user.givenName }} {{ $user.familyName }}</div>
             <div class="info">@{{ $user.tgUsername }}&nbsp;&nbsp;#{{ $user.tgId }}</div>
           </div>
         </div>
-
-        <CircleLoading v-if="loading" size="30px" light />
       </section>
 
       <section class="user-data-block">
@@ -137,21 +134,21 @@
           <div class="field">Фамилия</div>
           <div class="data">{{ $user.familyName }}</div>
           <button class="button-edit" @click="changeUserParam('familyName', 'name')">
-            <img src="/static/icons/mono/edit.svg" alt="edit">
+            <img src="/static/icons/mono/edit.svg" alt="edit" />
           </button>
         </div>
         <div class="data-row">
           <div class="field">Имя</div>
           <div class="data">{{ $user.givenName }}</div>
           <button class="button-edit" @click="changeUserParam('givenName', 'name')">
-            <img src="/static/icons/mono/edit.svg" alt="edit">
+            <img src="/static/icons/mono/edit.svg" alt="edit" />
           </button>
         </div>
         <div class="data-row">
           <div class="field">Отчество</div>
           <div class="data">{{ $user.middleName }}</div>
           <button class="button-edit" @click="changeUserParam('middleName', 'name')">
-            <img src="/static/icons/mono/edit.svg" alt="edit">
+            <img src="/static/icons/mono/edit.svg" alt="edit" />
           </button>
         </div>
         <div class="data-row">
@@ -164,31 +161,33 @@
             <div class="data">{{ $user.email }}</div>
           </div>
           <button class="button-edit" @click="changeUserParam('email', 'email')">
-            <img src="/static/icons/mono/edit.svg" alt="edit">
+            <img src="/static/icons/mono/edit.svg" alt="edit" />
           </button>
         </div>
         <div class="data-row">
           <div class="field">Телефон</div>
           <div class="data">{{ $user.tel }}</div>
           <button class="button-edit" @click="changeUserParam('tel', 'phone')">
-            <img src="/static/icons/mono/edit.svg" alt="edit">
+            <img src="/static/icons/mono/edit.svg" alt="edit" />
           </button>
         </div>
+
+        <CircleLinesLoading v-if="loading" centered />
       </section>
     </section>
   </div>
 </template>
 
 <script lang="ts">
-import CircleLoading from '~/components/loaders/CircleLoading.vue';
 import Validators from '~/utils/validators';
 import Placeholder from '~/components/loaders/Placeholder.vue';
+import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 
 import ImageProfileDefault from '#/icons/mono/profile-default.svg';
 import { User } from '~/utils/models';
 
 export default {
-  components: { Placeholder, CircleLoading },
+  components: { CircleLinesLoading, Placeholder },
 
   data() {
     return {
@@ -210,7 +209,7 @@ export default {
       if (!inputValue) {
         return;
       }
-      const newUserData = {id: this.$user.id} as Partial<User>;
+      const newUserData = { id: this.$user.id } as Partial<User>;
 
       if (Validators[validatorName]) {
         if (!Validators[validatorName].validate(inputValue)) {

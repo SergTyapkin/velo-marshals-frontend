@@ -84,7 +84,7 @@
     <section class="group history">
       <header>История запросов</header>
       <ul class="history-container">
-        <li v-for="request in history" @click="sql = request.text" class="history">
+        <li v-for="request in history" @click="sql = request.text" @contextmenu="deleteHistory(request.id)" class="history">
           <div class="value">{{ request.text }}</div>
           <div class="datetime">{{ dateTimeFormatter(request.date) }}</div>
         </li>
@@ -150,7 +150,21 @@ export default {
         () => {},
         {history: []},
       )).history;
-      console.log(this.history);
+    },
+
+    async deleteHistory(id: string) {
+      await this.$request(
+        this,
+        this.$api.deleteSQLHistory,
+        [id],
+        'Не удалось удалить запись истори SQL',
+        () => {
+          const idx = this.history.findIndex(r => r.id === id);
+          if (idx !== -1) {
+            this.history.splice(idx, 1);
+          }
+        },
+      );
     },
   },
 };
