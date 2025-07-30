@@ -149,7 +149,7 @@ export default {
           409: () => {
             (this.$refs.form as typeof FormWithErrors).setError(
               ['email', 'tel'],
-              'Email или телефон уже зарегистрированы',
+              'Email или телефон заняты',
             );
           },
         },
