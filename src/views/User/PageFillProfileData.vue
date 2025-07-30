@@ -38,10 +38,10 @@
 <template>
   <div class="root-signin">
     <article class="form-container">
-      <header>РЕГИСТРАЦИЯ</header>
+      <header>ДАННЫЕ ПРОФИЛЯ</header>
 
       <section>
-        Видим вас впервые. Давайте знакомиться!
+        Для вашего профиля не хватает данных. Давайте знакомиться!
         <div class="info">Вы вошли в Telegram: @{{ $user.tgUsername }} #{{ $user.tgId }}</div>
         <FormWithErrors
           ref="form"
