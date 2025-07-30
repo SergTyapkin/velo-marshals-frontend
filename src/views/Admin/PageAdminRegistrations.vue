@@ -216,6 +216,11 @@ export default {
           },
         )
       ).events;
+
+      const openedRegistrationEvent = this.events.find(ev => ev.isRegistrationOpened);
+      if (openedRegistrationEvent) {
+        await this.updateRegistrations(openedRegistrationEvent.id);
+      }
     },
 
     async updateRegistrations(eventId: string) {
