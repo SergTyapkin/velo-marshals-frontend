@@ -79,9 +79,11 @@ export default class API extends REST_API {
   // getUsersBySearch = (search) => this.#GET(`/user/all`, {search});
   //
   // updateUserAvatarImageId = (userId, avatarUrl) => this.#PUT(`/user`, {userId, avatarUrl});
-  //
-  // confirmEmailSendMessage = () => this.#POST(`/user/email/confirm`);
-  // confirmEmailByCode = (code) => this.#PUT(`/user/email/confirm`, {code});
+
+  sendEmailConfirmationLetter = () =>
+    this.#POST(`/user/email/confirmation/send`, {}, {}, Response200({})) as MyResponse<unknown>;
+  confirmEmailByCode = (code: string) =>
+    this.#POST(`/user/email/confirmation`, {code}, {}, Response200({})) as MyResponse<unknown>;
 
   getUser = () => this.#GET(`/user`, {}, UserModel, Response200(UserModelMockData)) as MyResponse<User>;
   // getAnotherUser = (id) => this.#GET(`/user`, {id}, UserModel, Response200(UserModelMockData)) as MyResponse<User>;

@@ -32,7 +32,7 @@ export default function createVueRouter(Store: Store): Router {
     { path: '/profile', name: 'profile', component: PageProfile, meta: {loginRequired: true} },
     { path: '/profile/fill', name: 'fillProfile', component: PageFillProfileData, meta: {loginRequiredPartial: true} },
     { path: '/login', name: 'login', component: PageLogin, meta: {noLoginRequired: true} },
-    { path: '/email/confirm', name: 'confirmEmail', component: PageConfirmEmail, meta: {loginRequired: true} },
+    { path: '/email/confirm', name: 'confirmEmail', component: PageConfirmEmail },
 
     { path: '/events', name: 'events', component: PageEvents, meta: {loginRequired: true} },
     { path: '/admin', name: 'admin', component: PageAdmin, redirect: {name: 'adminRegistrations'}, meta: {loginRequired: true}, children: [

@@ -14,15 +14,15 @@
 <template>
   <div class="root-confirm-email">
     Подтверждаем ваш E-mail...
-    <CircleLoading />
+    <CircleLinesLoading />
   </div>
 </template>
 
 <script>
-import CircleLoading from '~/components/loaders/CircleLoading.vue';
+import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 
 export default {
-  components: { CircleLoading },
+  components: { CircleLinesLoading },
 
   data() {
     return {
@@ -30,36 +30,30 @@ export default {
     };
   },
 
-  async mounted() {
-    const { ok } = await this.confirmEmail();
-    if (ok) {
-      this.$router.push({ name: 'profile' });
+  mounted() {
+    if (!this.code) {
+      this.$popups.error('Ошибка', 'Код для подтверждения не был передан в url');
+      this.$router.push({name: 'default'});
       return;
     }
-    this.$popups.error('Ошибка', 'Неизвестная ошибка');
+
+    this.confirmEmail();
   },
 
   methods: {
     async confirmEmail() {
-      if (!this.code) {
-        this.$popups.error('Ошибка', 'Код для подтверждения не был передан в url');
-        return;
-      }
-
-      this.$refs.form.loading = true;
-      const { data, ok } = await this.$api.confirmEmailByCode(this.code);
-      this.$refs.form.loading = false;
-
-      if (!ok) {
-        this.$popups.error('Не удалось подтвердить E-mail', data || 'Произошла неизвестная ошибка');
-        return;
-      }
-
-      this.$popups.success('Подтверждено', 'Теперь ваш E-mail подтверждён');
-
-      this.$refs.form.loading = true;
-      await this.$store.dispatch('GET_USER');
-      this.$refs.form.loading = false;
+      await this.$request(
+        this,
+        this.$api.confirmEmailByCode,
+        [this.code],
+        `Не удалось подтвердить Email`,
+        async () => {
+          this.$popups.success('Email подтвержден!');
+          await this.$store.dispatch('GET_USER');
+          this.$router.push({name: 'default'});
+        },
+      );
+      this.$router.push({name: 'default'});
     },
   },
 };

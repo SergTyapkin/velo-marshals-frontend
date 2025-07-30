@@ -71,36 +71,41 @@
     .user-data-block
       block-shadow()
       block-bg-transparent()
-
-      display grid
-      grid-template-columns max-content 1fr 30px
-      gap 20px 15px
       width 100%
       margin-block 50px
 
-      .data-row
-        display contents
+      .user-data-grid
+        display grid
+        grid-template-columns max-content 1fr 30px
+        gap 20px 15px
 
-        .data
-          word-wrap anywhere
+        .data-row
+          display contents
 
-        .field
-          color colorText4
+          .data
+            word-wrap anywhere
 
-          .info-success
-          .info-error
-            font-small-extra()
+          .field
+            color colorText4
 
-            color colorSuccess
-            white-space nowrap
+            .info-success
+            .info-error
+              font-small-extra()
 
-          .info-error
-            color colorError
+              color colorSuccess
+              white-space nowrap
 
-        .button-edit
-          button-no-fill()
+            .info-error
+              color colorError
 
-          padding 0
+          .button-edit
+            button-no-fill()
+
+            padding 0
+
+      .button-confirm-email
+        button()
+        margin-top 20px
 </style>
 
 <template>
@@ -130,49 +135,55 @@
       </section>
 
       <section class="user-data-block">
-        <div class="data-row">
-          <div class="field">Фамилия</div>
-          <div class="data">{{ $user.familyName }}</div>
-          <button class="button-edit" @click="changeUserParam('familyName', 'name')">
-            <img src="/static/icons/mono/edit.svg" alt="edit" />
-          </button>
-        </div>
-        <div class="data-row">
-          <div class="field">Имя</div>
-          <div class="data">{{ $user.givenName }}</div>
-          <button class="button-edit" @click="changeUserParam('givenName', 'name')">
-            <img src="/static/icons/mono/edit.svg" alt="edit" />
-          </button>
-        </div>
-        <div class="data-row">
-          <div class="field">Отчество</div>
-          <div class="data">{{ $user.middleName }}</div>
-          <button class="button-edit" @click="changeUserParam('middleName', 'nameOptional')">
-            <img src="/static/icons/mono/edit.svg" alt="edit" />
-          </button>
-        </div>
-        <div class="data-row">
-          <div class="field">
-            E-mail
-            <div v-if="$user.isConfirmedEmail" class="info-success">Подтвержден</div>
-            <div v-else class="info-error">Не подтвержден</div>
+        <div class="user-data-grid">
+          <div class="data-row">
+            <div class="field">Фамилия</div>
+            <div class="data">{{ $user.familyName }}</div>
+            <button class="button-edit" @click="changeUserParam('familyName', 'name')">
+              <img src="/static/icons/mono/edit.svg" alt="edit" />
+            </button>
           </div>
-          <div>
-            <div class="data">{{ $user.email }}</div>
+          <div class="data-row">
+            <div class="field">Имя</div>
+            <div class="data">{{ $user.givenName }}</div>
+            <button class="button-edit" @click="changeUserParam('givenName', 'name')">
+              <img src="/static/icons/mono/edit.svg" alt="edit" />
+            </button>
           </div>
-          <button class="button-edit" @click="changeUserParam('email', 'email')">
-            <img src="/static/icons/mono/edit.svg" alt="edit" />
-          </button>
-        </div>
-        <div class="data-row">
-          <div class="field">Телефон</div>
-          <div class="data">{{ $user.tel }}</div>
-          <button class="button-edit" @click="changeUserParam('tel', 'phone')">
-            <img src="/static/icons/mono/edit.svg" alt="edit" />
-          </button>
+          <div class="data-row">
+            <div class="field">Отчество</div>
+            <div class="data">{{ $user.middleName }}</div>
+            <button class="button-edit" @click="changeUserParam('middleName', 'nameOptional')">
+              <img src="/static/icons/mono/edit.svg" alt="edit" />
+            </button>
+          </div>
+          <div class="data-row">
+            <div class="field">
+              E-mail
+              <div v-if="$user.isConfirmedEmail" class="info-success">Подтвержден</div>
+              <div v-else class="info-error">Не подтвержден</div>
+            </div>
+            <div>
+              <div class="data">{{ $user.email }}</div>
+            </div>
+            <button class="button-edit" @click="changeUserParam('email', 'email')">
+              <img src="/static/icons/mono/edit.svg" alt="edit" />
+            </button>
+          </div>
+          <div class="data-row">
+            <div class="field">Телефон</div>
+            <div class="data">{{ $user.tel }}</div>
+            <button class="button-edit" @click="changeUserParam('tel', 'phone')">
+              <img src="/static/icons/mono/edit.svg" alt="edit" />
+            </button>
+          </div>
         </div>
 
-        <CircleLinesLoading v-if="loading" centered />
+        <button v-if="!$user.isConfirmedEmail && !emailWasSent" class="button-confirm-email" @click="sendConfirmationLetter" :disabled="loading">
+          <CircleLinesLoading v-if="loading"/>
+          <span v-else>Подтвердить Email</span>
+        </button>
+        <CircleLinesLoading v-else-if="loading" centered />
       </section>
     </section>
   </div>
@@ -192,6 +203,8 @@ export default {
   data() {
     return {
       loading: false,
+
+      emailWasSent: false,
 
       ImageProfileDefault,
     };
@@ -241,6 +254,19 @@ export default {
         this.$store.dispatch('DELETE_USER');
         this.$router.push({ name: 'login' });
       });
+    },
+
+    async sendConfirmationLetter() {
+      await this.$request(
+        this,
+        this.$api.sendEmailConfirmationLetter,
+        [],
+        `Не удалось отправить письмо подтверждения`,
+        () => {
+          this.emailWasSent = true;
+          this.$popups.success('Письмо отправлено!', 'Не забудьте проверить папку "спам"');
+        },
+      );
     },
   },
 };
