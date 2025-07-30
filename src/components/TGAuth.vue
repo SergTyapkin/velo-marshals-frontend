@@ -7,12 +7,6 @@
 @import '../styles/animations.styl'
 @import '../styles/scrollbars.styl'
 
-.root-signin
-  page-root()
-  .error
-    font-medium()
-
-    color colorError
 </style>
 
 <template>

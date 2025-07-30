@@ -44,11 +44,9 @@ field()
 
     pointer-events none
     position absolute
-    top -6px
-    left 4px
+    top -8px
+    left 10px
     trans()
-
-    background colorBlockBg
 
   .selected-item
     input()
@@ -58,8 +56,18 @@ field()
     width 100%
     height height
     color colorText1
-    background colorBlockBg
     border 2px solid colorBorder
+    border-top none
+    position relative
+    overflow hidden
+    &::before
+      content ""
+      position absolute
+      top 0
+      height 2px
+      left calc(var(--title-length) * 0.65em)
+      right 0
+      background colorBorder
     &.default
       color colorText2
 
@@ -112,12 +120,14 @@ field()
   &.unrolled
     z-index 999999999999
     .title
-      top -16px
+      top -12px
       background transparent
 
     .selected-item
       background bg-color-selected
       border-color colorEmp1
+      &::before
+        background colorEmp1
 
     img
       transform rotate(-180deg)
@@ -166,6 +176,7 @@ field()
       '--overflow-y-length': overflowYLength,
       '--overflow-x-length': overflowXLength,
       '--z-index': zIndex,
+      '--title-length': title?.length || 0,
     }"
   >
     <span class="error-text">{{ currentError }}</span>
