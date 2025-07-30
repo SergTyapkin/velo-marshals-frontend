@@ -147,7 +147,7 @@
         <div class="data-row">
           <div class="field">Отчество</div>
           <div class="data">{{ $user.middleName }}</div>
-          <button class="button-edit" @click="changeUserParam('middleName', 'name')">
+          <button class="button-edit" @click="changeUserParam('middleName', 'nameOptional')">
             <img src="/static/icons/mono/edit.svg" alt="edit" />
           </button>
         </div>
@@ -200,7 +200,7 @@ export default {
   async mounted() {},
 
   methods: {
-    async changeUserParam(fieldName: keyof User, validatorName: string, overrideHavingValue: string | null = null) {
+    async changeUserParam(fieldName: keyof User, validatorName: keyof typeof Validators, overrideHavingValue: string | null = null) {
       const inputValue = await this.$modals.prompt(
         overrideHavingValue ? 'Неверный формат' : 'Изменить значение поля',
         'Введите новое значение',
@@ -213,7 +213,7 @@ export default {
 
       if (Validators[validatorName]) {
         if (!Validators[validatorName].validate(inputValue)) {
-          this.changeUserParam(fieldName, fieldName, inputValue);
+          this.changeUserParam(fieldName, validatorName, inputValue);
           return;
         }
         newUserData[fieldName] = Validators[validatorName].prettifyResult(inputValue);
