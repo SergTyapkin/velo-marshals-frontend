@@ -76,7 +76,7 @@
   >
     <div class="number">#{{ idx }}</div>
 
-    <div class="username">{{ inEditRegistration.userName }}</div>
+    <div class="username">{{ inEditRegistration.userGivenName }} {{ inEditRegistration.userFamilyName }}</div>
 
     <a class="tg" :href="`https://t.me/${inEditRegistration.userTgUsername}`">@{{ inEditRegistration.userTgUsername }}</a>
 
@@ -86,7 +86,7 @@
       :list="Object.entries(MARSHAL_CATEGORIES).map(([key, val]) => ({ name: val, value: key, id: key }))"
       v-model="inEditRegistration.level"
       :can-be-null="true"
-      :selected-id="registration.level"
+      :selected-id="String(registration.level)"
       @input="isEdited = true"
     />
 

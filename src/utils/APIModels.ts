@@ -271,13 +271,25 @@ export const RegistrationModel = {
     type: Number,
     from: 'lapspassed',
   },
-  userName: {
+  userFamilyName: {
     type: String,
-    from: 'username',
+    from: 'userfamilyname',
+    optional: true,
+  },
+  userGivenName: {
+    type: String,
+    from: 'usergivenname',
+    optional: true,
+  },
+  userMiddleName: {
+    type: String,
+    from: 'usermiddlename',
+    optional: true,
   },
   userTel: {
     type: String,
     from: 'usertel',
+    optional: true,
   },
   userTgUsername: {
     type: String,

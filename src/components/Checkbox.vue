@@ -18,10 +18,15 @@ no-checked-background = colorBg
 no-checked-border = 0px solid transparent
 
 .checkbox-container
+  display flex
+  align-items center
+  gap 5px
   input
     position relative
     width size
     height size
+    min-width size
+    min-height size
     appearance none
     background no-checked-background
     border no-checked-border
@@ -65,6 +70,7 @@ no-checked-border = 0px solid transparent
       :id="uid"
     >
     <label :for="uid" />
+    <label v-if="title" :for="uid" class="title">{{ title }}</label>
   </div>
 </template>
 
@@ -75,6 +81,11 @@ export default {
   props: {
     readonly: Boolean,
     disabled: Boolean,
+
+    title: {
+      type: String,
+      default: '',
+    },
 
     modelValue: {
       type: Boolean,
