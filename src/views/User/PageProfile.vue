@@ -239,8 +239,9 @@ export default {
         this.$api.updateUser,
         [newUserData],
         `Не удалось изменить значение поля ${fieldName}`,
-        () => {
+        async () => {
           this.$user[fieldName] = newUserData[fieldName];
+          await this.$store.dispatch('GET_USER');
           this.$forceUpdate();
         },
       );
