@@ -18,7 +18,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 
 export default {
@@ -52,8 +52,12 @@ export default {
           await this.$store.dispatch('GET_USER');
           this.$router.push({name: 'default'});
         },
+        undefined,
+        (_, status: number) => {
+          this.$popups.error('Не удалось подтвердить Email!', `Ошибка ${status}`);
+          this.$router.push({name: 'default'});
+        }
       );
-      this.$router.push({name: 'default'});
     },
   },
 };
