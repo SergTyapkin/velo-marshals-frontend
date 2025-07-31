@@ -33,10 +33,12 @@ export const UserModel = {
   familyName: {
     type: String,
     from: 'familyname',
+    optional: true,
   },
   givenName: {
     type: String,
     from: 'givenname',
+    optional: true,
   },
   middleName: {
     type: String,

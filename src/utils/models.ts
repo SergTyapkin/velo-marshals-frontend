@@ -6,9 +6,9 @@ export interface User {
   isConfirmedEmail: boolean,
   tel?: string,
   avatarUrl?: string,
-  familyName: string,
-  givenName: string,
-  middleName: string,
+  familyName?: string,
+  givenName?: string,
+  middleName?: string,
   joinedDate: Date,
   level: string,
 
