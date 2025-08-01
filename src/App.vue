@@ -106,7 +106,7 @@
     overflow-y hidden
     overflow-x auto
     tr:nth-child(2n)
-      background colorBlockLight
+      background colorBlockBgLight
     th
       font-medium()
       cursor pointer

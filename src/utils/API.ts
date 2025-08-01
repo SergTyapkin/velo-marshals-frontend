@@ -2,14 +2,13 @@ import REST_API from '@sergtyapkin/rest-api';
 import { validateModel, type Model } from '@sergtyapkin/models-validator';
 import {
   EquipmentGroupListModel, EquipmentGroupListModelMockData,
-  EquipmentGroupModel,
   EquipmentListModel, EquipmentListModelMockData,
   EventListModel,
   EventListModelMockData,
   EventModel,
   EventModelMockData, GlobalsModel, GlobalsModelMockData,
   RegistrationListModel,
-  RegistrationListModelMockData,
+  RegistrationListModelMockData, RegistrationModel, RegistrationModelMockData,
   SQLHistoryListModel, SQLHistoryListModelMockData,
   UserModel,
   UserModelMockData,
@@ -89,11 +88,7 @@ export default class API extends REST_API {
     this.#POST(`/user/email/confirmation`, {code}, {}, Response200({})) as MyResponse<unknown>;
 
   getUser = () => this.#GET(`/user`, {}, Object.assign({}, UserModel, GlobalsModel), Response200(Object.assign({}, UserModelMockData, GlobalsModelMockData))) as MyResponse<User | Globals>;
-  // getAnotherUser = (id) => this.#GET(`/user`, {id}, UserModel, Response200(UserModelMockData)) as MyResponse<User>;
-  checkUserTgExisting = (tgUsername: string, tgId: string) =>
-    this.#GET(`/user`, { tgUsername, tgId }, { id: String }, Response200({ id: 'USER_ID' })) as MyResponse<{
-      id: string;
-    }>;
+  getUserById = (id: string) => this.#GET(`/user`, {id}, UserModel, Response200(UserModelMockData)) as MyResponse<User>;
   updateUser = (userData: Partial<User> | { id: string }) =>
     this.#PUT(`/user`, userData, UserModel, Response200(UserModelMockData)) as MyResponse<User>;
 
@@ -202,8 +197,25 @@ export default class API extends REST_API {
     ) as MyResponse<{
       registrations: Registration[];
     }>;
+  getRegistrationByEventidUserid = (eventId: string, userId: string) =>
+    this.#GET(
+      `/registration/event/user`,
+      { eventId, userId },
+      RegistrationModel,
+      Response200(RegistrationModelMockData),
+    ) as MyResponse<Registration>;
   updateRegistration = (registration: Registration) =>
     this.#PUT(`/registration`, registration, {}, Response200({})) as MyResponse<unknown>;
+  updateRegistrationIncreaseLapPassed = (id: string) =>
+    this.#PUT(`/registration/lap-increase`, {id}, {}, Response200({})) as MyResponse<unknown>;
+  updateRegistrationSetCamedate = (id: string) =>
+    this.#PUT(`/registration/camedate`, {id}, {}, Response200({})) as MyResponse<unknown>;
+  updateRegistrationSetLeavedate = (id: string) =>
+    this.#PUT(`/registration/leavedate`, {id}, {}, Response200({})) as MyResponse<unknown>;
+  updateRegistrationAddEquipment = (userId: string, equipmentId: string, amountAdd: number) =>
+    this.#PUT(`/equipment/holder/add`, {userId, equipmentId, amountAdd}, {}, Response200({})) as MyResponse<unknown>;
+  updateRegistrationRemoveEquipment = (userId: string, equipmentId: string, amountRemove: number) =>
+    this.#PUT(`/equipment/holder/remove`, {userId, equipmentId, amountRemove}, {}, Response200({})) as MyResponse<unknown>;
   // getRegistrationRatingWithDates = (dateStart, dateEnd) => this.#GET(`/ratings`, {dateStart, dateEnd});
   // getRegistrationRating = () => this.#GET(`/ratings`);
   // getRegistrationsExtract = () => this.#GET(`/registration/extract`);
@@ -246,6 +258,15 @@ export default class API extends REST_API {
       Response200(EquipmentGroupListModelMockData),
     ) as MyResponse<{
       equipmentGroups: EquipmentGroup[];
+    }>;
+  getEquipmentOnEvent = (eventId: string) =>
+    this.#GET(
+      `/equipment/event`,
+      { eventId },
+      EquipmentListModel,
+      Response200(EquipmentListModelMockData),
+    ) as MyResponse<{
+      equipment: Equipment[];
     }>;
   updateEquipment = (equipment: Equipment) =>
     this.#PUT(`/equipment`, equipment, {}, Response200({})) as MyResponse<unknown>;

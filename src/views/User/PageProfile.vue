@@ -29,7 +29,7 @@
       font-large()
 
       width 100%
-      margin-bottom 15px
+      margin-bottom 30px
       text-align center
 
       .user-image-group

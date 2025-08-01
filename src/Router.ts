@@ -19,6 +19,7 @@ import PageEventInfo from '~/views/PageEventInfo.vue';
 import PageEventRoute from '~/views/PageEventRoute.vue';
 import PageEventEquipment from '~/views/PageEventEquipment.vue';
 import PageProfileQR from '~/views/PageProfileQR.vue';
+import PageAdminQR from '~/views/Admin/PageAdminQR.vue';
 
 type MyRoute = RouteRecordRaw & {
   path: keyof typeof routes,
@@ -44,14 +45,15 @@ export default function createVueRouter(Store: Store): Router {
     { path: '/global-event/equipment', name: 'eventEquipment', component: PageEventEquipment },
 
     { path: '/events', name: 'events', component: PageEvents, meta: {loginRequired: true} },
-    { path: '/admin', name: 'admin', component: PageAdmin, redirect: {name: 'adminRegistrations'}, meta: {loginRequired: true}, children: [
-        { path: '/admin/registrations', name: 'adminRegistrations', component: PageAdminRegistrations, meta: {loginRequired: true} },
-        { path: '/admin/events', name: 'adminEvents', component: PageAdminRegistrations, meta: {loginRequired: true} },
-        { path: '/admin/users', name: 'adminUsers', component: PageAdminRegistrations, meta: {loginRequired: true} },
-        { path: '/admin/equipment', name: 'adminEquipment', component: PageAdminRegistrations, meta: {loginRequired: true} },
-        { path: '/admin/achievements', name: 'adminAchievements', component: PageAdminRegistrations, meta: {loginRequired: true} },
-        { path: '/admin/globals', name: 'adminGlobals', component: PageAdminRegistrations, meta: {loginRequired: true} },
-        { path: '/admin/sql', name: 'adminSQL', component: PageAdminSqlExecute, meta: {loginRequired: true} },
+    { path: '/admin', name: 'admin', component: PageAdmin, redirect: {name: 'adminRegistrations'}, meta: {adminRequired: true}, children: [
+        { path: '/admin/registrations', name: 'adminRegistrations', component: PageAdminRegistrations, meta: {adminRequired: true} },
+        { path: '/admin/events', name: 'adminEvents', component: PageAdminRegistrations, meta: {adminRequired: true} },
+        { path: '/admin/users', name: 'adminUsers', component: PageAdminRegistrations, meta: {adminRequired: true} },
+        { path: '/admin/equipment', name: 'adminEquipment', component: PageAdminRegistrations, meta: {adminRequired: true} },
+        { path: '/admin/achievements', name: 'adminAchievements', component: PageAdminRegistrations, meta: {adminRequired: true} },
+        { path: '/admin/globals', name: 'adminGlobals', component: PageAdminRegistrations, meta: {adminRequired: true} },
+        { path: '/admin/sql', name: 'adminSQL', component: PageAdminSqlExecute, meta: {adminRequired: true} },
+        { path: '/admin/qr', name: 'adminQR', component: PageAdminQR, meta: {adminRequired: true} },
       ]
     },
 

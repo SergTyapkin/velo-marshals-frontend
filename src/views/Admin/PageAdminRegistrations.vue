@@ -108,7 +108,7 @@
         overflow-y hidden
         overflow-x auto
         tr:nth-child(2n)
-          background colorBlockLight
+          background colorBlockBgLight
         th
           font-medium()
           cursor pointer
@@ -391,7 +391,7 @@ export default {
             return false;
           }
           if (
-            !(new RegExp(this.filters.search)).test(`${reg.userFamilyName} ${reg.userGivenName} ${reg.userMiddleName} ${reg.userId}`)
+            !(new RegExp(this.filters.search, 'i')).test(`${reg.userFamilyName} ${reg.userGivenName} ${reg.userMiddleName} ${reg.userId}`)
           ) {
             return false;
           }

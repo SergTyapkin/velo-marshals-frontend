@@ -33,13 +33,14 @@
     <header>Админстрирование</header>
 
     <section class="navigation-block">
-      <router-link :to="{name: 'adminRegistrations'}">Регистрации</router-link>
-      <router-link :to="{name: 'adminEvents'}">Мероприятия</router-link>
-      <router-link :to="{name: 'adminUsers'}">Пользователи</router-link>
-      <router-link :to="{name: 'adminEquipment'}">Оборудование</router-link>
-      <router-link :to="{name: 'adminAchievements'}">Достижения</router-link>
-      <router-link :to="{name: 'adminGlobals'}">Глобальные настройки</router-link>
-      <router-link :to="{name: 'adminSQL'}">Выполнить SQL</router-link>
+      <router-link :to="{name: 'adminRegistrations'}" v-if="$user.canEditRegistrations">Регистрации</router-link>
+      <router-link :to="{name: 'adminQR'}">Сканировать QR</router-link>
+<!--      <router-link :to="{name: 'adminEvents'}">Мероприятия</router-link>-->
+<!--      <router-link :to="{name: 'adminUsers'}">Пользователи</router-link>-->
+<!--      <router-link :to="{name: 'adminEquipment'}">Оборудование</router-link>-->
+<!--      <router-link :to="{name: 'adminAchievements'}">Достижения</router-link>-->
+<!--      <router-link :to="{name: 'adminGlobals'}">Глобальные настройки</router-link>-->
+      <router-link :to="{name: 'adminSQL'}" v-if="$user.canExecuteSQL">Выполнить SQL</router-link>
     </section>
 
     <section class="wrapper-block">
