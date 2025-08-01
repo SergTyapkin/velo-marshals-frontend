@@ -406,6 +406,12 @@ export const GlobalsModel = {
     from: 'globalevent',
     optional: true,
   },
+  globalRegistration: {
+    type: Object,
+    fields: RegistrationModel,
+    from: 'globalregistration',
+    optional: true,
+  },
   isOnMaintenance: {
     type: Boolean,
     from: 'isonmaintenance',
@@ -414,5 +420,6 @@ export const GlobalsModel = {
 
 export const GlobalsModelMockData = {
   globalEvent: EventModelMockData,
+  globalRegistration: RegistrationModelMockData,
   isOnMaintenance: false,
 };

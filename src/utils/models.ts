@@ -30,6 +30,7 @@ export interface User {
 export interface Globals {
   isOnMaintenance: boolean,
   globalEvent?: Event,
+  globalRegistration?: Registration,
 }
 
 export interface Event {

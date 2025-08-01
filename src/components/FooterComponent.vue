@@ -62,19 +62,19 @@
 </style>
 
 <template>
-  <footer class="root-footer" v-if="$user?.isSignedIn && $user?.isFilledFullData" :class="{large: $globals?.globalEvent}">
+  <footer class="root-footer" v-if="$user?.isSignedIn && $user?.isFilledFullData" :class="{large: isGlobalEventButtonsShown}">
     <nav class="buttons">
-      <router-link v-if="!$globals?.globalEvent" :to="{ name: 'events' }" class="button">
+      <router-link v-if="!isGlobalEventButtonsShown" :to="{ name: 'events' }" class="button">
         <img src="/static/icons/mono/listing.svg" alt="" /><span>Фестивали</span>
       </router-link>
 
-      <router-link v-if="$globals?.globalEvent" :to="{ name: 'eventInfo' }" class="button">
+      <router-link v-if="isGlobalEventButtonsShown" :to="{ name: 'eventInfo' }" class="button">
         <img src="/static/icons/mono/info.svg" alt="" /><span>Фестиваль</span>
       </router-link>
-      <router-link v-if="$globals?.globalEvent" :to="{ name: 'eventRoute' }" class="button">
+      <router-link v-if="isGlobalEventButtonsShown" :to="{ name: 'eventRoute' }" class="button">
         <img src="/static/icons/mono/link.svg" alt="" /><span>Ссылки</span>
       </router-link>
-      <router-link v-if="$globals?.globalEvent" :to="{ name: 'eventEquipment' }" class="button">
+      <router-link v-if="isGlobalEventButtonsShown" :to="{ name: 'eventEquipment' }" class="button">
         <img src="/static/icons/mono/work.svg" alt="" /><span>Оборудование</span>
       </router-link>
 
@@ -95,6 +95,12 @@ export default {
     return {
       isUserAdmin: false,
     };
+  },
+
+  computed: {
+    isGlobalEventButtonsShown() {
+      return this.$globals?.globalRegistration || this.$user.canEditGlobals || this.$user.canEditRegistrations;
+    }
   },
 
   mounted() {

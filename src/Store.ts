@@ -37,6 +37,7 @@ export default new Vuex.Store({
     SET_GLOBALS(state: State, globalsData: Globals) {
       state.globals.isOnMaintenance = globalsData.isOnMaintenance;
       state.globals.globalEvent = globalsData.globalEvent;
+      state.globals.globalRegistration = globalsData.globalRegistration;
     },
     DELETE_USER(state: State) {
       state.user.isSignedIn = false;
