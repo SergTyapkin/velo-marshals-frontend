@@ -188,10 +188,10 @@ export default class API extends REST_API {
   // updateRegistrationCommentAdmin = (id, comment) => this.#PUT(`/registration/event`, {id, comment});
   // updateRegistrationCommentSelf = (id, comment) => this.#PUT(`/registration/event/comment`, {id, comment});
 
-  getRegistrations = (eventId: string) =>
+  getRegistrations = (eventId: string, isConfirmed?: boolean) =>
     this.#GET(
       `/registration/event`,
-      { eventId },
+      { eventId, isConfirmed },
       RegistrationListModel,
       Response200(RegistrationListModelMockData),
     ) as MyResponse<{

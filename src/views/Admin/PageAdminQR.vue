@@ -331,7 +331,7 @@ export default {
         await this.$request(
           this,
           this.$api.getRegistrations,
-          [this.$globals.globalEvent?.id || ''],
+          [this.$globals.globalEvent?.id || '', true],
           'Не удалось получить список регистраций',
           () => {},
           {
