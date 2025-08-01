@@ -34,12 +34,13 @@
 
     <section class="navigation-block">
       <router-link :to="{name: 'adminRegistrations'}" v-if="$user.canEditRegistrations">Регистрации</router-link>
-      <router-link :to="{name: 'adminQR'}">Сканировать QR</router-link>
+      <router-link :to="{name: 'adminQR'}" v-if="$user.canEditRegistrations">Сканировать QR</router-link>
 <!--      <router-link :to="{name: 'adminEvents'}">Мероприятия</router-link>-->
 <!--      <router-link :to="{name: 'adminUsers'}">Пользователи</router-link>-->
 <!--      <router-link :to="{name: 'adminEquipment'}">Оборудование</router-link>-->
 <!--      <router-link :to="{name: 'adminAchievements'}">Достижения</router-link>-->
-<!--      <router-link :to="{name: 'adminGlobals'}">Глобальные настройки</router-link>-->
+      <router-link :to="{name: 'adminGlobals'}" v-if="$user.canEditGlobals">Глобальные настройки</router-link>
+      <router-link :to="{name: 'adminEventEmulation'}">Эмулировать мероприятие</router-link>
       <router-link :to="{name: 'adminSQL'}" v-if="$user.canExecuteSQL">Выполнить SQL</router-link>
     </section>
 

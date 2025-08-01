@@ -188,10 +188,10 @@ export default class API extends REST_API {
   // updateRegistrationCommentAdmin = (id, comment) => this.#PUT(`/registration/event`, {id, comment});
   // updateRegistrationCommentSelf = (id, comment) => this.#PUT(`/registration/event/comment`, {id, comment});
 
-  getRegistrations = (eventId: string, isConfirmed?: boolean) =>
+  getRegistrations = (eventId: string ) =>
     this.#GET(
       `/registration/event`,
-      { eventId, isConfirmed },
+      { eventId },
       RegistrationListModel,
       Response200(RegistrationListModelMockData),
     ) as MyResponse<{
@@ -270,6 +270,9 @@ export default class API extends REST_API {
     }>;
   updateEquipment = (equipment: Equipment) =>
     this.#PUT(`/equipment`, equipment, {}, Response200({})) as MyResponse<unknown>;
+
+  updateGlobals = (inEventId?: string | null, isOnMaintenance?: boolean) =>
+    this.#PUT(`/globals`, {inEventId, isOnMaintenance}, {}, Response200({})) as MyResponse<unknown>;
 
 
   executeAdminSql = (sql: string) => this.#POST(`/sql`, { sql });

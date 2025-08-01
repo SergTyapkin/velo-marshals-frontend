@@ -10,6 +10,8 @@ page-root()
   margin-right 'max(calc((100% - %s) / 2), 0px)' % (pageMaxWidth + 2 * pageMinHorizontalPadding)
   margin-left 'max(calc((100% - %s) / 2), 0px)' % (pageMaxWidth + 2 * pageMinHorizontalPadding)
   padding 30px pageMinHorizontalPadding (footerHeight + 20px) pageMinHorizontalPadding
+  @media({mobile})
+    padding-bottom (footerHeight + 100px)
   header
     font-large-extra()
     font-bold()

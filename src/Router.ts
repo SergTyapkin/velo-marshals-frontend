@@ -20,6 +20,8 @@ import PageEventRoute from '~/views/PageEventRoute.vue';
 import PageEventEquipment from '~/views/PageEventEquipment.vue';
 import PageProfileQR from '~/views/PageProfileQR.vue';
 import PageAdminQR from '~/views/Admin/PageAdminQR.vue';
+import PageAdminEventEmulation from '~/views/Admin/PageAdminEventEmulation.vue';
+import PageAdminGlobals from '~/views/Admin/PageAdminGlobals.vue';
 
 type MyRoute = RouteRecordRaw & {
   path: keyof typeof routes,
@@ -51,7 +53,8 @@ export default function createVueRouter(Store: Store): Router {
         { path: '/admin/users', name: 'adminUsers', component: PageAdminRegistrations, meta: {adminRequired: true} },
         { path: '/admin/equipment', name: 'adminEquipment', component: PageAdminRegistrations, meta: {adminRequired: true} },
         { path: '/admin/achievements', name: 'adminAchievements', component: PageAdminRegistrations, meta: {adminRequired: true} },
-        { path: '/admin/globals', name: 'adminGlobals', component: PageAdminRegistrations, meta: {adminRequired: true} },
+        { path: '/admin/event-emulation', name: 'adminEventEmulation', component: PageAdminEventEmulation, meta: {adminRequired: true} },
+        { path: '/admin/globals', name: 'adminGlobals', component: PageAdminGlobals, meta: {adminRequired: true} },
         { path: '/admin/sql', name: 'adminSQL', component: PageAdminSqlExecute, meta: {adminRequired: true} },
         { path: '/admin/qr', name: 'adminQR', component: PageAdminQR, meta: {adminRequired: true} },
       ]

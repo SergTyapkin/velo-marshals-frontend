@@ -174,7 +174,7 @@
             userSearchText = '';
             updateUserEquipments();
           ">
-          <div class="number">{{ i }}</div>
+          <div class="number">{{ i + 1 }}</div>
           <div class="id"><span class="hash">#</span>{{ reg.userId }}</div>
           <div class="name">{{ reg.userFamilyName }} {{ reg.userGivenName }} {{ reg.userMiddleName }}</div>
         </li>

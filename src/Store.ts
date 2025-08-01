@@ -31,6 +31,7 @@ export default new Vuex.Store({
       state.user.canEditDocs = userData.canEditDocs;
       state.user.canExecuteSQL = userData.canExecuteSQL;
       state.user.canEditHistory = userData.canEditHistory;
+      state.user.canEditGlobals = userData.canEditGlobals;
 
       state.user.isSignedIn = true;
       state.user.isFilledFullData = !!state.user.tel && !!state.user.email;

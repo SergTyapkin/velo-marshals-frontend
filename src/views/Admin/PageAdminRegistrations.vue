@@ -136,10 +136,10 @@
 
       <ul class="filters-group">
         <li
-          @click="updateRegistrations(event.id)"
+          @click="updateRegistrations(event)"
           class="event"
           v-for="event in events"
-          :class="{ selected: event.id === selectedEventId }">
+          :class="{ selected: event.id === selectedEvent?.id }">
           <div class="title">{{ event.title }}</div>
           <div class="date">{{ dateFormatter(event.startDate) }}</div>
           <div class="count">
@@ -280,7 +280,7 @@
               </th>
             </tr>
             <tr v-for="(registration, i) in filteredRegistrations">
-              <td v-if="tableColumns.number">{{ i }}</td>
+              <td v-if="tableColumns.number">{{ i + 1 }}</td>
               <td v-if="tableColumns.userId">{{ registration.userId }}</td>
               <td v-if="tableColumns.userFamilyName">{{ registration.userFamilyName }}</td>
               <td v-if="tableColumns.userGivenName">{{ registration.userGivenName }}</td>
@@ -314,7 +314,7 @@
               :key="registration"
               class="registration"
               :registration="registration"
-              :idx="i" />
+              :idx="i + 1" />
           </ul>
         </section>
       </transition>
@@ -344,7 +344,6 @@ export default {
       events: [] as Event[],
       registrations: [] as Registration[],
 
-      selectedEventId: null as string | null,
       selectedEvent: null as Event | null,
 
       displayAsTable: false,
@@ -437,26 +436,18 @@ export default {
 
       const openedRegistrationEvent = this.events.find(ev => ev.isRegistrationOpened);
       if (openedRegistrationEvent) {
-        await this.updateRegistrations(openedRegistrationEvent.id);
+        await this.updateRegistrations(openedRegistrationEvent);
       }
     },
 
-    async updateRegistrations(eventId: string) {
-      this.selectedEventId = eventId;
-
-      this.selectedEvent = await this.$request(
-        this,
-        this.$api.getEventById,
-        [this.selectedEventId],
-        'Не удалось получить мероприятие',
-        () => {},
-      );
+    async updateRegistrations(event: Event) {
+      this.selectedEvent = event;
 
       this.registrations = (
         await this.$request(
           this,
           this.$api.getRegistrations,
-          [this.selectedEventId],
+          [this.selectedEvent?.id || ''],
           'Не удалось получить список регистраций',
           () => {},
           {
