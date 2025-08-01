@@ -49,6 +49,8 @@
       list-no-styles()
       display flex
       justify-content space-evenly
+      flex-wrap wrap
+      gap 20px
       .stat
         display flex
         gap 5px
@@ -93,6 +95,22 @@
             <div class="value">{{ $globals.globalRegistration?.salary ?? 'Не известна' }}</div>
           </div>
         </li>
+
+        <li class="stat" v-if="$globals.globalRegistration?.cameDate">
+          <img src="/static/icons/mono/recieved.svg" alt="came">
+          <div class="info-right">
+            <div class="info">Зарегистрирован</div>
+            <div class="value">{{ dateTimeFormatter($globals.globalRegistration?.cameDate) }}</div>
+          </div>
+        </li>
+
+        <li class="stat" v-if="$globals.globalRegistration?.leaveDate">
+          <img src="/static/icons/mono/done.svg" alt="came">
+          <div class="info-right">
+            <div class="info">Оплата получена</div>
+            <div class="value">{{ dateTimeFormatter($globals.globalRegistration?.leaveDate) }}</div>
+          </div>
+        </li>
       </ul>
 
       <div class="task-group">
@@ -118,6 +136,7 @@
 import MarkdownRenderer from '@sergtyapkin/vue3-markdown/MarkdownRenderer.vue';
 import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 import { MARSHAL_LEVELS } from '~/constants';
+import { dateTimeFormatter } from '~/utils/formatters';
 
 export default {
   components: { MarkdownRenderer, CircleLinesLoading },
@@ -132,6 +151,6 @@ export default {
 
   mounted() {},
 
-  methods: {},
+  methods: { dateTimeFormatter },
 };
 </script>

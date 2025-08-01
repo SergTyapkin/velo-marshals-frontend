@@ -102,6 +102,9 @@
     border-left 1px solid colorText4
     padding 5px 0 5px 15px
     margin 0 0 0 10px
+  ul
+  li
+    margin-left 15px
   table
     overflow-y hidden
     overflow-x auto
