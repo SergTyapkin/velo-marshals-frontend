@@ -12,17 +12,14 @@ export function getRequestFoo<APIFoo extends (...args: any) => any, Fallback>(
     errorText: string,
     callback?: RequestHandler<APIFoo>,
     toFallbackValue?: Fallback,
-    errorCallbacks?: {[key: number]: RequestHandler<APIFoo>} | RequestHandler<APIFoo>,
+    errorCallbacks?: { [key: number]: RequestHandler<APIFoo> } | RequestHandler<APIFoo>,
   ) => {
     context.loading = true;
     try {
-      const { status, ok, data } = await apiRequest(...<[]>args);
+      const { status, ok, data } = await apiRequest(...(<[]>args));
       context.loading = false;
       if (!ok) {
-        const errCallback =
-          typeof errorCallbacks === 'function' ?
-            errorCallbacks :
-            errorCallbacks?.[status];
+        const errCallback = typeof errorCallbacks === 'function' ? errorCallbacks : errorCallbacks?.[status];
         if (errCallback) {
           errCallback(data, status);
           return toFallbackValue;
@@ -39,7 +36,7 @@ export function getRequestFoo<APIFoo extends (...args: any) => any, Fallback>(
       context.loading = false;
       console.error('Error while executing $request:', err);
     }
-  }
+  };
 }
 
 export function getCookie(name: string) {
@@ -127,7 +124,7 @@ export function deepClone<T>(obj: T): T {
       continue;
     }
     let val = obj[key];
-    if (val && typeof (val) == 'object') {
+    if (val && typeof val == 'object') {
       val = deepClone(val);
     }
     ret[key] = val;
@@ -136,7 +133,7 @@ export function deepClone<T>(obj: T): T {
 }
 
 export async function saveAllAssetsByServiceWorker(
-  callbackEach?: (data: {current: string, progress: number, total: number}) => void,
+  callbackEach?: (data: { current: string; progress: number; total: number }) => void,
   callbackFinish?: () => void,
   callbackError?: (errUrl: string | null) => void,
 ) {
@@ -144,9 +141,9 @@ export async function saveAllAssetsByServiceWorker(
   try {
     const module = await import(`${'/assetsList.js'}`);
     allCachableResources = module.default; // list of all cachable resources urls
-    console.log('Imported assetsList.js:', allCachableResources );
+    console.log('Imported assetsList.js:', allCachableResources);
   } catch {
-    console.warn('Cannot find assetsList.js. Nothing to cache. Maybe we are in develompent mode' )
+    console.warn('Cannot find assetsList.js. Nothing to cache. Maybe we are in develompent mode');
   }
 
   async function saveAllSite() {
@@ -176,7 +173,7 @@ export async function saveAllAssetsByServiceWorker(
     const word = '[\\w-~!*\'()<>"{}|^`]+';
     const baseUrl = `(http(s)?://${word}(\\.${word})+)`;
     const anyEnding = `([?/].*)?`;
-    const regexps = {} as {[key: string]: string};
+    const regexps = {} as { [key: string]: string };
     Object.keys(routes).forEach(route => {
       if (route.includes('pathMatch')) {
         return;
@@ -184,7 +181,7 @@ export async function saveAllAssetsByServiceWorker(
       route = route.replace(/:\w+/, word);
       regexps[`^${baseUrl}${route}${anyEnding}$`] = '$1/index.html';
     });
-    console.log("Send to SW override caching regexps:", regexps);
+    console.log('Send to SW override caching regexps:', regexps);
     await swAPI.setResourceMappingRegexps(regexps);
   }
 
@@ -196,6 +193,47 @@ export async function setDisableCachingUrlsByServiceWorker(paths: string[]) {
   const word = '[\\w-~!*\'()<>"{}|^`]+';
   const baseUrl = `(http(s)?://${word}(\\.${word})+)`;
   const regexps = paths.map(path => `^${baseUrl}${path}`);
-  console.log("Send to SW disable caching regexps:", regexps);
-  return await swAPI.setDisableCachingRegexps(regexps)
+  console.log('Send to SW disable caching regexps:', regexps);
+  return await swAPI.setDisableCachingRegexps(regexps);
+}
+
+export async function getImageWithRemovedBackground(imageSrc: string, threshold = 10, smooth = 80) {
+  const backgroundColor = { red: 255, green: 255, blue: 255 };
+
+  const imageElement = new Image();
+  imageElement.src = imageSrc;
+  imageElement.crossOrigin = 'Anonymous';
+  await new Promise(function (resolve) {
+    imageElement.addEventListener('load', resolve);
+  });
+
+  const canvas = document.createElement('canvas');
+  canvas.width = imageElement.naturalWidth;
+  canvas.height = imageElement.naturalHeight;
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) {
+    return imageSrc;
+  }
+  ctx.drawImage(imageElement, 0, 0);
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  for (let i = 0; i < imageData.data.length; i += 4) {
+    const red = imageData.data[i];
+    const green = imageData.data[i + 1];
+    const blue = imageData.data[i + 2];
+    const diff = (
+      Math.abs(red - backgroundColor.red) +
+      Math.abs(green - backgroundColor.green) +
+      Math.abs(blue - backgroundColor.blue)
+    ) / 3;
+    if (diff < threshold) {
+      imageData.data[i + 3] = 0;
+    } else if (diff < threshold + smooth) {
+      imageData.data[i + 3] *= (diff - threshold) / smooth;
+      imageData.data[i + 3] = Math.round(imageData.data[i + 3]);
+    }
+  }
+
+  ctx.putImageData(imageData, 0, 0);
+  return canvas.toDataURL(`image/png`);
 }

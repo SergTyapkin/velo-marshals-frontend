@@ -1,6 +1,9 @@
 import REST_API from '@sergtyapkin/rest-api';
 import { validateModel, type Model } from '@sergtyapkin/models-validator';
 import {
+  EquipmentGroupListModel, EquipmentGroupListModelMockData,
+  EquipmentGroupModel,
+  EquipmentListModel, EquipmentListModelMockData,
   EventListModel,
   EventListModelMockData,
   EventModel,
@@ -11,7 +14,7 @@ import {
   UserModel,
   UserModelMockData,
 } from '~/utils/APIModels';
-import { User, Event, Registration, SQLHistory, Globals } from '~/utils/models';
+import { User, Event, Registration, SQLHistory, Globals, Equipment, EquipmentGroup } from '~/utils/models';
 
 type RequestFunc = (url: string, data?: object) => Promise<{ data: object; status: number; ok: boolean }>;
 type MyResponse<T> = Promise<{ data: T; status: number; ok: boolean }> | { data: T; status: number; ok: boolean };
@@ -225,6 +228,28 @@ export default class API extends REST_API {
   //
   // uploadImage = (dataUrl) => this.#POST(`/image`, {dataUrl});
   // deleteImage = (imageId) => this.#DELETE(`/image`, {imageId});
+
+  getUserEquipmentOnEvent = (eventId: string, userId: string) =>
+    this.#GET(
+      `/equipment/event/holder`,
+      { eventId, userId },
+      EquipmentListModel,
+      Response200(EquipmentListModelMockData),
+    ) as MyResponse<{
+      equipment: Equipment[];
+    }>;
+  getEquipmentGroupsOnEvent = (eventId: string) =>
+    this.#GET(
+      `/equipment/event/groups`,
+      { eventId },
+      EquipmentGroupListModel,
+      Response200(EquipmentGroupListModelMockData),
+    ) as MyResponse<{
+      equipmentGroups: EquipmentGroup[];
+    }>;
+  updateEquipment = (equipment: Equipment) =>
+    this.#PUT(`/equipment`, equipment, {}, Response200({})) as MyResponse<unknown>;
+
 
   executeAdminSql = (sql: string) => this.#POST(`/sql`, { sql });
   getSQLHistory = (filters: { limit?: number } = {}) =>

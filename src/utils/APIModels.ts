@@ -1,4 +1,5 @@
 import { ArrayType, validateModel } from '@sergtyapkin/models-validator';
+import { deepClone } from '~/utils/utils';
 
 // ------------------------------
 
@@ -423,3 +424,100 @@ export const GlobalsModelMockData = {
   globalRegistration: RegistrationModelMockData,
   isOnMaintenance: false,
 };
+
+
+// ------------------------------
+
+export const EquipmentGroupModel = {
+  id: {
+    type: String,
+    optional: true,
+  },
+  title: String,
+  description: {
+    type: String,
+    optional: true,
+  },
+  previewUrl: {
+    type: String,
+    optional: true,
+    from: 'previewurl',
+  },
+  amountLeft: {
+    type: Number,
+    from: 'amountleft',
+    optional: true,
+  },
+  amountTotal: {
+    type: Number,
+    from: 'amounttotal',
+    optional: true,
+  },
+  isNeedsToReturn: {
+    type: Boolean,
+    from: 'isneedstoreturn',
+  },
+};
+
+export const EquipmentGroupModelMockData = validateModel(EquipmentGroupModel, {
+  id: 'EQUIPMENT_ID_1',
+  title: 'Аптечка',
+  description: 'Помогает при ранениях',
+  amountleft: 32,
+  amounttotal: 57,
+  isneedstoreturn: true,
+});
+export const EquipmentGroupListModel = {
+  equipmentGroups: ArrayType(EquipmentGroupModel),
+}
+export const EquipmentGroupListModelMockData = {
+  equipmentGroups: [
+    Object.assign({}, EquipmentGroupModelMockData, {title: 'Аптечка'}),
+    Object.assign({}, EquipmentGroupModelMockData, {title: 'Рация'}),
+    Object.assign({}, EquipmentGroupModelMockData, {title: 'Свисток', isNeedsToReturn: false}),
+  ]
+}
+
+export const EquipmentModel = Object.assign(
+  deepClone(EquipmentGroupModel),
+  {
+    id: {
+      type: String,
+      optional: false,
+    },
+    amountHolds: {
+      type: Number,
+      from: 'amountholds',
+      optional: true,
+    },
+    takenDate: {
+      type: Date,
+      from: 'takendate',
+      optional: true,
+    },
+    updatedDate: {
+      type: Date,
+      from: 'updateddate',
+      optional: true,
+    },
+  }
+);
+export const EquipmentModelMockData = Object.assign(
+  deepClone(EquipmentGroupModelMockData),
+  {
+    id: 'EQUIPMENT_ID_1',
+    amountHolds: 3,
+    takenDate: new Date(),
+    updatedDate: new Date(),
+  },
+);
+export const EquipmentListModel = {
+  equipment: ArrayType(EquipmentModel),
+}
+export const EquipmentListModelMockData = {
+  equipment: [
+    Object.assign({}, EquipmentModelMockData, {id: 'EQUIPMENT_ID_1', title: 'Аптечка'}),
+    Object.assign({}, EquipmentModelMockData, {id: 'EQUIPMENT_ID_2', title: 'Рация'}),
+    Object.assign({}, EquipmentModelMockData, {id: 'EQUIPMENT_ID_3', title: 'Свисток', isNeedsToReturn: false}),
+  ]
+}

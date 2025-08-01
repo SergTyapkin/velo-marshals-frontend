@@ -76,11 +76,24 @@ export interface Registration {
   userLevel: string,
 }
 
-
 export interface SQLHistory {
   id: string,
   userId: string,
   text: string,
   date: Date,
+}
+export interface EquipmentGroup {
+  title: string,
+  description?: string,
+  previewUrl?: string,
+  amountLeft?: number,
+  amountTotal?: number,
+  isNeedsToReturn: boolean,
+}
+export interface Equipment extends EquipmentGroup {
+  id: string,
+  amountHolds?: number,
+  takenDate?: Date,
+  updatedDate?: Date,
 }
 
