@@ -37,7 +37,7 @@ no-checked-border = 0px solid transparent
       position absolute
       width 0
       height 0
-      background-image url("/icons/mono/done.svg")
+      background-image url("/static/icons/mono/done.svg")
       background-repeat no-repeat
       background-size size size
       trans()

@@ -22,6 +22,7 @@ import PageProfileQR from '~/views/PageProfileQR.vue';
 import PageAdminQR from '~/views/Admin/PageAdminQR.vue';
 import PageAdminEventEmulation from '~/views/Admin/PageAdminEventEmulation.vue';
 import PageAdminGlobals from '~/views/Admin/PageAdminGlobals.vue';
+import PageScanQr from '~/views/PageScanQR.vue';
 
 type MyRoute = RouteRecordRaw & {
   path: keyof typeof routes,
@@ -45,6 +46,7 @@ export default function createVueRouter(Store: Store): Router {
     { path: '/global-event/info', name: 'eventInfo', component: PageEventInfo },
     { path: '/global-event/route', name: 'eventRoute', component: PageEventRoute },
     { path: '/global-event/equipment', name: 'eventEquipment', component: PageEventEquipment },
+    { path: '/qr-scan', name: 'scanQR', component: PageScanQr, meta: {loginRequired: true} },
 
     { path: '/events', name: 'events', component: PageEvents, meta: {loginRequired: true} },
     { path: '/admin', name: 'admin', component: PageAdmin, redirect: {name: 'adminRegistrations'}, meta: {adminRequired: true}, children: [

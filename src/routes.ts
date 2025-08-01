@@ -12,6 +12,7 @@ export default {
   '/password/restore': false,
   '/password/change': false,
   '/email/confirm': false,
+  '/qr-scan': true,
 
   '/global-event/info': false,
   '/global-event/route': false,

@@ -2,7 +2,7 @@ import REST_API from '@sergtyapkin/rest-api';
 import { validateModel, type Model } from '@sergtyapkin/models-validator';
 import {
   EquipmentGroupListModel, EquipmentGroupListModelMockData,
-  EquipmentListModel, EquipmentListModelMockData,
+  EquipmentListModel, EquipmentListModelMockData, EquipmentModel, EquipmentModelMockData,
   EventListModel,
   EventListModelMockData,
   EventModel,
@@ -241,6 +241,18 @@ export default class API extends REST_API {
   // uploadImage = (dataUrl) => this.#POST(`/image`, {dataUrl});
   // deleteImage = (imageId) => this.#DELETE(`/image`, {imageId});
 
+  getEquipment = (id: string) => this.#GET(
+    `/equipment`,
+    { id },
+    EquipmentModel,
+    Response200(EquipmentModelMockData),
+  ) as MyResponse<Equipment>;
+  takeEquipmentFromAnotherUser = (id: string) => this.#POST(
+    `/equipment/take`,
+    { id },
+    {},
+    Response200({}),
+  ) as MyResponse<unknown>;
   getUserEquipmentOnEvent = (eventId: string, userId: string) =>
     this.#GET(
       `/equipment/event/holder`,

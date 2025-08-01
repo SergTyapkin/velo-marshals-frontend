@@ -133,10 +133,27 @@ export default {
       if (!this.selectedEvent) {
         return;
       }
-      this.$globals.globalRegistration = Object.assign({}, RegistrationModelMockData, {
+
+      this.$globals.globalRegistration = {
+        id: 'MOCK_REG_ID_1',
         userId: this.$user.id,
         eventId: this.selectedEvent.id,
-      }) as Registration;
+        isConfirmed: false,
+        userComment: '_Ваш комментарий при регистрации_',
+        adminComment: 'Хорошо отработал',
+        taskText: 'Стоять на старте, ничего не делать',
+        cameDate: new Date(),
+        leaveDate: new Date(),
+        level: this.$user.level,
+        salary: 3000,
+        lapsPassed: 2,
+        userFamilyName: this.$user.familyName,
+        userGivenName: this.$user.givenName,
+        userMiddleName: this.$user.middleName,
+        userTel: this.$user.tel,
+        userTgUsername: this.$user.tgUsername,
+        userAvatarUrl: this.$user.avatarUrl,
+      };
       this.$globals.globalEvent = this.selectedEvent;
       this.$app.update();
       this.$router.push({ name: 'admin' });

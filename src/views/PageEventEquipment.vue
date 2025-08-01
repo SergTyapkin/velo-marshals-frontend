@@ -10,6 +10,10 @@
 .root-page-event-equipment
   page-root()
 
+  .button-take-equipment
+    button()
+    margin-bottom 20px
+
   .block-yours
   .block-left
     block-bg()
@@ -118,6 +122,8 @@
 <template>
   <div class="root-page-event-equipment">
     <header>Оборудование</header>
+
+    <router-link :to="{name: 'scanQR'}" class="button-take-equipment">Взять или забрать оборудование по QR</router-link>
 
     <section class="block-yours">
       <header>Взятое вами оборудование</header>
