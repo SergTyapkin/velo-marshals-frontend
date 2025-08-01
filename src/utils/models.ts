@@ -11,6 +11,7 @@ export interface User {
   middleName?: string,
   joinedDate: Date,
   level: string,
+  completedEvents: Event[],
 
   canEditAchievements: boolean,
   canAssignAchievements: boolean,

@@ -21,6 +21,7 @@ export default new Vuex.Store({
       state.user.middleName = userData.middleName;
       state.user.joinedDate = userData.joinedDate;
       state.user.level = userData.level;
+      state.user.completedEvents = userData.completedEvents;
 
       state.user.canEditAchievements = userData.canEditAchievements;
       state.user.canAssignAchievements = userData.canAssignAchievements;

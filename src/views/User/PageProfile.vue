@@ -68,6 +68,68 @@
 
           color colorText3
 
+    .user-level-block
+      centered-margin()
+      width min-content
+      position relative
+      .center
+        block-bg()
+        block-shadow()
+        font-large()
+        font-bold()
+        width 70px
+        letter-spacing 2px
+        color colorText5
+        position relative
+        transform rotate(45deg)
+        padding-block 20px !important
+        aspect-ratio 1/1
+        > *
+          centered-absolute-transform()
+          transform translate(-50%, -50%) rotate(-45deg)
+        > .bg
+          position absolute
+          inset 0
+          background colorBg
+          transform none
+          border-radius radiusM
+        .value
+          color colorEmp1
+      .right-wing
+      .left-wing
+        block-bg()
+        block-border()
+        position absolute
+        top 8px
+        left 65%
+        transform skewX(45deg)
+        z-index -1
+        padding-left 70% !important
+        padding-right 20% !important
+        padding-block 8px !important
+        border-right-width 3px
+        border-left-width 3px
+        border-radius radiusM radiusS radiusM radiusS
+        text-align center
+        > *
+          transform skewX(-45deg)
+        .value
+          font-medium()
+          margin-bottom 4px
+        .info
+          white-space nowrap
+          font-small-extra()
+          color colorText5
+      .left-wing
+        left initial
+        right 65%
+        transform skewX(-45deg)
+        padding-right 70% !important
+        padding-left 20% !important
+        border-radius radiusS radiusM radiusS radiusM
+        > *
+          transform skewX(45deg)
+
     .user-data-block
       block-shadow()
       block-bg-transparent()
@@ -134,6 +196,25 @@
         </div>
       </section>
 
+      <section class="user-level-block">
+        <section class="center">
+          <div class="bg" />
+          <div>
+            #<span class="value">{{ $user.id }}</span>
+          </div>
+        </section>
+
+        <section class="left-wing">
+          <div class="value">{{ MARSHAL_LEVELS[$user.level] }}</div>
+          <div class="info">категория {{ $user.level }} </div>
+        </section>
+
+        <section class="right-wing">
+          <div class="value">{{ $user.completedEvents?.length ?? '?' }}</div>
+          <div class="info">фестивалей</div>
+        </section>
+      </section>
+
       <section class="user-data-block">
         <div class="user-data-grid">
           <div class="data-row">
@@ -196,6 +277,7 @@ import CircleLinesLoading from '~/components/loaders/CircleLinesLoading.vue';
 
 import ImageProfileDefault from '#/icons/mono/profile-default.svg';
 import { User } from '~/utils/models';
+import { MARSHAL_LEVELS } from '~/constants';
 
 export default {
   components: { CircleLinesLoading, Placeholder },
@@ -207,6 +289,8 @@ export default {
       emailWasSent: false,
 
       ImageProfileDefault,
+
+      MARSHAL_LEVELS,
     };
   },
 

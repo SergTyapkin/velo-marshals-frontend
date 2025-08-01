@@ -8,7 +8,7 @@ export const MARSHAL_LEVELS = {
   '3': 'Новичок',
   '2': 'Стандарт',
   '1': 'Старший',
-  '-1': '100500 Ебейший старший',
+  '100500': 'Ебейший старший',
 };
 export const MARSHAL_LEVELS_REVERSE: Record<
   (typeof MARSHAL_LEVELS)[keyof typeof MARSHAL_LEVELS],

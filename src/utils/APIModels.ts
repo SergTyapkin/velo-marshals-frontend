@@ -1,122 +1,5 @@
 import { ArrayType, validateModel } from '@sergtyapkin/models-validator';
 
-export const UserModel = {
-  id: String,
-  tgUsername: {
-    type: String,
-    from: 'tgusername',
-    optional: true,
-  },
-  tgId: {
-    type: String,
-    from: 'tgid',
-  },
-  email: {
-    type: String,
-    from: 'email',
-    optional: true,
-  },
-  isConfirmedEmail: {
-    type: Boolean,
-    from: 'isconfirmedemail',
-  },
-  tel: {
-    type: String,
-    from: 'tel',
-    optional: true,
-  },
-  avatarUrl: {
-    type: String,
-    from: 'avatarurl',
-    optional: true,
-  },
-  familyName: {
-    type: String,
-    from: 'familyname',
-    optional: true,
-  },
-  givenName: {
-    type: String,
-    from: 'givenname',
-    optional: true,
-  },
-  middleName: {
-    type: String,
-    from: 'middlename',
-    optional: true,
-  },
-  joinedDate: {
-    type: Date,
-    from: 'joineddate',
-  },
-  level: {
-    type: String,
-    from: 'level',
-  },
-  canEditAchievements: {
-    type: Boolean,
-    from: 'caneditachievements',
-  },
-  canAssignAchievements: {
-    type: Boolean,
-    from: 'canassignachievements',
-  },
-  canEditRegistrations: {
-    type: Boolean,
-    from: 'caneditregistrations',
-  },
-  canEditEvents: {
-    type: Boolean,
-    from: 'caneditevents',
-  },
-  canEditUsersData: {
-    type: Boolean,
-    from: 'caneditusersdata',
-  },
-  canEditDocs: {
-    type: Boolean,
-    from: 'caneditdocs',
-  },
-  canExecuteSQL: {
-    type: Boolean,
-    from: 'canexecutesql',
-  },
-  canEditHistory: {
-    type: Boolean,
-    from: 'canedithistory',
-  },
-  canEditGlobals: {
-    type: Boolean,
-    from: 'caneditglobals',
-  },
-};
-
-export const UserModelMockData = validateModel(UserModel, {
-  id: 'USER_ID_1',
-  tgusername: 'Tyapkin_s',
-  tgid: '213412214',
-  email: 'Tuapdke293@mail.ru',
-  isconfirmedemail: true,
-  tel: '8912314122',
-  avatarurl: '/images/0',
-  familyname: 'Тяпкин',
-  givenname: 'Сергей',
-  middlename: 'Сергеевич',
-  joineddate: '03-02-2018 14:30',
-  level: 2,
-
-  caneditachievements: true,
-  canassignachievements: true,
-  caneditregistrations: true,
-  caneditevents: true,
-  caneditusersdata: true,
-  caneditdocs: true,
-  canexecutesql: true,
-  canedithistory: true,
-  caneditglobals: true,
-});
-
-
 // ------------------------------
 
 export const EventModel = {
@@ -176,6 +59,7 @@ export const EventModel = {
   isYouRegistered: {
     type: Boolean,
     from: 'isyouregistered',
+    optional: true,
   },
   isYourRegistrationConfirmed: {
     type: Boolean,
@@ -190,6 +74,7 @@ export const EventModel = {
   registrationsCount: {
     type: Number,
     from: 'registrationscount',
+    optional: true,
   },
 };
 
@@ -225,6 +110,138 @@ export const EventListModelMockData = {
     Object.assign({}, EventModelMockData, {id: 'EVENT_ID_3', title: 'Фестиваль 3'}),
   ]
 }
+
+
+// ------------------------------
+
+
+export const UserModel = {
+  id: String,
+  tgUsername: {
+    type: String,
+    from: 'tgusername',
+    optional: true,
+  },
+  tgId: {
+    type: String,
+    from: 'tgid',
+  },
+  email: {
+    type: String,
+    from: 'email',
+    optional: true,
+  },
+  isConfirmedEmail: {
+    type: Boolean,
+    from: 'isconfirmedemail',
+  },
+  tel: {
+    type: String,
+    from: 'tel',
+    optional: true,
+  },
+  avatarUrl: {
+    type: String,
+    from: 'avatarurl',
+    optional: true,
+  },
+  familyName: {
+    type: String,
+    from: 'familyname',
+    optional: true,
+  },
+  givenName: {
+    type: String,
+    from: 'givenname',
+    optional: true,
+  },
+  middleName: {
+    type: String,
+    from: 'middlename',
+    optional: true,
+  },
+  joinedDate: {
+    type: Date,
+    from: 'joineddate',
+  },
+  level: {
+    type: String,
+    from: 'level',
+  },
+  completedEvents: {
+    type: Array,
+    item: {
+      type: Object,
+      fields: EventModel,
+    },
+    from: 'completedevents',
+    optional: true,
+  },
+
+  canEditAchievements: {
+    type: Boolean,
+    from: 'caneditachievements',
+  },
+  canAssignAchievements: {
+    type: Boolean,
+    from: 'canassignachievements',
+  },
+  canEditRegistrations: {
+    type: Boolean,
+    from: 'caneditregistrations',
+  },
+  canEditEvents: {
+    type: Boolean,
+    from: 'caneditevents',
+  },
+  canEditUsersData: {
+    type: Boolean,
+    from: 'caneditusersdata',
+  },
+  canEditDocs: {
+    type: Boolean,
+    from: 'caneditdocs',
+  },
+  canExecuteSQL: {
+    type: Boolean,
+    from: 'canexecutesql',
+  },
+  canEditHistory: {
+    type: Boolean,
+    from: 'canedithistory',
+  },
+  canEditGlobals: {
+    type: Boolean,
+    from: 'caneditglobals',
+  },
+};
+
+export const UserModelMockData = validateModel(UserModel, {
+  id: 'USER_ID_1',
+  tgusername: 'Tyapkin_s',
+  tgid: '213412214',
+  email: 'Tuapdke293@mail.ru',
+  isconfirmedemail: true,
+  tel: '8912314122',
+  avatarurl: '/images/0',
+  familyname: 'Тяпкин',
+  givenname: 'Сергей',
+  middlename: 'Сергеевич',
+  joineddate: '03-02-2018 14:30',
+  level: 2,
+  completedevents: [],
+
+  caneditachievements: true,
+  canassignachievements: true,
+  caneditregistrations: true,
+  caneditevents: true,
+  caneditusersdata: true,
+  caneditdocs: true,
+  canexecutesql: true,
+  canedithistory: true,
+  caneditglobals: true,
+});
+
 
 
 // ------------------------------
