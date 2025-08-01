@@ -154,6 +154,7 @@ export default {
     this.global = getCurrentInstance()!.appContext.config.globalProperties;
 
     this.global.$user = this.$store.state.user;
+    this.global.$globals = this.$store.state.globals;
     this.global.$modals = this.$refs.modals;
     this.global.$popups = this.$refs.popups;
     this.global.$app = this;

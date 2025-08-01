@@ -85,6 +85,10 @@ export const UserModel = {
     type: Boolean,
     from: 'canedithistory',
   },
+  canEditGlobals: {
+    type: Boolean,
+    from: 'caneditglobals',
+  },
 };
 
 export const UserModelMockData = validateModel(UserModel, {
@@ -109,6 +113,7 @@ export const UserModelMockData = validateModel(UserModel, {
   caneditdocs: true,
   canexecutesql: true,
   canedithistory: true,
+  caneditglobals: true,
 });
 
 
@@ -118,6 +123,10 @@ export const EventModel = {
   id: String,
   title: String,
   description: String,
+  fullDescription: {
+    type: String,
+    from: 'fulldescription',
+  },
   routeDescription: {
     type: String,
     from: 'routedescription',
@@ -188,6 +197,7 @@ export const EventModelMockData = validateModel(EventModel, {
   id: 'EVENT_ID_1',
   title: 'Фестиваль 2025 лето',
   description: '#Большой и классный фестиваль\n_C markdown_ оформлением\n**Где даже** есть немного `кода`\n```js\nconst a = "some str";\n## Ждем вас!```',
+  fulldescription: '#Большой и классный маршрууууууут!\n_C markdown_ оформлением\n**Где даже** есть немного `кода`\n```js\nconst a = "some str";\n## Ждем вас!```',
   routedescription: '#Большой и классный маршрууууууут!\n_C markdown_ оформлением\n**Где даже** есть немного `кода`\n```js\nconst a = "some str";\n## Ждем вас!```',
   createddate: '2025-07-05',
   startdate: '2025-08-02',
@@ -372,3 +382,20 @@ export const SQLHistoryListModelMockData = {
 
 
 // ------------------------------
+
+export const GlobalsModel = {
+  globalEvent: {
+    type: String,
+    from: 'globalevent',
+    optional: true,
+  },
+  isOnMaintenance: {
+    type: Boolean,
+    from: 'isonmaintenance',
+  },
+};
+
+export const GlobalsModelMockData = {
+  globalEvent: EventModelMockData,
+  isOnMaintenance: false,
+};

@@ -38,6 +38,7 @@
       <router-link :to="{name: 'adminUsers'}">Пользователи</router-link>
       <router-link :to="{name: 'adminEquipment'}">Оборудование</router-link>
       <router-link :to="{name: 'adminAchievements'}">Достижения</router-link>
+      <router-link :to="{name: 'adminGlobals'}">Глобальные настройки</router-link>
       <router-link :to="{name: 'adminSQL'}">Выполнить SQL</router-link>
     </section>
 

@@ -99,20 +99,26 @@
 
     .results-container-table
       .checkboxes-container
-        block-shadow()
+        block-inner()
         display grid
         grid-template-columns repeat(auto-fit, minmax(150px, 1fr))
         gap 15px
       table
-        block-shadow()
+        block-inner()
         overflow-y hidden
         overflow-x auto
         tr:nth-child(2n)
           background colorBlockLight
         th
           font-medium()
+          cursor pointer
           padding 4px
           color colorEmp1
+          white-space nowrap
+          img
+            display inline-block
+            height 1em
+            padding-top 4px
         td
           font-small()
           padding 4px
@@ -150,8 +156,12 @@
         <header>Регистрации на<br />"{{ selectedEvent?.title }}"</header>
 
         <transition mode="out-in" name="scale-in">
-          <button v-if="displayAsTable" @click="displayAsTable = false"><img src="/static/icons/mono/listing.svg" alt="list" /></button>
-          <button v-else @click="displayAsTable = true"><img src="/static/icons/mono/flex-wrap.svg" alt="list" /></button>
+          <button v-if="displayAsTable" @click="displayAsTable = false">
+            <img src="/static/icons/mono/listing.svg" alt="list" />
+          </button>
+          <button v-else @click="displayAsTable = true">
+            <img src="/static/icons/mono/flex-wrap.svg" alt="list" />
+          </button>
         </transition>
       </div>
 
@@ -173,6 +183,11 @@
           :list="Object.entries(MARSHAL_LEVELS).map(([key, val]) => ({ name: val, value: key }))"
           v-model="filters.level"
           :can-be-null="true" />
+        <InputSearch
+          class="filter-field"
+          title="Поиск"
+          placeholder="Поиск по имени и id"
+          v-model="filters.search" />
       </ul>
 
       <transition mode="out-in" name="opacity">
@@ -180,7 +195,7 @@
           <header>Столбцы таблицы</header>
           <div class="checkboxes-container">
             <Checkbox class="filter-field" title="Номер" v-model="tableColumns.number" />
-            <Checkbox class="filter-field" title="ID марашала" v-model="tableColumns.userId" />
+            <Checkbox class="filter-field" title="ID" v-model="tableColumns.userId" />
             <Checkbox class="filter-field" title="Фамилия" v-model="tableColumns.userFamilyName" />
             <Checkbox class="filter-field" title="Имя" v-model="tableColumns.userGivenName" />
             <Checkbox class="filter-field" title="Отчество" v-model="tableColumns.userMiddleName" />
@@ -189,7 +204,7 @@
             <Checkbox class="filter-field" title="Подтверждение" v-model="tableColumns.isConfirmed" />
             <Checkbox class="filter-field" title="Категория" v-model="tableColumns.userLevel" />
             <Checkbox class="filter-field" title="Категория на фестивале" v-model="tableColumns.level" />
-            <Checkbox class="filter-field" title="Коммент" v-model="tableColumns.userComment" />
+            <Checkbox class="filter-field" title="Комментарий" v-model="tableColumns.userComment" />
             <Checkbox class="filter-field" title="Коммент админа" v-model="tableColumns.adminComment" />
             <Checkbox class="filter-field" title="Оплата" v-model="tableColumns.salary" />
             <Checkbox class="filter-field" title="Задача" v-model="tableColumns.taskText" />
@@ -198,30 +213,71 @@
             <Checkbox class="filter-field" title="Кругов проехал" v-model="tableColumns.lapsPassed" />
             <Checkbox class="filter-field" title="Аватарка" v-model="tableColumns.userAvatarUrl" />
           </div>
-          <br>
-          <br>
+          <br />
+          <br />
           <header>Таблица</header>
           <div v-if="!filteredRegistrations.length && !loading" class="info">Зявок по текущим фильтрам не найдено</div>
           <table v-else>
             <tr>
               <th v-if="tableColumns.number">#</th>
-              <th v-if="tableColumns.userId">ID</th>
-              <th v-if="tableColumns.userFamilyName">Фамилия</th>
-              <th v-if="tableColumns.userGivenName">Имя</th>
-              <th v-if="tableColumns.userMiddleName">Отчество</th>
-              <th v-if="tableColumns.userTel">Телефон</th>
-              <th v-if="tableColumns.userTgUsername">Tg</th>
-              <th v-if="tableColumns.isConfirmed">Подтверждение</th>
-              <th v-if="tableColumns.userLevel">Категория</th>
-              <th v-if="tableColumns.level">Категория на меро</th>
-              <th v-if="tableColumns.userComment">Комментарий</th>
-              <th v-if="tableColumns.adminComment">Комментарий админа</th>
-              <th v-if="tableColumns.salary">Оплата</th>
-              <th v-if="tableColumns.taskText">Задача</th>
-              <th v-if="tableColumns.cameDate">Пришел в</th>
-              <th v-if="tableColumns.leaveDate">Ушел в</th>
-              <th v-if="tableColumns.lapsPassed">Кругов проехал</th>
-              <th v-if="tableColumns.userAvatarUrl">Аватар</th>
+              <th v-if="tableColumns.userId" @click="toggleTableOrder('userId')">
+                ID <img v-if="tableOrders.has('userId')" src="/static/icons/mono/chevron-down.svg" alt="" />
+              </th>
+              <th v-if="tableColumns.userFamilyName" @click="toggleTableOrder('userFamilyName')">
+                Фамилия
+                <img v-if="tableOrders.has('userFamilyName')" src="/static/icons/mono/chevron-down.svg" alt="" />
+              </th>
+              <th v-if="tableColumns.userGivenName" @click="toggleTableOrder('userGivenName')">
+                Имя <img v-if="tableOrders.has('userGivenName')" src="/static/icons/mono/chevron-down.svg" alt="" />
+              </th>
+              <th v-if="tableColumns.userMiddleName" @click="toggleTableOrder('userMiddleName')">
+                Отчество
+                <img v-if="tableOrders.has('userMiddleName')" src="/static/icons/mono/chevron-down.svg" alt="" />
+              </th>
+              <th v-if="tableColumns.userTel" @click="toggleTableOrder('userTel')">
+                Телефон <img v-if="tableOrders.has('userTel')" src="/static/icons/mono/chevron-down.svg" alt="" />
+              </th>
+              <th v-if="tableColumns.userTgUsername" @click="toggleTableOrder('userTgUsername')">
+                Tg <img v-if="tableOrders.has('userTgUsername')" src="/static/icons/mono/chevron-down.svg" alt="" />
+              </th>
+              <th v-if="tableColumns.isConfirmed" @click="toggleTableOrder('isConfirmed')">
+                Подтверждение
+                <img v-if="tableOrders.has('isConfirmed')" src="/static/icons/mono/chevron-down.svg" alt="" />
+              </th>
+              <th v-if="tableColumns.userLevel" @click="toggleTableOrder('userLevel')">
+                Категория <img v-if="tableOrders.has('userLevel')" src="/static/icons/mono/chevron-down.svg" alt="" />
+              </th>
+              <th v-if="tableColumns.level" @click="toggleTableOrder('level')">
+                Категория на меро
+                <img v-if="tableOrders.has('level')" src="/static/icons/mono/chevron-down.svg" alt="" />
+              </th>
+              <th v-if="tableColumns.userComment" @click="toggleTableOrder('userComment')">
+                Комментарий
+                <img v-if="tableOrders.has('userComment')" src="/static/icons/mono/chevron-down.svg" alt="" />
+              </th>
+              <th v-if="tableColumns.adminComment" @click="toggleTableOrder('adminComment')">
+                Комментарий админа
+                <img v-if="tableOrders.has('adminComment')" src="/static/icons/mono/chevron-down.svg" alt="" />
+              </th>
+              <th v-if="tableColumns.salary" @click="toggleTableOrder('salary')">
+                Оплата <img v-if="tableOrders.has('salary')" src="/static/icons/mono/chevron-down.svg" alt="" />
+              </th>
+              <th v-if="tableColumns.taskText" @click="toggleTableOrder('taskText')">
+                Задача <img v-if="tableOrders.has('taskText')" src="/static/icons/mono/chevron-down.svg" alt="" />
+              </th>
+              <th v-if="tableColumns.cameDate" @click="toggleTableOrder('cameDate')">
+                Пришел в <img v-if="tableOrders.has('cameDate')" src="/static/icons/mono/chevron-down.svg" alt="" />
+              </th>
+              <th v-if="tableColumns.leaveDate" @click="toggleTableOrder('leaveDate')">
+                Ушел в <img v-if="tableOrders.has('leaveDate')" src="/static/icons/mono/chevron-down.svg" alt="" />
+              </th>
+              <th v-if="tableColumns.lapsPassed" @click="toggleTableOrder('lapsPassed')">
+                Кругов проехал
+                <img v-if="tableOrders.has('lapsPassed')" src="/static/icons/mono/chevron-down.svg" alt="" />
+              </th>
+              <th v-if="tableColumns.userAvatarUrl" @click="toggleTableOrder('userAvatarUrl')">
+                Аватар <img v-if="tableOrders.has('userAvatarUrl')" src="/static/icons/mono/chevron-down.svg" alt="" />
+              </th>
             </tr>
             <tr v-for="(registration, i) in filteredRegistrations">
               <td v-if="tableColumns.number">{{ i }}</td>
@@ -244,7 +300,7 @@
               <td v-if="tableColumns.leaveDate">{{ dateTimeFormatter(registration.leaveDate) }}</td>
               <td v-if="tableColumns.lapsPassed">{{ registration.lapsPassed }}</td>
               <td v-if="tableColumns.userAvatarUrl">
-                <img :src="registration.userAvatarUrl" alt="">
+                <img :src="registration.userAvatarUrl" alt="" />
               </td>
             </tr>
           </table>
@@ -258,8 +314,7 @@
               :key="registration"
               class="registration"
               :registration="registration"
-              :idx="i"
-            />
+              :idx="i" />
           </ul>
         </section>
       </transition>
@@ -277,9 +332,10 @@ import SelectList from '~/components/SelectList.vue';
 import RegistrationCard from '~/components/RegistrationCard.vue';
 import { MARSHAL_LEVELS } from '~/constants';
 import Checkbox from '~/components/Checkbox.vue';
+import InputSearch from '~/components/InputSearch.vue';
 
 export default {
-  components: { Checkbox, RegistrationCard, SelectList, CircleLinesLoading },
+  components: { InputSearch, Checkbox, RegistrationCard, SelectList, CircleLinesLoading },
 
   data() {
     return {
@@ -296,10 +352,11 @@ export default {
       filters: {
         isConfirmed: null as null | undefined | boolean,
         level: null as null | string,
+        search: '',
       },
       tableColumns: {
-        number: false,
-        userId: false,
+        number: true,
+        userId: true,
         isConfirmed: true,
         userComment: false,
         adminComment: false,
@@ -317,6 +374,7 @@ export default {
         userAvatarUrl: false,
         userLevel: false,
       },
+      tableOrders: new Set(['userFamilyName']) as Set<keyof Registration>,
 
       MARSHAL_LEVELS,
     };
@@ -324,15 +382,34 @@ export default {
 
   computed: {
     filteredRegistrations() {
-      return this.registrations.filter(reg => {
-        if (this.filters.isConfirmed !== null && reg.isConfirmed !== this.filters.isConfirmed) {
-          return false;
-        }
-        if (this.filters.level !== null && reg.userLevel !== this.filters.level) {
-          return false;
-        }
-        return true;
-      });
+      return this.registrations
+        .filter(reg => {
+          if (this.filters.isConfirmed !== null && reg.isConfirmed !== this.filters.isConfirmed) {
+            return false;
+          }
+          if (this.filters.level !== null && reg.userLevel !== this.filters.level) {
+            return false;
+          }
+          if (
+            !(new RegExp(this.filters.search)).test(`${reg.userFamilyName} ${reg.userGivenName} ${reg.userMiddleName} ${reg.userId}`)
+          ) {
+            return false;
+          }
+          return true;
+        })
+        .sort((reg1, reg2) => {
+          for (const field of this.tableOrders) {
+            if (reg1[field] !== reg2[field]) {
+              if (typeof reg1[field] === 'string' && field !== 'userId') {
+                // @ts-expect-error unknown types
+                return reg1[field].localeCompare(reg2[field]);
+              }
+              // @ts-expect-error unknown types
+              return reg1[field] - reg2[field];
+            }
+          }
+          return 0;
+        });
     },
   },
 
@@ -387,6 +464,15 @@ export default {
           },
         )
       ).registrations;
+    },
+
+    toggleTableOrder(fieldName: keyof Registration) {
+      // if (this.tableOrders.has(fieldName)) {
+      //   this.tableOrders.delete(fieldName);
+      //   return;
+      // }
+      this.tableOrders.clear();
+      this.tableOrders.add(fieldName);
     },
   },
 };

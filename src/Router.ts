@@ -41,6 +41,7 @@ export default function createVueRouter(Store: Store): Router {
         { path: '/admin/users', name: 'adminUsers', component: PageAdminRegistrations, meta: {loginRequired: true} },
         { path: '/admin/equipment', name: 'adminEquipment', component: PageAdminRegistrations, meta: {loginRequired: true} },
         { path: '/admin/achievements', name: 'adminAchievements', component: PageAdminRegistrations, meta: {loginRequired: true} },
+        { path: '/admin/globals', name: 'adminGlobals', component: PageAdminRegistrations, meta: {loginRequired: true} },
         { path: '/admin/sql', name: 'adminSQL', component: PageAdminSqlExecute, meta: {loginRequired: true} },
       ]
     },
@@ -131,6 +132,7 @@ export default function createVueRouter(Store: Store): Router {
         !Store.state.user.canEditUsersData &&
         !Store.state.user.canEditDocs &&
         !Store.state.user.canExecuteSQL &&
+        !Store.state.user.canEditGlobals &&
         !Store.state.user.canEditHistory
       ) {
         Store.$app.$popups.error('Нет доступа', 'Вы пытались попасть на админскую страницу');

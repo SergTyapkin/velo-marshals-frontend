@@ -1,10 +1,11 @@
 import Vuex from 'vuex';
 import { type State, type Store } from '~/types/store';
-import { User } from '~/utils/models';
+import { Globals, User } from '~/utils/models';
 
 export default new Vuex.Store({
   state: {
     user: {} as User,
+    globals: {} as Globals,
   },
   mutations: {
     SET_USER(state: State, userData: User) {
@@ -32,6 +33,10 @@ export default new Vuex.Store({
       state.user.isSignedIn = true;
       state.user.isFilledFullData = !!state.user.tel && !!state.user.email;
     },
+    SET_GLOBALS(state: State, globalsData: Globals) {
+      state.globals.isOnMaintenance = globalsData.isOnMaintenance;
+      state.globals.globalEvent = globalsData.globalEvent;
+    },
     DELETE_USER(state: State) {
       state.user.isSignedIn = false;
     },
@@ -44,6 +49,7 @@ export default new Vuex.Store({
         return;
       }
       state.commit('SET_USER', data);
+      state.commit('SET_GLOBALS', data);
       this.$app.update();
     },
     DELETE_USER(this: Store, state: State) {

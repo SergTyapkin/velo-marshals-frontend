@@ -56,6 +56,7 @@
   <footer class="root-footer" v-if="$user?.isSignedIn && $user?.isFilledFullData">
     <nav class="buttons">
       <router-link
+        v-if="!$globals?.globalEvent"
         :to="{ name: 'events' }"
         class="button"
       >
@@ -108,6 +109,7 @@ export default {
         this.$user?.canEditDocs ||
         this.$user?.canEditHistory ||
         this.$user?.canEditRegistrations ||
+        this.$user?.canEditGlobals ||
         this.$user?.canExecuteSQL;
     }
   },

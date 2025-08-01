@@ -20,15 +20,22 @@ export interface User {
   canEditDocs: boolean,
   canExecuteSQL: boolean,
   canEditHistory: boolean,
+  canEditGlobals: boolean,
 
   isFilledFullData: boolean,
   isSignedIn: boolean,
+}
+
+export interface Globals {
+  isOnMaintenance: boolean,
+  globalEvent?: Event,
 }
 
 export interface Event {
   id: string,
   title: string,
   description: string,
+  fullDescription: string,
   routeDescription: string,
   createdDate: Date,
   startDate?: Date,

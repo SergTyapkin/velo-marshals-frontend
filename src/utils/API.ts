@@ -4,14 +4,14 @@ import {
   EventListModel,
   EventListModelMockData,
   EventModel,
-  EventModelMockData,
+  EventModelMockData, GlobalsModel, GlobalsModelMockData,
   RegistrationListModel,
   RegistrationListModelMockData,
   SQLHistoryListModel, SQLHistoryListModelMockData,
   UserModel,
   UserModelMockData,
 } from '~/utils/APIModels';
-import { User, Event, Registration, SQLHistory } from '~/utils/models';
+import { User, Event, Registration, SQLHistory, Globals } from '~/utils/models';
 
 type RequestFunc = (url: string, data?: object) => Promise<{ data: object; status: number; ok: boolean }>;
 type MyResponse<T> = Promise<{ data: T; status: number; ok: boolean }> | { data: T; status: number; ok: boolean };
@@ -85,7 +85,7 @@ export default class API extends REST_API {
   confirmEmailByCode = (code: string) =>
     this.#POST(`/user/email/confirmation`, {code}, {}, Response200({})) as MyResponse<unknown>;
 
-  getUser = () => this.#GET(`/user`, {}, UserModel, Response200(UserModelMockData)) as MyResponse<User>;
+  getUser = () => this.#GET(`/user`, {}, Object.assign({}, UserModel, GlobalsModel), Response200(Object.assign({}, UserModelMockData, GlobalsModelMockData))) as MyResponse<User | Globals>;
   // getAnotherUser = (id) => this.#GET(`/user`, {id}, UserModel, Response200(UserModelMockData)) as MyResponse<User>;
   checkUserTgExisting = (tgUsername: string, tgId: string) =>
     this.#GET(`/user`, { tgUsername, tgId }, { id: String }, Response200({ id: 'USER_ID' })) as MyResponse<{
@@ -173,7 +173,7 @@ export default class API extends REST_API {
     registrationId?: string;
     type?: 'future' | 'past' | 'all';
   }) =>
-    this.#GET(`/event`, filters, EventListModel, Response200(EventListModelMockData)) as MyResponse<{
+    this.#GET(`/event`, {order: '["startDate"]', ...filters}, EventListModel, Response200(EventListModelMockData)) as MyResponse<{
       events: Event[];
     }>;
   getEventById = (id: string) =>
