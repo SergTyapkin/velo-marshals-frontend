@@ -5,10 +5,10 @@ export const TG_WEB_APP_INTERACTOR_SCRIPT_URL = 'https://telegram.org/js/telegra
 export const DISABLED_CACHING_URLS = [`${API_PREFIX}/.*`];
 
 export const MARSHAL_LEVELS = {
-  '3': 'Новичок',
-  '2': 'Стандарт',
-  '1': 'Старший',
-  '100500': 'Ебейший старший',
+  '3': 'новичок',
+  '2': 'стандарт',
+  '1': 'старший',
+  '100500': 'ебейший старший',
 };
 export const MARSHAL_LEVELS_REVERSE: Record<
   (typeof MARSHAL_LEVELS)[keyof typeof MARSHAL_LEVELS],

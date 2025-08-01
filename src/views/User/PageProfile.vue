@@ -87,14 +87,22 @@
         > *
           centered-absolute-transform()
           transform translate(-50%, -50%) rotate(-45deg)
+          .value
+            color colorEmp1
+          .info
+            centered-absolute-transform()
+            top unset
+            bottom -30px
+            font-small-extra()
+            white-space nowrap
+            color colorText5
+            position absolute
         > .bg
           position absolute
           inset 0
           background colorBg
           transform none
           border-radius radiusM
-        .value
-          color colorEmp1
       .right-wing
       .left-wing
         block-bg()
@@ -201,6 +209,7 @@
           <div class="bg" />
           <div>
             #<span class="value">{{ $user.id }}</span>
+            <div class="info">ID</div>
           </div>
         </section>
 
