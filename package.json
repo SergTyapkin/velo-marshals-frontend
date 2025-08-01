@@ -51,6 +51,8 @@
     "@sergtyapkin/vue3-markdown": "^0.1.0",
     "@vitejs/plugin-vue": "^4.2.3",
     "file-loader": "^6.2.0",
+    "qr-scanner": "^1.4.2",
+    "qrcode-generator-es6": "^1.1.4",
     "stylus": "^0.54.7",
     "typescript": "^4.6.2",
     "vite": "^6.3.5",

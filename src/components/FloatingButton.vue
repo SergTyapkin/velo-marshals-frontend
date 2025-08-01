@@ -23,7 +23,7 @@ image-width = 30px
   padding padding
   padding-right ((float-button-height - image-width) / 2)
   background colorEmp1
-  box-shadow 3px 3px 5px colorShadow
+  box-shadow 3px 3px 5px colorBg
 
   .fields
     display flex
@@ -49,7 +49,7 @@ image-width = 30px
     right 20px
   border-radius((float-button-height / 2))
 .float-button:hover
-  box-shadow 5px 5px 8px colorShadow
+  box-shadow 5px 5px 8px colorBg
   .hover-text
     width 120px
     opacity 1

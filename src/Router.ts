@@ -18,6 +18,7 @@ import PageNotHealthly from '~/views/PageNotHealthly.vue';
 import PageEventInfo from '~/views/PageEventInfo.vue';
 import PageEventRoute from '~/views/PageEventRoute.vue';
 import PageEventEquipment from '~/views/PageEventEquipment.vue';
+import PageProfileQR from '~/views/PageProfileQR.vue';
 
 type MyRoute = RouteRecordRaw & {
   path: keyof typeof routes,
@@ -33,6 +34,7 @@ export default function createVueRouter(Store: Store): Router {
     { path: '/not-healthly', name: 'notHealthly', component: PageNotHealthly },
 
     { path: '/profile', name: 'profile', component: PageProfile, meta: {loginRequired: true} },
+    { path: '/profile/qr', name: 'profileQR', component: PageProfileQR, meta: {loginRequired: true} },
     { path: '/profile/fill', name: 'fillProfile', component: PageFillProfileData, meta: {loginRequiredPartial: true} },
     { path: '/login', name: 'login', component: PageLogin, meta: {noLoginRequired: true} },
     { path: '/email/confirm', name: 'confirmEmail', component: PageConfirmEmail },

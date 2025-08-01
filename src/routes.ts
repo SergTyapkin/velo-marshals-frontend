@@ -5,6 +5,7 @@ export default {
 
   // User pages
   '/profile': true,
+  '/profile/qr': true,
   '/profile/fill': false,
   '/login': true,
   '/signup': true,

@@ -7,7 +7,7 @@ animation-not-reduced(animation)
 animation-index-delay(delay=0.1s)
   animation-delay 'calc(var(--animation-index, 0) * %s)' % delay
 
-animation-float(time=0.5s, translateX=0, translateY=-20px, uniqueName=_)
+animation-float(time=0.5s, translateX=-20px, translateY=0, uniqueName=_)
   opacity 0
   animation 'float-%s %s ease forwards' % (uniqueName time)
   animation-index-delay()

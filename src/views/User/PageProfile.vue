@@ -24,12 +24,12 @@
         transform scale(-1, 1)
         margin 0
 
-  .user-block
-    .user-name-row
+  .user-container
+    .user-avatar-block
       font-large()
 
       width 100%
-      margin-bottom 50px
+      margin-bottom 15px
       text-align center
 
       .user-image-group
@@ -59,14 +59,35 @@
           filter blur(10px) brightness(0.3)
 
       .user-name-group
-        .name
-          margin-top 10px
-          font-large()
+        display flex
+        gap 10px
+        justify-content center
+        align-items center
+        .text-group
+          .name
+            margin-top 10px
+            font-large()
 
-        .info
-          font-small()
+          .info
+            font-small()
 
-          color colorText3
+            color colorText3
+        a
+          button()
+          padding 0
+          display block
+          &:hover
+            transform scale(1.1)
+
+          img
+            height 100%
+            width 50px
+            margin 0
+            display block
+            background colorBlockBg
+            border-radius radiusS
+
+
 
     .user-level-block
       centered-margin()
@@ -185,24 +206,30 @@
       <button class="logout-button" @click="logout"><img src="/static/icons/color/logout.svg" alt="logout" /></button>
     </section>
 
-    <section class="user-block">
-      <section class="user-name-row">
-        <div class="user-name-id-block">
-          <div class="user-image-group">
-            <Placeholder class="placeholder" ref="placeholder" absolute />
-            <img
-              :src="$user.avatarUrl || ImageProfileDefault"
-              alt="avatar"
-              @load="$refs.placeholder.setHidden()"
-              @error="$refs.placeholder.setError()" />
-            <img :src="$user.avatarUrl || ImageProfileDefault" alt="avatar" class="bg" />
+    <section class="user-container">
+      <router-link :to="{name: 'profileQR'}">
+        <section class="user-avatar-block">
+          <div class="user-name-id-block">
+            <div class="user-image-group">
+              <Placeholder class="placeholder" ref="placeholder" absolute />
+              <img
+                :src="$user.avatarUrl || ImageProfileDefault"
+                alt="avatar"
+                @load="$refs.placeholder.setHidden()"
+                @error="$refs.placeholder.setError()" />
+              <img :src="$user.avatarUrl || ImageProfileDefault" alt="avatar" class="bg" />
+            </div>
+            <div class="user-name-group">
+              <div class="text-group">
+                <div class="name">{{ $user.givenName }} {{ $user.familyName }}</div>
+                <div class="info">@{{ $user.tgUsername }}&nbsp;&nbsp;#{{ $user.tgId }}</div>
+              </div>
+              <router-link :to="{name: 'profileQR'}"><img src="/static/icons/color/qr-scanner.svg" alt="QR"></router-link>
+            </div>
           </div>
-          <div class="user-name-group">
-            <div class="name">{{ $user.givenName }} {{ $user.familyName }}</div>
-            <div class="info">@{{ $user.tgUsername }}&nbsp;&nbsp;#{{ $user.tgId }}</div>
-          </div>
-        </div>
-      </section>
+        </section>
+      </router-link>
+
 
       <section class="user-level-block">
         <section class="center">
