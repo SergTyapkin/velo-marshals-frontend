@@ -84,6 +84,45 @@
     opacity 1
 </style>
 
+<style lang="stylus">
+@import 'styles/constants.styl'
+@import 'styles/components.styl'
+@import 'styles/buttons.styl'
+@import 'styles/fonts.styl'
+@import 'styles/utils.styl'
+@import 'styles/animations.styl'
+@import 'styles/scrollbars.styl'
+
+._markdown_renderer
+  a
+    color colorEmp1
+    text-decoration underline
+  blockquote
+    color colorText4
+    border-left 1px solid colorText4
+    padding 5px 0 5px 15px
+    margin 0 0 0 10px
+  table
+    overflow-y hidden
+    overflow-x auto
+    tr:nth-child(2n)
+      background colorBlockLight
+    th
+      font-medium()
+      cursor pointer
+      padding 4px
+      color colorEmp1
+      white-space nowrap
+      img
+        display inline-block
+        height 1em
+        padding-top 4px
+    td
+      font-small()
+      padding 4px
+</style>
+
+
 <template>
   <!--  <HeaderComponent class="header" />-->
 

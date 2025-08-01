@@ -11,7 +11,10 @@ export default {
   '/password/restore': false,
   '/password/change': false,
   '/email/confirm': false,
-  '/horse/:id': false,
+
+  '/global-event/info': false,
+  '/global-event/route': false,
+  '/global-event/equipment': false,
 
   '/events': true,
   '/admin': false,

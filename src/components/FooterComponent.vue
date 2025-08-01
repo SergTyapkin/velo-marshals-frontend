@@ -50,33 +50,40 @@
       centered-flex-container()
       font-small()
       trans()
+
+  &.large
+    .buttons
+      .button
+        padding 0
+        font-small-extra()
+        @media(max-width: 330px)
+          > *:not(img)
+            display none
 </style>
 
 <template>
-  <footer class="root-footer" v-if="$user?.isSignedIn && $user?.isFilledFullData">
+  <footer class="root-footer" v-if="$user?.isSignedIn && $user?.isFilledFullData" :class="{large: $globals?.globalEvent}">
     <nav class="buttons">
-      <router-link
-        v-if="!$globals?.globalEvent"
-        :to="{ name: 'events' }"
-        class="button"
-      >
-        <img src="/static/icons/mono/listing.svg" alt="">Фестивали
+      <router-link v-if="!$globals?.globalEvent" :to="{ name: 'events' }" class="button">
+        <img src="/static/icons/mono/listing.svg" alt="" /><span>Фестивали</span>
       </router-link>
-      <!--      <router-link :to="{ name: 'login' }" class="button"><img src="/static/icons/listing.svg" alt="">Фестиваль</router-link>-->
-      <!--      <router-link :to="{ name: 'default' }" class="button"><img src="/static/icons/external-link.svg" alt="">Ссылки</router-link>-->
-      <!--      <router-link :to="{ name: 'default' }" class="button"><img src="/static/icons/work.svg" alt="">Оборудование</router-link>-->
-      <router-link
-        :to="{ name: 'profile' }"
-        class="button"
-      >
-        <img src="/static/icons/mono/profile.svg" alt="">Профиль
+
+      <router-link v-if="$globals?.globalEvent" :to="{ name: 'eventInfo' }" class="button">
+        <img src="/static/icons/mono/info.svg" alt="" /><span>Фестиваль</span>
       </router-link>
-      <router-link
-        :to="{ name: 'admin' }"
-        v-if="isUserAdmin"
-        class="button"
-      >
-        <img src="/static/icons/mono/admin.svg" alt="">Админская
+      <router-link v-if="$globals?.globalEvent" :to="{ name: 'eventRoute' }" class="button">
+        <img src="/static/icons/mono/link.svg" alt="" /><span>Ссылки</span>
+      </router-link>
+      <router-link v-if="$globals?.globalEvent" :to="{ name: 'eventEquipment' }" class="button">
+        <img src="/static/icons/mono/work.svg" alt="" /><span>Оборудование</span>
+      </router-link>
+
+      <router-link :to="{ name: 'profile' }" class="button">
+        <img src="/static/icons/mono/profile.svg" alt="" /><span>Профиль</span>
+      </router-link>
+
+      <router-link :to="{ name: 'admin' }" v-if="isUserAdmin" class="button">
+        <img src="/static/icons/mono/admin.svg" alt="" /><span>Админская</span>
       </router-link>
     </nav>
   </footer>
@@ -111,7 +118,7 @@ export default {
         this.$user?.canEditRegistrations ||
         this.$user?.canEditGlobals ||
         this.$user?.canExecuteSQL;
-    }
+    },
   },
 };
 </script>

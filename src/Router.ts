@@ -15,6 +15,9 @@ import PageAdminRegistrations from '~/views/Admin/PageAdminRegistrations.vue';
 import PageAdminSqlExecute from '~/views/Admin/PageAdminSqlExecute.vue';
 import PageFillProfileData from '~/views/User/PageFillProfileData.vue';
 import PageNotHealthly from '~/views/PageNotHealthly.vue';
+import PageEventInfo from '~/views/PageEventInfo.vue';
+import PageEventRoute from '~/views/PageEventRoute.vue';
+import PageEventEquipment from '~/views/PageEventEquipment.vue';
 
 type MyRoute = RouteRecordRaw & {
   path: keyof typeof routes,
@@ -33,6 +36,10 @@ export default function createVueRouter(Store: Store): Router {
     { path: '/profile/fill', name: 'fillProfile', component: PageFillProfileData, meta: {loginRequiredPartial: true} },
     { path: '/login', name: 'login', component: PageLogin, meta: {noLoginRequired: true} },
     { path: '/email/confirm', name: 'confirmEmail', component: PageConfirmEmail },
+
+    { path: '/global-event/info', name: 'eventInfo', component: PageEventInfo },
+    { path: '/global-event/route', name: 'eventRoute', component: PageEventRoute },
+    { path: '/global-event/equipment', name: 'eventEquipment', component: PageEventEquipment },
 
     { path: '/events', name: 'events', component: PageEvents, meta: {loginRequired: true} },
     { path: '/admin', name: 'admin', component: PageAdmin, redirect: {name: 'adminRegistrations'}, meta: {loginRequired: true}, children: [

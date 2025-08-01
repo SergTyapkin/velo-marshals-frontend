@@ -388,7 +388,6 @@ export const SQLHistoryModelMockData = validateModel(SQLHistoryModel, {
 export const SQLHistoryListModel = {
   history: ArrayType(SQLHistoryModel),
 }
-console.log(SQLHistoryListModel);
 export const SQLHistoryListModelMockData = {
   history: [
     Object.assign({}, SQLHistoryModelMockData, {id: 'HISTORY_ID_1', text: 'SELECT * FROM users'}),
@@ -402,7 +401,8 @@ export const SQLHistoryListModelMockData = {
 
 export const GlobalsModel = {
   globalEvent: {
-    type: String,
+    type: Object,
+    fields: EventModel,
     from: 'globalevent',
     optional: true,
   },
