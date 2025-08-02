@@ -113,6 +113,10 @@
     <section class="actions-block">
       <ul class="actions-group">
         <Checkbox title="Отметить время пришествия" v-model="actions.setCameDate" />
+        <Checkbox title="Записать текст задачи" v-model="actions.setTaskText" />
+        <section class="available-equipment-list" v-if="actions.setTaskText">
+          <InputComponent v-model="actions.setTaskTextValue" title="Задача маршала" />
+        </section>
         <Checkbox title="Добавить оборудование" v-model="actions.addEquipment" />
         <section class="available-equipment-list" v-if="actions.addEquipment">
           <div
@@ -147,7 +151,7 @@
             <InputComponent v-model="actions.removeEquipmentList[equipment.id].amount" title="Количество" />
           </div>
         </section>
-        <Checkbox title="Добавить круг" v-model="actions.addLapPassed" />
+        <Checkbox title="Добавить проезд круга" v-model="actions.addLapPassed" />
         <Checkbox title="Отметить окончание работы" v-model="actions.setLeaveDate" />
       </ul>
     </section>
@@ -219,6 +223,7 @@
 
         <header>Применяемые действия</header>
         <div v-if="actions.setCameDate">Установить время пришествия</div>
+        <div v-if="actions.setTaskText">Записать задачу маршала</div>
         <div v-if="actions.addLapPassed">Добавить проезд круга</div>
         <div v-if="actions.addEquipment">
           Записать оборудование: [
@@ -268,6 +273,8 @@ export default {
       loading: false,
 
       actions: {
+        setTaskText: false,
+        setTaskTextValue: '',
         setCameDate: false,
         setLeaveDate: false,
         addEquipment: false,
@@ -409,6 +416,20 @@ export default {
     },
 
     async onConfirm() {
+      if (this.actions.setTaskText) {
+        this.$request(
+          this,
+          this.$api.updateRegistration,
+          [{
+            id: this.selectedRegistration?.id || '',
+            taskText: this.actions.setTaskTextValue,
+          }],
+          `Не удалось записать текст задачи`,
+          () => {
+            this.$popups.success(`Текст задачи записан`);
+          },
+        );
+      }
       if (this.actions.addEquipment) {
         Object.entries(this.actions.addEquipmentList).filter(([_, eq]) => eq.enabled).forEach(([id, eq]) => {
           this.$request(
