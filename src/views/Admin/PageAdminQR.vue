@@ -26,14 +26,20 @@
       display flex
       gap 10px
 
-      .available-equipment-list
-        display grid
-        grid-template-columns min-content min-content 1fr
-        gap 10px
+      .inner-section
         padding 20px
         border-radius radiusM
         border-left 6px solid colorEmp1
         background colorBlockBgLight
+
+      .task-text
+        > *
+          width 100%
+
+      .available-equipment-list
+        display grid
+        grid-template-columns min-content min-content 1fr
+        gap 10px
 
         .available-equipment
           display contents
@@ -119,15 +125,15 @@
       <ul class="actions-group">
         <Checkbox title="Отметить время пришествия" v-model="actions.setCameDate" />
         <Checkbox title="Записать текст задачи" v-model="actions.setTaskText" />
-        <section class="available-equipment-list" v-if="actions.setTaskText">
-          <InputComponent v-model="actions.setTaskTextValue" title="Задача маршала" />
+        <section class="inner-section task-text" v-if="actions.setTaskText">
+          <InputComponent v-model="actions.setTaskTextValue" title="Задача маршала" placeholder="Текст задачи" />
         </section>
         <Checkbox title="Добавить оборудование" v-model="actions.addEquipment" />
-        <section class="available-equipment-list" v-if="actions.addEquipment">
+        <section class="inner-section available-equipment-list" v-if="actions.addEquipment">
           <div
             class="available-equipment"
             v-for="equipment in availableEquipment.sort((e1: Equipment, e2: Equipment) =>
-              e1.title.localeCompare(e2.title),
+              Number(e1.id) - Number(e2.id),
             )">
             <Checkbox
               v-model="actions.addEquipmentList[equipment.id].enabled"
@@ -140,11 +146,11 @@
           </div>
         </section>
         <Checkbox title="Списать оборудование" v-model="actions.removeEquipment" />
-        <section class="available-equipment-list" v-if="actions.removeEquipment">
+        <section class="inner-section available-equipment-list" v-if="actions.removeEquipment">
           <div
             class="available-equipment"
             v-for="equipment in availableEquipment.sort((e1: Equipment, e2: Equipment) =>
-              e1.title.localeCompare(e2.title),
+              Number(e1.id) - Number(e2.id),
             )">
             <Checkbox
               v-model="actions.removeEquipmentList[equipment.id].enabled"
@@ -238,7 +244,7 @@
             <span
               v-for="[_, eq] in Object.entries(actions.addEquipmentList)
                 .filter(e => e[1].enabled)
-                .sort((e1, e2) => e1[0].localeCompare(e2[0]))">
+                .sort((e1, e2) => Number(e1[0]) - Number(e2[0]))">
               {{ eq.title }} x{{ eq.amount }},
             </span>
             ]
@@ -352,7 +358,7 @@ export default {
         await this.$request(
           this,
           this.$api.getRegistrations,
-          [this.$globals.globalEvent?.id || '', true],
+          [this.$globals.globalEvent?.id || ''],
           'Не удалось получить список регистраций',
           () => {},
           {
