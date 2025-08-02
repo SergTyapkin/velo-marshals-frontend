@@ -21,6 +21,7 @@
       color colorText5
 
     .actions-group
+      list-no-styles()
       flex-direction column
       display flex
       gap 10px
