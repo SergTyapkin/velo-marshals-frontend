@@ -33,6 +33,11 @@
       font-style italic
       color colorText5
 
+    &[type='date']
+    &[type='time']
+    &[type='datetime-local']
+      max-width 20vw
+
   .keys-count
     font-small-extra()
 

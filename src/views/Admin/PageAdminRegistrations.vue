@@ -314,7 +314,8 @@
               :key="registration"
               class="registration"
               :registration="registration"
-              :idx="i + 1" />
+              show-change-confirmation
+              :number="i + 1" />
           </ul>
         </section>
       </transition>

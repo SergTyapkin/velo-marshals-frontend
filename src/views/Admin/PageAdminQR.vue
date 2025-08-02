@@ -205,32 +205,13 @@
         <div v-if="!selectedRegistration" class="info">Сначала выберите пользователя через QR или поиск</div>
         <div class="user-info" v-else>
           <header>Выбран пользователь</header>
-          <div class="field-row">
-            <div class="name">ID</div>
-            <div class="id"><span class="hash">#</span>{{ selectedRegistration?.userId }}</div>
-          </div>
-          <div class="field-row">
-            <div class="name">ФИО</div>
-            <div class="fullname">
-              {{ selectedRegistration?.userFamilyName }}
-              {{ selectedRegistration?.userGivenName }}
-              {{ selectedRegistration?.userMiddleName }}
-            </div>
-          </div>
-          <div class="field-row">
-            <div class="name">Категория</div>
-            <div class="level">{{ MARSHAL_LEVELS[selectedRegistration?.level] }}</div>
-          </div>
-          <div class="field-row">
-            <div class="name">Пройдено кругов</div>
-            <div class="laps">{{ selectedRegistration?.lapsPassed }}</div>
-          </div>
-          <div class="field-row">
-            <div class="name">Взято оборудование</div>
-            <div class="equipment">
-              [<span v-for="eq in userEquipment">{{ eq.title }} x{{ eq.amountHolds }}, </span>]
-            </div>
-          </div>
+          <RegistrationCard
+            :registration="selectedRegistration"
+            show-category-salary
+            show-task-comment
+            show-laps
+            show-equipment
+          />
 
           <br />
           <br />
@@ -263,8 +244,8 @@
 
           <br />
           <div class="buttons-container">
-            <button class="button-success" @click="onConfirm">Применить</button>
-            <button class="button-cancel" @click="onCancel">Отмена</button>
+            <button class="button-success" @click="onConfirm">Применить действия</button>
+            <button class="button-cancel" @click="onCancel">Закрыть</button>
           </div>
         </div>
       </section>
@@ -282,10 +263,11 @@ import QRScanner from '~/components/QRScanner.vue';
 import InputSearch from '~/components/InputSearch.vue';
 import { MARSHAL_LEVELS } from '~/constants';
 import InputComponent from '~/components/InputComponent.vue';
+import RegistrationCard from '~/components/RegistrationCard.vue';
 
 
 export default {
-  components: { InputComponent, InputSearch, QRScanner, Checkbox, CircleLinesLoading },
+  components: { RegistrationCard, InputComponent, InputSearch, QRScanner, Checkbox, CircleLinesLoading },
 
   data() {
     return {
@@ -322,7 +304,6 @@ export default {
       },
 
       availableEquipment: [] as Equipment[],
-      userEquipment: [] as Equipment[],
       registrations: [] as Registration[],
       selectedRegistration: null as Registration | null,
       userSearchText: '',
@@ -366,21 +347,6 @@ export default {
           },
         )
       ).registrations;
-    },
-
-    async updateUserEquipments() {
-      this.userEquipment = (
-        await this.$request(
-          this,
-          this.$api.getUserEquipmentOnEvent,
-          [this.$globals.globalEvent?.id || '', this.selectedRegistration?.userId || ''],
-          'Не удалось получить список оборудования пользователя',
-          () => {},
-          {
-            equipment: [],
-          },
-        )
-      ).equipment;
     },
 
     async updateAvailableEquipments() {
@@ -430,8 +396,6 @@ export default {
             },
           },
         )) || null;
-
-      await this.updateUserEquipments();
     },
 
     async onConfirm() {
@@ -516,7 +480,6 @@ export default {
       }
 
       this.selectedRegistration = null;
-      this.userEquipment = [];
       this.updateRegistrations();
       (this.$refs.qrScanner as typeof QRScanner).clearSavedText();
     },
