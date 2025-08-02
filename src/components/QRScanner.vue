@@ -108,6 +108,10 @@ export default {
       this.scanner!.stop();
       this.active = false;
     },
+
+    clearSavedText() {
+      this.prevValue = '';
+    }
   }
 };
 </script>

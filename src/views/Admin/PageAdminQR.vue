@@ -103,8 +103,13 @@
         .name
           color colorText5
 
-    .button-success
-      button-success()
+    .buttons-container
+      display flex
+      gap 10px
+      .button-success
+        button-success()
+      .button-cancel
+        button-attention()
 </style>
 
 <template>
@@ -156,101 +161,108 @@
       </ul>
     </section>
 
-    <header>Сканер ID</header>
-    <section class="scanner-search-block">
-      <QRScanner @scan="onScanQR" />
+    <div v-show="!selectedRegistration">
+      <header>Сканер ID</header>
+      <section class="scanner-search-block">
+        <QRScanner @scan="onScanQR" ref="qrScanner"/>
 
-      <div class="centered" v-if="selectedRegistration">
-        Выбран ID: {{ selectedRegistration?.userId }}
-        {{ selectedRegistration?.userFamilyName }}
-        {{ selectedRegistration?.userGivenName }}
-        {{ selectedRegistration?.userMiddleName }}
-      </div>
-      <div class="centered" v-else>или</div>
-
-      <InputSearch title="Поиск" placeholder="Поиск" v-model="userSearchText" class="search-field" />
-
-      <ul class="search-results" v-if="userSearchText">
-        <li
-          v-for="(reg, i) in filteredRegistrations"
-          class="result"
-          @click="
-            selectedRegistration = reg;
-            userSearchText = '';
-            updateUserEquipments();
-          ">
-          <div class="number">{{ i + 1 }}</div>
-          <div class="id"><span class="hash">#</span>{{ reg.userId }}</div>
-          <div class="name">{{ reg.userFamilyName }} {{ reg.userGivenName }} {{ reg.userMiddleName }}</div>
-        </li>
-      </ul>
-    </section>
-
-    <header>Подтверждение</header>
-    <section class="user-info-block">
-      <div v-if="!selectedRegistration" class="info">Сначала выберите пользователя через QR или поиск</div>
-      <div class="user-info" v-else>
-        <header>Выбран пользователь</header>
-        <div class="field-row">
-          <div class="name">ID</div>
-          <div class="id"><span class="hash">#</span>{{ selectedRegistration?.userId }}</div>
+        <div class="centered" v-if="selectedRegistration">
+          Выбран ID: {{ selectedRegistration?.userId }}
+          {{ selectedRegistration?.userFamilyName }}
+          {{ selectedRegistration?.userGivenName }}
+          {{ selectedRegistration?.userMiddleName }}
         </div>
-        <div class="field-row">
-          <div class="name">ФИО</div>
-          <div class="fullname">
-            {{ selectedRegistration?.userFamilyName }}
-            {{ selectedRegistration?.userGivenName }}
-            {{ selectedRegistration?.userMiddleName }}
+        <div class="centered" v-else>или</div>
+
+        <InputSearch title="Поиск" placeholder="Поиск" v-model="userSearchText" class="search-field" />
+
+        <ul class="search-results" v-if="userSearchText">
+          <li
+            v-for="(reg, i) in filteredRegistrations"
+            class="result"
+            @click="
+              selectedRegistration = reg;
+              userSearchText = '';
+              updateUserEquipments();
+            ">
+            <div class="number">{{ i + 1 }}</div>
+            <div class="id"><span class="hash">#</span>{{ reg.userId }}</div>
+            <div class="name">{{ reg.userFamilyName }} {{ reg.userGivenName }} {{ reg.userMiddleName }}</div>
+          </li>
+        </ul>
+      </section>
+    </div>
+
+    <div v-show="selectedRegistration">
+      <header>Подтверждение</header>
+      <section class="user-info-block">
+        <div v-if="!selectedRegistration" class="info">Сначала выберите пользователя через QR или поиск</div>
+        <div class="user-info" v-else>
+          <header>Выбран пользователь</header>
+          <div class="field-row">
+            <div class="name">ID</div>
+            <div class="id"><span class="hash">#</span>{{ selectedRegistration?.userId }}</div>
+          </div>
+          <div class="field-row">
+            <div class="name">ФИО</div>
+            <div class="fullname">
+              {{ selectedRegistration?.userFamilyName }}
+              {{ selectedRegistration?.userGivenName }}
+              {{ selectedRegistration?.userMiddleName }}
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="name">Категория</div>
+            <div class="level">{{ MARSHAL_LEVELS[selectedRegistration?.level] }}</div>
+          </div>
+          <div class="field-row">
+            <div class="name">Пройдено кругов</div>
+            <div class="laps">{{ selectedRegistration?.lapsPassed }}</div>
+          </div>
+          <div class="field-row">
+            <div class="name">Взято оборудование</div>
+            <div class="equipment">
+              [<span v-for="eq in userEquipment">{{ eq.title }} x{{ eq.amountHolds }}, </span>]
+            </div>
+          </div>
+
+          <br />
+          <br />
+
+          <header>Применяемые действия</header>
+          <div v-if="actions.setCameDate">Установить время пришествия</div>
+          <div v-if="actions.setTaskText">Записать задачу маршала</div>
+          <div v-if="actions.addLapPassed">Добавить проезд круга</div>
+          <div v-if="actions.addEquipment">
+            Записать оборудование: [
+            <span
+              v-for="[_, eq] in Object.entries(actions.addEquipmentList)
+                .filter(e => e[1].enabled)
+                .sort((e1, e2) => e1[0].localeCompare(e2[0]))">
+              {{ eq.title }} x{{ eq.amount }},
+            </span>
+            ]
+          </div>
+          <div v-if="actions.removeEquipment">
+            Списать оборудование: [
+            <span
+              v-for="[_, eq] in Object.entries(actions.removeEquipmentList)
+                .filter(e => e[1].enabled)
+                .sort((e1, e2) => e1[0].localeCompare(e2[0]))">
+              {{ eq.title }} x{{ eq.amount }},
+            </span>
+            ]
+          </div>
+          <div v-if="actions.setLeaveDate">Отметить окончание работы</div>
+
+          <br />
+          <div class="buttons-container">
+            <button class="button-success" @click="onConfirm">Применить</button>
+            <button class="button-cancel" @click="onCancel">Отмена</button>
           </div>
         </div>
-        <div class="field-row">
-          <div class="name">Категория</div>
-          <div class="level">{{ MARSHAL_LEVELS[selectedRegistration?.level] }}</div>
-        </div>
-        <div class="field-row">
-          <div class="name">Пройдено кругов</div>
-          <div class="laps">{{ selectedRegistration?.lapsPassed }}</div>
-        </div>
-        <div class="field-row">
-          <div class="name">Взято оборудование</div>
-          <div class="equipment">
-            [<span v-for="eq in userEquipment">{{ eq.title }} x{{ eq.amountHolds }}, </span>]
-          </div>
-        </div>
-
-        <br />
-        <br />
-
-        <header>Применяемые действия</header>
-        <div v-if="actions.setCameDate">Установить время пришествия</div>
-        <div v-if="actions.setTaskText">Записать задачу маршала</div>
-        <div v-if="actions.addLapPassed">Добавить проезд круга</div>
-        <div v-if="actions.addEquipment">
-          Записать оборудование: [
-          <span
-            v-for="[_, eq] in Object.entries(actions.addEquipmentList)
-              .filter(e => e[1].enabled)
-              .sort((e1, e2) => e1[0].localeCompare(e2[0]))">
-            {{ eq.title }} x{{ eq.amount }},
-          </span>
-          ]
-        </div>
-        <div v-if="actions.removeEquipment">
-          Списать оборудование: [
-          <span
-            v-for="[_, eq] in Object.entries(actions.removeEquipmentList)
-              .filter(e => e[1].enabled)
-              .sort((e1, e2) => e1[0].localeCompare(e2[0]))">
-            {{ eq.title }} x{{ eq.amount }},
-          </span>
-          ]
-        </div>
-        <div v-if="actions.setLeaveDate">Отметить окончание работы</div>
-
-        <br />
-        <button class="button-success" @click="onConfirm">Применить</button>
-      </div>
-    </section>
+      </section>
+    </div>
 
     <CircleLinesLoading v-if="loading" centered />
   </div>
@@ -264,6 +276,7 @@ import QRScanner from '~/components/QRScanner.vue';
 import InputSearch from '~/components/InputSearch.vue';
 import { MARSHAL_LEVELS } from '~/constants';
 import InputComponent from '~/components/InputComponent.vue';
+import { nextTick } from 'vue';
 
 export default {
   components: { InputComponent, InputSearch, QRScanner, Checkbox, CircleLinesLoading },
@@ -420,10 +433,12 @@ export default {
         this.$request(
           this,
           this.$api.updateRegistration,
-          [{
-            id: this.selectedRegistration?.id || '',
-            taskText: this.actions.setTaskTextValue,
-          }],
+          [
+            {
+              id: this.selectedRegistration?.id || '',
+              taskText: this.actions.setTaskTextValue,
+            },
+          ],
           `Не удалось записать текст задачи`,
           () => {
             this.$popups.success(`Текст задачи записан`);
@@ -431,30 +446,34 @@ export default {
         );
       }
       if (this.actions.addEquipment) {
-        Object.entries(this.actions.addEquipmentList).filter(([_, eq]) => eq.enabled).forEach(([id, eq]) => {
-          this.$request(
-            this,
-            this.$api.updateRegistrationAddEquipment,
-            [this.selectedRegistration?.userId || '', id, eq.amount],
-            `Не удалось записать оборудование "${eq.title}"`,
-            () => {
-              this.$popups.success(`Оборудование "${eq.title}" записано`);
-            },
-          );
-        });
+        Object.entries(this.actions.addEquipmentList)
+          .filter(([_, eq]) => eq.enabled)
+          .forEach(([id, eq]) => {
+            this.$request(
+              this,
+              this.$api.updateRegistrationAddEquipment,
+              [this.selectedRegistration?.userId || '', id, eq.amount],
+              `Не удалось записать оборудование "${eq.title}"`,
+              () => {
+                this.$popups.success(`Оборудование "${eq.title}" записано`);
+              },
+            );
+          });
       }
       if (this.actions.removeEquipment) {
-        Object.entries(this.actions.removeEquipmentList).filter(([_, eq]) => eq.enabled).forEach(([id, eq]) => {
-          this.$request(
-            this,
-            this.$api.updateRegistrationRemoveEquipment,
-            [this.selectedRegistration?.userId || '', id, eq.amount],
-            `Не удалось списать оборудование "${eq.title}"`,
-            () => {
-              this.$popups.success(`Оборудование "${eq.title}" списано`);
-            },
-          );
-        });
+        Object.entries(this.actions.removeEquipmentList)
+          .filter(([_, eq]) => eq.enabled)
+          .forEach(([id, eq]) => {
+            this.$request(
+              this,
+              this.$api.updateRegistrationRemoveEquipment,
+              [this.selectedRegistration?.userId || '', id, eq.amount],
+              `Не удалось списать оборудование "${eq.title}"`,
+              () => {
+                this.$popups.success(`Оборудование "${eq.title}" списано`);
+              },
+            );
+          });
       }
       if (this.actions.setCameDate) {
         await this.$request(
@@ -493,7 +512,11 @@ export default {
       this.selectedRegistration = null;
       this.userEquipment = [];
       this.updateRegistrations();
-      this.updateAvailableEquipments();
+      (this.$refs.qrScanner as typeof QRScanner).clearSavedText();
+    },
+    async onCancel() {
+      this.selectedRegistration = null;
+      (this.$refs.qrScanner as typeof QRScanner).clearSavedText();
     },
   },
 };
