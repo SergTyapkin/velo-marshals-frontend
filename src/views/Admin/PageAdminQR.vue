@@ -276,7 +276,7 @@ import QRScanner from '~/components/QRScanner.vue';
 import InputSearch from '~/components/InputSearch.vue';
 import { MARSHAL_LEVELS } from '~/constants';
 import InputComponent from '~/components/InputComponent.vue';
-import { nextTick } from 'vue';
+
 
 export default {
   components: { InputComponent, InputSearch, QRScanner, Checkbox, CircleLinesLoading },
