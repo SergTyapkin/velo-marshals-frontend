@@ -349,10 +349,10 @@ export default {
           },
         )
       ).registrations;
-    },
-
-    async updateAvailableEquipments() {
-      this.availableEquipment = (
+    ),
+    
+    async updateAvailableEquipments(onlyNumbers = false) {
+      const availableEquipment = (
         await this.$request(
           this,
           this.$api.getEquipmentOnEvent,
@@ -364,6 +364,14 @@ export default {
           },
         )
       ).equipment;
+      if (onlyNumbers) {
+        availableEquipment.forEach((eq, i) => {
+          this.availableEquipment[i].amountLeft = eq.amountLeft;
+        });
+        return;
+      }
+
+      this.availableEquipment = availableEquipment;
       this.availableEquipment.forEach(eq => {
         this.actions.removeEquipmentList[eq.id] = {
           enabled: false,
@@ -482,7 +490,7 @@ export default {
       }
 
       this.selectedRegistration = null;
-      this.updateAvailableEquipments();
+      this.updateAvailableEquipments(true);
       this.updateRegistrations();
       (this.$refs.qrScanner as typeof QRScanner).clearSavedText();
     },
