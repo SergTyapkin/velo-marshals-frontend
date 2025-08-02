@@ -134,7 +134,8 @@
             class="available-equipment"
             v-for="equipment in availableEquipment.sort((e1: Equipment, e2: Equipment) =>
               Number(e1.id) - Number(e2.id),
-            )">
+            )"
+            :key="equipment.id">
             <Checkbox
               v-model="actions.addEquipmentList[equipment.id].enabled"
               :title="`#${equipment.id} ${equipment.title}`" />
@@ -151,7 +152,8 @@
             class="available-equipment"
             v-for="equipment in availableEquipment.sort((e1: Equipment, e2: Equipment) =>
               Number(e1.id) - Number(e2.id),
-            )">
+            )"
+            :key="equipment.id">
             <Checkbox
               v-model="actions.removeEquipmentList[equipment.id].enabled"
               :title="`#${equipment.id} ${equipment.title}`" />
