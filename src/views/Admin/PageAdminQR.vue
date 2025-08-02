@@ -480,6 +480,7 @@ export default {
       }
 
       this.selectedRegistration = null;
+      this.updateAvailableEquipments();
       this.updateRegistrations();
       (this.$refs.qrScanner as typeof QRScanner).clearSavedText();
     },
