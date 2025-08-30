@@ -1,8 +1,16 @@
 ![GithubCI](https://github.com/SergTyapkin/velo-marshals-frontend/actions/workflows/deploy.yaml/badge.svg)
 
-# Фронтенд на Vue.js с авто-деплоем на _Nginx_ в докере и автоматическим получением сертификатов _Letsencrypt_
+# Velo Marshals Frontend
+Фронтенд для сайта веломаршалов московских велофестивалей
+| ![](https://github.com/user-attachments/assets/d95ae603-d407-4e3e-99fd-1244f6077cca) | ![](https://github.com/user-attachments/assets/3b39b695-1c2b-4c80-bcd3-ff5b3ee7be0c) |
+| --- | --- |
+| ![](https://github.com/user-attachments/assets/3a630c63-6be5-4b2f-b646-5fdaf335d431) | ![](https://github.com/user-attachments/assets/b2777b7f-6198-470f-9936-dd91f88426f9) |
+| ![](https://github.com/user-attachments/assets/3f15065c-d444-47f9-9eca-e3a9077c248a) | ![](https://github.com/user-attachments/assets/5175e2b4-7bd4-4094-afa8-f626a13a4dd4) |
+| ![](https://github.com/user-attachments/assets/02160148-8310-432f-8427-a9bee8752de3) |  |
 
-Словом, всё необходимое, чтобы раскатить фронтенд за 10 минут на чистой машине с Ubuntu.
+
+
+Включает всё необходимое, чтобы раскатить фронтенд за 10 минут на чистой машине с Ubuntu.
 
 ### Все сконфигурированные пакеты и инструменты сборки:
 
