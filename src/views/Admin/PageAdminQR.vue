@@ -349,7 +349,7 @@ export default {
           },
         )
       ).registrations;
-    ),
+    },
     
     async updateAvailableEquipments(onlyNumbers = false) {
       const availableEquipment = (
