@@ -254,8 +254,6 @@ export default {
   watch: {
     $route(to, from) {
       this.transitionName = 'scale-in';
-
-      console.log(from.path, 'TO', to.path);
     },
   },
 };

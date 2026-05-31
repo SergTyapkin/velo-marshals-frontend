@@ -84,9 +84,7 @@ sw.addEventListener('active', function (event) {
 });
 
 function isUrlNotCachable(url: string) {
-  console.log("CHECK DISABLE REGEXPS", DISABLE_CACHING_URLS_REGEXPS, url);
   return Array.from(DISABLE_CACHING_URLS_REGEXPS).some(regExp => {
-    console.log("| CHECK DISABLE REGEXP", regExp, url, regExp.test(url));
     return regExp.test(url);
   });
 }

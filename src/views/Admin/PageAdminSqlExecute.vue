@@ -120,14 +120,12 @@ export default {
     dateTimeFormatter,
 
     async execute() {
-      console.log("SQL REQUEST:", this.sql);
       await this.$request(
         this,
         this.$api.executeAdminSql,
         [this.sql],
         'Не удалось выполнить SQL',
         (res: string) => {
-          console.log("SQL RESPONSE:", res);
           this.result = '[';
           res.response.forEach(row => {
             this.result += '\r\n  {';

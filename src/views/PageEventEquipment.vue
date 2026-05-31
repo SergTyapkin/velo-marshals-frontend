@@ -123,12 +123,14 @@
   <div class="root-page-event-equipment">
     <header>Оборудование</header>
 
-    <router-link :to="{name: 'scanQR'}" class="button-take-equipment">Взять или забрать оборудование по QR</router-link>
+    <router-link :to="{ name: 'scanQR' }" class="button-take-equipment">Взять или забрать оборудование по QR</router-link>
 
     <section class="block-yours">
       <header>Взятое вами оборудование</header>
 
-      <div class="success-info" v-if="userEquipment.length && !userEquipment.find((eq: Equipment) => eq.isNeedsToReturn)">У вас нет оборудования, которое нужно сдавать!</div>
+      <div class="success-info"
+        v-if="userEquipment.length && !userEquipment.find((eq: Equipment) => eq.isNeedsToReturn)">У вас нет
+        оборудования, которое нужно сдавать!</div>
 
       <div class="info" v-if="!userEquipment.length">На вас не записано оборудования</div>
       <ul v-else class="equipment-container">
@@ -143,8 +145,10 @@
               <span class="count" v-if="equipment.amountHolds > 1">x{{ equipment.amountHolds }}</span>
             </header>
             <span class="return-info" v-if="equipment.isNeedsToReturn">Необходимо вернуть!</span>
-            <div class="date"><img src="/static/icons/mono/recieved.svg" alt="taken">{{ dateTimeFormatter(equipment.takenDate) }}</div>
-            <div class="date" v-if="equipment.updatedDate"><img src="/static/icons/mono/change.svg" alt="taken">{{ dateTimeFormatter(equipment.updatedDate) }}</div>
+            <div class="date"><img src="/static/icons/mono/recieved.svg" alt="taken">{{
+              dateTimeFormatter(equipment.takenDate) }}</div>
+            <div class="date" v-if="equipment.updatedDate"><img src="/static/icons/mono/change.svg" alt="taken">{{
+              dateTimeFormatter(equipment.updatedDate) }}</div>
           </div>
         </li>
       </ul>
@@ -197,10 +201,17 @@ export default {
   },
 
   async mounted() {
-    await this.updateUserEquipment();
-    this.equipmentsTransparentPreviewUrls = await this.getEquipmentsTransparentPreviewUrls(this.userEquipment);
-    await this.updateEquipmentGroups();
-    this.equipmentsGroupsTransparentPreviewUrls = await this.getEquipmentsTransparentPreviewUrls(this.equipmentGroups);
+    await Promise.all([
+      (async () => {
+        await this.updateUserEquipment();
+        await this.getEquipmentsTransparentPreviewUrls(this.userEquipment, (res) => this.equipmentsTransparentPreviewUrls = res.concat());
+      })(),
+
+      (async () => {
+        await this.updateEquipmentGroups();
+        await this.getEquipmentsTransparentPreviewUrls(this.equipmentGroups, (res) => this.equipmentsGroupsTransparentPreviewUrls = res.concat());
+      })(),
+    ]);
   },
 
   methods: {
@@ -212,7 +223,7 @@ export default {
           this.$api.getUserEquipmentOnEvent,
           [this.$globals.globalEvent?.id ?? '', this.$user.id],
           'Не удалось получить список вашего оборудования',
-          () => {},
+          () => { },
           {
             equipment: [],
           },
@@ -227,7 +238,7 @@ export default {
           this.$api.getEquipmentGroupsOnEvent,
           [this.$globals.globalEvent?.id ?? ''],
           'Не удалось получить список групп оборудования',
-          () => {},
+          () => { },
           {
             equipmentGroups: [],
           },
@@ -235,12 +246,17 @@ export default {
       ).equipmentGroups;
     },
 
-    async getEquipmentsTransparentPreviewUrls(equipments: (Equipment | EquipmentGroup)[]) {
+    async getEquipmentsTransparentPreviewUrls(equipments: (Equipment | EquipmentGroup)[], onEach: (res: (string | null)[]) => unknown) {
       const res: (string | null)[] = [];
 
       for (const i in equipments) {
         const eq = equipments[i];
-        res[i] = eq.previewUrl ? await getImageWithRemovedBackground(eq.previewUrl) : null;
+        try {
+          res[i] = eq.previewUrl ? await getImageWithRemovedBackground(eq.previewUrl) : null;
+        } catch {
+          res[i] = null;
+        }
+        onEach(res);
       }
 
       return res;

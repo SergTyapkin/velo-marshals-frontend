@@ -356,7 +356,6 @@ export default {
       const rect = (this.$refs.list as HTMLElement).getBoundingClientRect();
       const maxHeight = window.innerHeight - HEIGHT_SAVE_ZONE_OFFSET;
       const maxWidth = window.innerWidth - WIDTH_SAVE_ZONE_OFFSET;
-      console.log(rect);
       this.overflowYLength = Math.max(rect.bottom - maxHeight, 0);
       this.overflowXLength = Math.max(rect.right - maxWidth, 0);
       this.isUnrolled = true;
